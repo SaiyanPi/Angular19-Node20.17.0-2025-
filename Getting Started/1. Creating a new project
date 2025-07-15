@@ -1,0 +1,60 @@
+Creating a new angular project:
+
+1) cmd: ng new my-app. (Standalone by default for Angular 18+)
+
+    If you want traditional app with module:
+
+        cmd: ng new my-app --no-standalone
+
+2) Initially, it will ask if we want to enable Angular analytics:
+
+    Would you like to share pseudonymous usage data about this project 
+    with the Angular Team at Google under Google's Privacy Policy at 
+    https://policies.google.com/privacy. For more details and how to 
+    change this setting, see https://angular.dev/cli/analytics. (y/N)
+
+    -> The Angular CLI will ask this question once when we create the first Angular project and 
+        apply it globally in our system. However, we can change the setting later in a specific 
+        Angular workspace.
+
+3) The next question is related to the styling of our application:
+
+    Which stylesheet format would you like to use?
+
+    ->  It is common to use CSS to style Angular applications. However, we can use preprocessors 
+        like SCSS or Less to add value to our development workflow. Here, we work with CSS directly,
+        so accept the default choice, CSS, and press Enter.
+
+4) Finally, the Angular CLI will prompt us if we want to enable SSR and Static Site Generation (SSG)
+    in our application:
+
+    Do you want to enable Server-Side Rendering (SSR) and Static Site 
+    Generation (SSG/Prerendering)? (y/N)
+
+    -> SSR and SSG are concerned with improving the startup and load performance of an Angular
+        application. We will learn more about them in future chapter, Optimizing Application 
+        Performance. For now, accept the default choice, No, by pressing Enter.
+
+
+- The workspace contains various folders and configuration files that the Angular CLI needs to 
+    build and test the Angular application:
+
+    • .vscode: Includes VSCode configuration files
+    • node_modules: Includes installed npm packages that are needed to develop and run the Angular
+                    application
+    • public: Contains static assets such as fonts, images, and icons
+    • src: Contains the source files of the application
+    • .editorconfig: Defines coding styles for the default editor
+    • .gitignore: Specifies the files and folders that Git should not track
+    • angular.json: The main configuration file of the Angular CLI workspace
+    • package.json and package-lock.json: Provide definitions of npm packages, along with their exact
+                versions, which are needed to develop, test, and run the Angular application
+    • README.md: A README file that is automatically generated from the Angular CLI
+    • tsconfig.app.json: A TypeScript configuration that is specific to the Angular application
+    • tsconfig.json: A TypeScript configuration that is specific to the Angular CLI workspace
+    • tsconfig.spec.json: A TypeScript configuration that is specific to unit tests of the Angular
+                            application
+
+- Navigate to the newly created folder and start your application with the following command:
+
+    cmd: ng serve
