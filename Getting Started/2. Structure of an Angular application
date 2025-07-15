@@ -1,0 +1,36 @@
+Structure of an Angular application:
+
+📂 src folder:
+- When we develop an Angular application, we’ll likely interact with the src folder. It is where we 
+    write the code and tests of our application. It contains the following:
+ 
+    1. app folder
+        All the Angular-related files of the application. You interact with this folder mostof the time
+        during development.
+    2. index.html
+        The main HTML page of the Angular application.
+    3. main.ts
+        The main entry point of the Angular application.
+    4. styles.css
+        CSS styles that apply globally to the Angular application. The extension of this file depends on
+        the stylesheet format you choose when creating the application
+
+
+📂 app folder:
+- The app folder contains the actual source code we write for our application. Developers spend 
+    most of their time inside that folder. The Angular application that was created automatically 
+    from the Angular CLI contains the following files:
+
+    1. app.component.css
+        Contains CSS styles specific to the sample page. The extension of this file depends on the
+        stylesheet format you choose when creating the application.
+    2. app.component.html
+        Contains the HTML content of the sample page.
+    3. app.component.spec.ts
+        Contains unit tests for the sample page.
+    4. app.component.ts
+        Defines the presentational logic of the sample page.
+    5. app.config.ts
+        Defines the configuration of the Angular application.
+    6. app.routes.ts
+        Defines the routing configuration of the Angular application.
