@@ -9,4 +9,5 @@ import { RouterOutlet } from '@angular/router';
 })
 export class AppComponent {
   title = 'MyApp';
+  description = 'This is my Angular app.';
 }

@@ -1,0 +1,40 @@
+Angular DevTools:
+
+- Angular DevTools is a browser extension created and maintained by the Angular team. It allows 
+    us to inspect and profile Angular applications directly in the browser. It is currently supported
+    by Google Chrome and Mozilla Firefox and can be downloaded from the following browser stores:
+    • Google Chrome: https://chrome.google.com/webstore/detail/angular-developertools/ienfalfjdbdpebioblfackkekamfmbnh
+    • Mozilla Firefox: https://addons.mozilla.org/firefox/addon/angular-devtools
+
+- To open the extension, open the browser developer tools and select the Angular tab. It contains 
+    three additional tabs: (see AngularExtension.png)
+    • Components: Displays the component tree of the Angular application
+    • Profiler: Allows us to profile and inspect the Angular application
+    • Injector Tree: Displays the services provided by the Angular application
+
+- In this chapter, we will explore how to use the Components tab. We will learn how to use the 
+    Profiler tab in Chapter 3, Structuring User Interfaces with Components, and the Injector Tree tab in 
+    Chapter 5, Managing Complex Tasks with Services.
+
+------------------------------------------------------------------------------------------------------------
+
+# Components tab
+
+- The Components tab allows us to preview the components and directives of an Angular application and
+    interact with them. If we select a component from the tree representation, we can view its properties
+    and metadata
+
+- From the Components tab, we can also look up the respective HTML element in the DOM or navigate to the
+    actual source code of the component or directive. Clicking the < > button will take us to the
+    TypeScript file of the current component:
+    (see TypeScriptSourceFile.png)
+
+- Double-clicking a selector from the tree representation of the Components tab will navigate us 
+    to the DOM of the main page and highlight the individual HTML element: 
+    (see mainPageDOM.png)
+
+- Finally, one of the most useful features of the component tree is that we can alter the value of a 
+    component property and inspect how the component template behaves:
+    (see changeComponentState.png)
+    In the image you can see that when we change the value of the title property to 'world', the change
+    was also reflected in the component template.

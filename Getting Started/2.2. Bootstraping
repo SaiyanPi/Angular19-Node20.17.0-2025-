@@ -1,0 +1,50 @@
+Bootstraping:
+
+- The startup method of an Angular application is called bootstrapping, and it is defined in the main.ts
+    file inside the src folder:
+
+        (main.ts)
+
+        import { bootstrapApplication } from '@angular/platform-browser';
+        import { appConfig } from './app/app.config';
+        import { AppComponent } from './app/app.component';
+
+        bootstrapApplication(AppComponent, appConfig)
+        .catch((err) => console.error(err));
+
+- The main task of the bootstrapping file is to define the component that will be loaded at application
+    startup.
+- It calls the bootstrapApplication method, passing AppComponent as a parameter to specify the starting
+    component of the application. It also passes the appConfig object as a second parameter to specify
+    the configuration that will be used in the application startup.
+    The application configuration is described in the app.config.ts file:
+
+        (app.config.ts)
+
+        import { ApplicationConfig, provideZoneChangeDetection } from '@angular/core';
+        import { provideRouter } from '@angular/router';
+
+        import { routes } from './app.routes';
+        import { provideClientHydration, withEventReplay } from '@angular/platform-browser';
+
+        export const appConfig: ApplicationConfig = {
+        providers: [provideZoneChangeDetection({ eventCoalescing: true }), provideRouter(routes),
+            provideClientHydration(withEventReplay())]
+        };
+
+    -> The appConfig object contains a providers property to define services provided throughout the 
+        Angular application. We will learn more about services in future chapter.
+
+- A new Angular CLI application provides routing services by default. Routing is related to in
+    app navigation between different components using the browser URL. It is activated using the 
+    provideRouter method, passing a routes object, called route configuration, as a parameter.
+    The route configuration of the application is defined in the app.routes.ts file:
+
+        (app.routes.ts)
+
+        import { Routes } from '@angular/router';
+
+        export const routes: Routes = [];
+
+    -> Our application does not have a route configuration yet, as indicated by the empty routes array. 
+        We will learn how to set up routing and configure it in future chapter.

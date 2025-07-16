@@ -1,0 +1,14 @@
+Introduction to TypeScript:
+
+- As we learned in the previous chapter, when we built our very first Angular application, the code 
+    of an Angular project is written in TypeScript. Writing in TypeScript and leveraging its static 
+    typing gives us a remarkable advantage over other scripting languages. 
+
+- This chapter is not a thorough overview of the TypeScript language. Instead, we’ll focus on the core
+    elements that will be useful for this repository. As we will see very soon, having sound knowledge of
+    these mechanisms is paramount to understanding how dependency injection works in Angular.
+
+- In this chapter, we’re going to cover the following main topics:
+    • JavaScript essentials
+    • What is TypeScript?
+    • Getting started with TypeScript

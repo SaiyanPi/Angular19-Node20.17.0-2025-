@@ -1,0 +1,35 @@
+VSCode Debugger:
+
+- We can debug an Angular application using standard debugging techniques for web applications 
+    or the tooling that VSCode provides out of the box.
+
+- The console object is the most commonly used web API for debugging. It is a very fast way to 
+    print data and inspect values in the browser console. To inspect the value of an object in an
+    Angular component, we can use the debug or log method, passing the object we want to inspect as 
+    a parameter. However, it is considered an old-fashioned approach, and a codebase with many 
+    console.log methods is difficult to read.
+
+- An alternate way is to use breakpoints inside the source code using the VSCode debug menu.
+    VSCode contains a built-in debugging tool that uses breakpoints to debug Angular applications. 
+    We can add breakpoints inside the source code from VSCode and inspect the state of an Angular
+    application. When an Angular application runs and hits a breakpoint, it will pause and wait.
+    During that time, we can investigate and inspect several values involved in the current execution
+    context.
+
+- Let's see how to add breakpoints to our sample application:
+1) Open the app.component.ts file and click on the left of line 11 to add a breakpoint. A red 
+    dot denotes breakpoints:
+    (see addBreakingPoint.png)
+
+2) Click on the Run and Debug button in the left sidebar of VSCode.
+
+3) Click on the play button to start the application using the ng serve command:
+    (see runAndDebugMenu.png.png)
+    VSCode will build our application, open the default web browser, and hit the breakpoint inside the
+    editor:
+    (see hittingBreakingPoint.png)
+    We can now inspect various aspects of our component and use the buttons in the debugger toolbar to
+    control the debugging session.
+    
+- Another powerful feature of VSCode is VSCode Profiles, which help developers customize VSCode 
+    according to their development needs.

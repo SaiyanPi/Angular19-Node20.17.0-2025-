@@ -1,10 +1,10 @@
 Creating a new angular project:
 
-1) cmd: ng new my-app. (Standalone by default for Angular 18+)
+1) cmd: ng new MyApp. (Standalone by default for Angular 18+)
 
     If you want traditional app with module:
 
-        cmd: ng new my-app --no-standalone
+        cmd: ng new MyApp --no-standalone
 
 2) Initially, it will ask if we want to enable Angular analytics:
 
@@ -55,6 +55,6 @@ Creating a new angular project:
     • tsconfig.spec.json: A TypeScript configuration that is specific to unit tests of the Angular
                             application
 
-- Navigate to the newly created folder and start your application with the following command:
+5) Navigate to the newly created folder and start your application with the following command:
 
     cmd: ng serve

@@ -1,0 +1,36 @@
+Template syntax:
+
+- Now that we have taken a brief overview of our sample application, it’s time to start interacting 
+    with the source code:
+
+1) Run the application.
+2) Open the url and notice the text below the Angular logo that reads Hello, MyApp. The word MyApp,
+    which corresponds to the application name, comes from a variable declared in the TypeScript file of
+    the main component. Open the app.component.ts file and locate the title variable:
+
+        import { Component } from '@angular/core';
+        import { RouterOutlet } from '@angular/router';
+        @Component({
+            selector: 'app-root',
+            imports: [RouterOutlet],
+            templateUrl: './app.component.html',
+            styleUrl: './app.component.css'
+        })
+        export class AppComponent {
+            title = 'my-app';
+        }
+
+    -> The title variable is a component property that is used in the component template.
+
+3) Open the app.component.html file and go to line 228:
+
+        <h1>Hello, {{ title }}</h1>
+    
+    -> The title property is surrounded by double curly braces syntax called interpolation,which is part
+        of the Angular template syntax. In a nutshell, interpolation converts the value of the title
+        property to text and prints it on the page.
+    -> Angular uses specific template syntax to extend and enrich the standard HTML syntax in the
+        application template. We will learn more about the Angular template syntax in future chapter.
+
+4) Change the value of the title property in the AppComponent class to World, save the changes, wait for
+    the application to reload, and examine the output in the browser:

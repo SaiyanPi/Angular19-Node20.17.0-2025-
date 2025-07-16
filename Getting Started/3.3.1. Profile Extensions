@@ -1,0 +1,78 @@
+VSCode Profile Extensions:
+
+- Let's explore some of the extensions in the VSCode Angular profile.
+_____________________________________________________________________________________________________________
+
+# Angular Language Service:
+
+- The Angular Language Service extension is developed and maintained by the Angular team and 
+    provides code completion, navigation, and error detection inside Angular templates. It enriches 
+    VSCode with the following features:
+    • Code completion
+    • A go-to definition
+    • Quick info
+    • Diagnostic messages
+
+- To get a glimpse of its powerful capabilities, let’s look at the code completion feature. Suppose 
+    we want to display a new property called description in the template of the main component. 
+    We can set this up by going through the following steps:
+
+    1) Define the new property in the app.component.ts file:
+
+        // omitted
+        export class AppComponent {
+            title = 'MyApp';
+            description = 'This is my Angular app.';
+        }
+    
+    2) Open the app.component.html file and add the property name in the template using Angular
+        interpolation syntax. The Angular Language Service will find it and suggest it for us
+        automatically:
+        (see AngularLanguageService.png)
+
+- The description property is a public property. We can omit the keyword public when using public 
+    properties and methods.
+-   Code completion does not work for private properties and methods. If the property had been declared
+    private, then the Angular Language Service and the template would not have been able to recognize it.
+
+____________________________________________________________________________________________________________
+
+# Material Icon Theme:
+
+- VSCode has a built-in set of icons to display different types of files in a project. The Material Icon 
+    Theme extension provides additional icons that conform to the Material Design guidelines by Google;
+    a subset of this collection targets Angular-based artifacts:
+
+- Using this extension, you can easily spot the type of Angular files in a project, such as components, 
+    and increase developer productivity, especially in large projects with many files.
+    (see materialIconTheme.png)
+
+_____________________________________________________________________________________________________________
+
+# EditorConfig:
+
+-  VSCode editor settings, such as indentation or spacing, can be set at a user or project level.
+    EditorConfig can override these settings using the .editorconfig configuration file, which can be 
+    found in the root folder of an Angular CLI project:
+    (.editorconfig)
+
+        # Editor configuration, see https://editorconfig.org
+        root = true
+
+        [*]
+        charset = utf-8
+        indent_style = space
+        indent_size = 2
+        insert_final_newline = true
+        trim_trailing_whitespace = true
+
+        [*.ts]
+        quote_type = single
+        ij_typescript_use_double_quotes = false
+
+        [*.md]
+        max_line_length = off
+        trim_trailing_whitespace = false
+
+    -> You can define unique settings in this file to ensure the consistency of the coding style across 
+        your team.

@@ -1,0 +1,21 @@
+Components:
+
+- Files whose names start with app.component constitute an Angular component. 
+- A component in angular controls part of web page by orchestrating the interaction of the presentational
+    logic with the HTML content of the page, called template.
+- Each Angular application has a main HTML file, named index.html, that exists inside the src folder and
+    contains the following <body> HTML element:
+
+    <body>
+        <app-root></app-root>
+    </body>
+
+    -> The <app-root> tag is used to identify the main component of the application and acts as a 
+        container to display its HTML content.
+    ->  It instructs Angular to render the template of the main component inside that tag.
+    -> When the Angular CLI builds an Angular application, it parses the index.html file and identifies 
+        HTML tags inside the <body> element. An Angular application is always rendered inside the 
+        <body> element and comprises a tree of components. When the Angular CLI finds a tag that is 
+        not a known HTML element, such as <app-root>, it starts searching through the components of 
+        the application tree.   
+        But how does it know where to start?

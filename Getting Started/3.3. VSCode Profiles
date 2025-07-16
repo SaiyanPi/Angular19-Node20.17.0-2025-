@@ -1,0 +1,23 @@
+VSCode Profiles:
+
+- VSCode Profiles allows us to customize the following aspects of the VSCode editor:
+    • Settings: The configuration settings of VSCode
+    • Keyboard shortcuts: Shortcuts to execute VSCode commands with the keyboard 
+    • Snippets: Reusable template code snippets
+    • Tasks: Tasks that automate the execution of scripts and tools directly from VSCode
+    • Extensions: Tools that enable us to add new capabilities in VSCode, such as languages, 
+                    debuggers, and linters
+
+- Profiles can also be shared, which helps us maintain a consistent development setup and work
+    flow across our team. VSCode contains a set of built-in profiles, including one for Angular,
+    that we can further customize according to our development needs. To install the Angular
+    profile:
+
+    1) Click the Manage button represented by the gear icon at the bottom of the left sidebar in 
+        VSCode and select the Profiles option.
+    2) Click on the arrow of the New Profile button and select the From Template | Angular option.
+    3) Click the gear button if you want to select a custom icon for your profile.
+    4) Click the Create button to create your profile.
+
+- VSCode will automatically apply the new profile after it has been created successfully.
+    In the following sections, we will explore some of the extensions in the VSCode Angular profile.
