@@ -1,0 +1,55 @@
+Arrow functions:
+
+- In JavaScript, we can create functions in an alternate way called arrow functions. 
+- The purpose of an arrow function is to simplify the general function syntax and provide a bulletproof
+    way to handle the function scope, which is traditionally handled by the this object.
+    Consider the following example, which calculates a product discount given its price:
+
+        const discount = (price) => {
+            return (price / 100) * 10 ; 
+        };
+
+    The preceding code does not have a function keyword, and the function body is defined by an arrow (=>).
+    Arrow functions can be simplified further using the following best practices:
+
+    • Omit the parentheses in the function parameters when the signature contains one parameter only.
+    • Omit the curly braces in the function body and the return keyword if the function has only one
+        statement
+
+    The resulting function will look much simpler and easier to read:
+        
+        const discount = price => (price / 100) * 10;
+
+- Scope Handling:
+    Let’s explain now how arrow functions are related to scope handling. The value of the this object
+    can point to a different context, depending on where we execute a function.
+    When we use it inside a callback, we lose track of the upper context, which usually leads us to use
+    conventions such as assigning its value to an external variable. Consider the following function,
+    which logs a product name using the native setTimeout function:
+
+        function createProduct(name) {
+            this.name = name;
+            this.getName = function() {
+                setTimeout(function() {
+                    console.log('Product name is:', this.name);
+                });
+            }
+        }
+
+    Execute the getName function using the following snippet:
+
+        const product = new createProduct('Monitor');
+        product.getName();
+
+    Console output: Product name is: undefined
+    
+    -> The preceding snippet will not print the Monitor product name as expected because our code 
+        modifies the scope of the this object when evaluating the function inside the setTimeout
+        callback.
+    -> To fix it, convert the setTimeout function to use an arrow function instead:
+
+        setTimeout(() => {
+            console.log('Product name is:', this.name);
+        });
+
+        Console output: Product name is: Monitor

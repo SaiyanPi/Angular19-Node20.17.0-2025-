@@ -1,0 +1,53 @@
+Function parameters:
+
+- Functions in JavaScript are the processing machines we use to analyze input, digest information,
+    and apply the necessary transformations to data. They use parameters to provide data for 
+    transforming the state of our application or returning an output that will be used to shape our 
+    application’s business logic or user interactivity.
+
+- We can declare a function to accept default parameters so that the function assumes a default 
+    value when it’s not explicitly passed upon execution:
+
+        function addtoCart(productId, quantity = 1) {
+            const product = {
+                id: productId,
+                qty: quantity
+            };
+        }
+    
+    -> If we do not pass a value for the quantity parameter while calling the function, we will get a 
+        product object with qty set to 1.
+
+NOTE 
+Default parameters must be defined after all required parameters in the function signature
+
+- One significant advantage of JavaScript flexibility when defining functions is accepting an unlimited,
+    non-declared array of parameters called rest parameters. Essentially, we can define an 
+    additional parameter at the end of the arguments list prefixed by an ellipsis (…):
+
+        function addProduct(name, ...categories) {
+            const product = {
+                name,
+                categories: categories.join(',')
+            };
+        }
+    
+    -> In the preceding function, we use the join method to create a comma-separated string from the 
+        categories parameter. We pass each parameter separately when calling the function:
+
+        addProduct('Keyboard', 'Computing', 'Peripherals');
+
+- Rest parameters are beneficial when we don’t know how many arguments will be passed as parameters.
+    The name property is also set using another useful feature of the JavaScript language. 
+    Instead of setting the property in the product object explicitly, we used the property name
+    directly. The following snippet is equivalent to the initial declaration of the addProduct function:
+
+        function addProduct(name, ...categories) {
+            const product = {
+                name: name, // PARAMETER NAME MUST MATCH THE PROPERTY NAME OF AN OBJECT
+                categories: categories.join(',')
+            };
+        }
+
+    -> The shorthand syntax for assigning property values can be used only when the parameter name 
+        matches the property name of an object.

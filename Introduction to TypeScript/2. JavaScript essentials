@@ -1,0 +1,15 @@
+JavaScript essentials:
+
+- JavaScript is a programming language that contains many features for building web applications. 
+    In this section, we will revisit and refresh our knowledge of some of the most basic ones as they
+    are directly correlated with TypeScript and Angular development.
+
+- TypeScript is a syntactic superset of JavaScript, meaning that it adds features such as types,
+    interfaces, and generics. We will look at the following JavaScript features in more detail:
+    • Variable declaration
+    • Function parameters
+    • Arrow functions
+    • Optional chaining
+    • Nullish coalescing
+    • Classes
+    • Modules

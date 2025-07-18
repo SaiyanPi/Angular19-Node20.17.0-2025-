@@ -1,0 +1,98 @@
+Variable declaration:
+
+- Traditionally, JavaScript developers have used the keyword var to declare objects, variables, and 
+    other artifacts. The reason was that the old semantics of the language only had a function scope 
+    where variables were unique within its context:
+
+        function myFunc(){
+            var x = 0;
+        }
+    
+    In the preceding function, no other variable can be declared as x inside its body. If you do declare 
+    one, then you effectively redefine it.
+    However, there are cases in which scoping is not applied, such as in loops:
+
+        var x =20;
+        for (var x = 0; x <10; x++){
+
+        }
+    
+    In the preceding snippet, the x variable outside the loop will not affect the x variable inside be
+    cause they have a different scope.
+    To overcome the scope limitation, JavaScript introduced the let keyword:
+
+        function myFunc() {
+            let x = 0;
+            x = 10;
+        }
+
+        -> The let keyword allows us to change the reference of a variable multiple times in the code.
+
+- Another way to define variables in JavaScript is the const keyword, which indicates that a variable 
+    should never change. As a code base grows, changes may happen by mistake, which can be costly. 
+    The const keyword can prevent these types of mistakes. Consider the following code snippet:
+
+        const price = 100;
+        price = 50;
+
+    If we try to execute it, it will throw the following error message:
+
+        TypeError: Assignment to constant variable.
+
+    The preceding error will come up only at the top level. You need to be aware of this if you declare 
+    objects as constants, like so:
+
+        const product = { price: 100 };
+        product.price = 50; 
+    
+    Declaring the product variable as a constant does not prevent the entire object but rather its 
+    reference from being edited. So, the preceding code is valid. If we try to change the reference
+    of the variable like:
+        
+        const product = { price: 100 };
+        product = { price: 50 };
+    
+    Then, we will get the same type of error as before.
+
+- It is preferable to use the const keyword when we are sure that the properties of an object will 
+    not change during its lifetime because it prevents the object from accidentally changing.
+
+- When we want to combine variables, we can use the spread parameter syntax. A spread parameter 
+    uses the ellipsis (…) to expand the values of a variable:
+
+        const category = 'Computing';
+        const categories = ['Gaming', 'Multimedia'];
+        const productCategories = [...categories, category];
+
+    In the preceding snippet, we combine the categories array and the category item to create a 
+    new array. The categories array still contains two items, whereas the new array contains three. 
+    The current behavior is called immutability, which means not changing a variable but creating 
+    a new one that comes from the original.
+
+- We can also use a spread parameter on objects:
+
+        const product = {
+            name: 'Keyboard',
+            price: 75
+        };
+        const newProduct = {
+            ...product,
+            price: 100,
+            category: 'Computing'
+        };
+    
+    In the preceding snippet, we didn’t change the original product object but created a merge between
+    the two. The value of the newProduct object will be:
+
+        {
+            name: 'Keyboard',
+            price: 100,
+            category: 'Computing'
+        }
+
+    The newProduct object takes the properties from the product object, adds new values on top of 
+    it, and replaces the existing ones. Thta's why 'price: 100'.
+
+NOTE
+    An object is not immutable if its properties can be changed or its properties are an 
+    object whose properties can be changed.

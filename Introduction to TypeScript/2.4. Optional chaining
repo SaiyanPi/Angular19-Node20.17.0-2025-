@@ -1,0 +1,44 @@
+Optional chaining:
+
+- Optional chaining is a powerful feature that can help us with refactoring and simplifying our code.
+    In a nutshell, it can guide our code to ignore the execution of a statement unless a value has 
+    been provided somewhere in that statement. Let’s look at optional chaining with an example:
+
+1)
+        const getOrder = () => {
+            return {
+                product: {
+                    name: 'Keyboard'
+                }
+            };
+        };
+
+    -> we define a getOrder function that returns the product of a particular order.
+
+2) Next, let’s fetch the value of the product property, making sure that an order exists before 
+    reading it:
+
+        const order = getOrder();
+        if (order !== undefined) {
+            const product = order.product;
+            console.log("Product ", product)
+        }
+
+        Console output: Product  { name: 'Keyboard' }
+    
+    -> previous snippet is a precautionary step in case our object has been modified. If we do not 
+        check the object and it has become undefined, JavaScript will throw an error.
+
+3) However, we can use optional chaining to improve the previous statement:
+
+        const order = getOrder();
+        const product = order?.product;
+
+    -> The character ? after the order object ensures that the product property will be accessed only 
+        if the object has a value.
+    Optional chaining also works in more complicated scenarios, such as:
+
+        const name = order?.product?.name;
+    
+    -> In the preceding snippet, we also check if the product object has a value before accessing its 
+        name property.
