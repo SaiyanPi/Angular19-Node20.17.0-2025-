@@ -1,0 +1,38 @@
+Modules:
+
+- As our applications scale and grow, there will be a time when we need to organize our code better 
+    and make it sustainable and reusable. Modules are a great way to accomplish these tasks, so let’s 
+    look at how they work and how we can implement them in our application.
+
+- In the preceding section, we learned how to work with classes. Having both classes in the same 
+    file is not scalable, and maintaining it won’t be easy. Imagine how much code you must process 
+    to make a simple change in one of the classes. 
+
+- Modules allow us to separate our application code into single files, enforcing the Single Responsibility
+    Pattern (SRP). Each file is a different module concerned with a specific feature or functionality.
+
+
+🧠🚀  
+A good indication to split a module into multiple files is when the module starts to occupy different
+domains. For example, a products module cannot contain logic for customers.
+
+- Let’s refactor the code described in the previous section so that the User and Customer classes 
+    belong to separate modules:
+
+    1) Open VSCode and create a new JavaScript file named user.js.
+    2) Enter the contents of the User class and add the export keyword in the class definition. 
+        The export keyword makes the module available to other modules and forms the public API
+        of the module.
+    3) Create a new JavaScript file named customer.js and add the contents of the Customer class.
+        The Customer class cannot recognize the User class because they are in different files.
+    4) Import the User class into the customer.js file by adding the following statement at the 
+        top of the file:
+
+            import { User } from './user';
+        
+        -> We use the import keyword and the relative path of the module file without the extension 
+            to import the User class.
+        -> If a module exports more than one artifact, we place them inside curly braces separated by
+            a comma, such as:
+
+            import { User, UserPreferences } from './user';

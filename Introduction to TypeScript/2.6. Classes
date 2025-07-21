@@ -1,0 +1,65 @@
+Classes:
+
+- JavaScript classes allow us to structure our application code and create instances of each class.
+- A class can have property members, a constructor, methods, and property accessors. The following 
+    code snippet illustrates what a class looks like:
+
+        class User {
+            firstName = '';
+            lastName = '';
+            #isActive = false;
+            constructor(firstName, lastName, isActive = true) {
+                this.firstName = firstName;
+                this.lastName = lastName;
+                this.#isActive = isActive;
+            }
+            getFullname() {
+                return `${this.firstName} ${this.lastName}`;
+            }
+            
+            get active() {
+                return this.#isActive;
+            }
+        }
+    
+
+1. Member:
+    - The User class contains the firstName, lastName, and #isActive members.
+    - Class members will only be accessible from within the class itself.
+    - Instances of the User class will have access only to the public properties firstName and lastName. 
+    - The #isActive property will not be available because it is private, as denoted by the # character
+        in front of the property name. 
+
+2. Constructor:
+    - The constructor is executed when we create an instance of the class.
+    - It is usually used to initialize the class members inside it with the parameters provided in 
+        the signature.
+    - We can also provide default values for parameters such as the isActive parameter.
+
+3. Methos:
+    - A method represents a function and may return a value, such as the getFullname method, which
+        constructs the full name of a user.
+    - It can also be defined as private, similar to class members.
+
+4. Property accessor:
+    - A property accessor is defined by prefixing a method with the set keyword to make it writable and
+        the get keyword to make it readable, followed by the property name we want to expose. 
+    - The active method is a property accessor that returns the value of the #isActive member.
+
+
+- A class can also extend members and functionality of other classes. We can make a class inherit 
+    from another by appending the extends keyword to the class definition followed by the class we want
+    to inherit:
+
+        class Customer extends User {
+            taxNumber = '';
+            constructor(firstName, lastName) {
+                super(firstName, lastName);
+            }
+        }
+    
+    -> In the preceding snippet, the Customer class extends the User class, which exposes firstName 
+        and lastName properties. Any instance of the Customer class can use those properties by default.
+    -> We can also override methods from the User class by appending a method with the same name.
+    -> The constructor is required to call the super method, which points to the constructor of the 
+        User class.

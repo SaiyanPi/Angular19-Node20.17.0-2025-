@@ -1,0 +1,45 @@
+What is TypeScript?
+
+- Transforming small web applications into thick monolithic clients was impossible due to the 
+    limitations of earlier JavaScript versions. In a nutshell, large-scale JavaScript applications
+    suffered from serious maintainability and scalability problems as soon as they grew in size and
+    complexity. This issue became more relevant as new libraries and modules required seamless
+    integration into our applications. The lack of proper mechanisms for interoperability led to
+    cumbersome solutions.
+- To overcome those difficulties, Microsoft built a superset of the JavaScript language that would 
+    help build enterprise applications with a lower error footprint using static type checking, better 
+    tooling, and code analysis.
+
+- TypeScript 1.0 was introduced in 2014. It ran ahead of JavaScript, implemented the same features,
+    and provided a stable environment for building large-scale applications. It introduced optional
+    static typing through type annotations, thereby ensuring type checking at compile time and catching
+    errors early in the development process. Its support for declaration files also enabled developers
+    to describe the interface of their modules so that other developers could better integrate them
+    into their code workflow and tooling.
+
+🔗
+The official TypeScript website can be reached at https://www.typescriptlang.org.
+It contains extensive language documentation and a playground that gives us 
+access to a quick tutorial to get up to speed with the language in no time. It includes 
+some ready-made code examples that cover some of the most common traits of the 
+language.
+
+- As a superset of JavaScript, one of the main advantages of embracing TypeScript in your next 
+    project is the low entry barrier. If you know JavaScript, you are pretty much all set since all the 
+    additional features in TypeScript are optional. You can pick and introduce any of them to achieve 
+    your goal. Overall, there is a long list of solid arguments for using TypeScript in your next project, 
+    and all apply to Angular.
+    Here is a short rundown of some of the advantages:
+
+    • Annotating your code with types ensures the consistent integration of your different code 
+        units and improves code readability and comprehension.
+    • The built-in type-checker analyzes your code at compile time and helps you prevent errors 
+        before executing your code.
+    • The use of types ensures consistency across your application. Combined with the previous 
+        two, the overall code error footprint is minimized in the long run.
+    • Interfaces ensure the smooth and seamless integration of your libraries in other systems 
+        and code bases.
+    • Language support across different IDEs is amazing, and you can benefit from features 
+        such as highlighting code, real-time type checking, and automatic compilation at no cost.
+    • The syntax is familiar to developers from other OOP-based backgrounds, such as Java, 
+        C#, and C++.

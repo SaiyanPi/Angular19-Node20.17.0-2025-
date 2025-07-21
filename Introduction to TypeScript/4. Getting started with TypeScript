@@ -1,0 +1,65 @@
+Getting started with TypeScript
+
+- The TypeScript language is an npm package that can be installed from the npm registry using 
+    the following command:
+
+        npm install -g typescript
+    
+    In the preceding command, we chose to install TypeScript globally in our system so that we 
+    can use it from any path in our development environment. Let’s see how we can use TypeScript 
+    through a simple example:
+
+    1) Open VSCode and select File | New File… from the main menu options.
+    2) Enter app.ts in the New File… dialog and press Enter.
+    3) Select the path where you want to create the new file. VSCode will then open that file 
+        inside the editor.
+    4) Type the following snippet into the app.ts file:
+        
+            const title = 'Hello TypeScript!';
+
+        -> Although we have created a TypeScript file, the preceding snippet is valid JavaScript code. 
+        -> Recall that TypeScript is a superset of JavaScript that provides syntactic sugar through 
+            its typing system. However, writing plain JavaScript code with TypeScript does not give 
+            us any clear benefit.
+    5) Open a terminal window and run the following command to compile the TypeScript file into
+        JavaScript:
+
+            cmd: tsc app.ts
+        
+        -> The preceding command initiates a process called transpilation performed by the tsc 
+            executable, a compiler that is at the core of the TypeScript language. We need to compile 
+            TypeScript code into JavaScript because browsers do not currently support TypeScript 
+            out of the box.
+        -> The TypeScript compiler supports extra configuration options that we can pass to the 
+            tsc executable through the terminal window or a configuration file. The complete list 
+            of available compiler options can be found at https://www.typescriptlang.org/docs/
+            handbook/compiler-options.html.
+    6) The transpilation process will create an app.js file in the same folder as the TypeScript file.
+        The new file will contain the following code:
+
+            var title = 'Hello TypeScript!';
+        
+        -> Since we have not used any specific TypeScript feature yet, the preceding snippet looks 
+            almost identical to the original except for the variable declaration.
+        -> The transpilation process replaced the const keyword with the var keyword because the 
+            TypeScript compiler uses an old JavaScript version by default. We can change that by 
+            specifying a target in the tsc command:
+
+                cmd: tsc app.ts --target es2022
+            
+            *  we specified es2022, which represents JavaScript compatible with the ECMAScript 2022
+                (ES2022) specification. We will use es2022 JavaScript version throughout this repository.
+        
+🧠🚀
+To make TypeScript copiler use the specific JavaScript version by default
+i) Generate tsconfig.json
+
+    cmd: tsc --init
+
+ii) Edit tsconfig.json: Find the compilerOptions section and set:
+
+    {
+        "compilerOptions": {
+            "target": "es2022"
+        }
+    }

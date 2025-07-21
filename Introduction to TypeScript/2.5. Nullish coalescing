@@ -1,0 +1,16 @@
+Nullish coalescing:
+
+- Nullish coalescing is related to providing a default value when a variable is not set.
+    Consider the following example, which assigns a value to the quantity variable only if the qty
+    variable exists:
+
+        const quantity = qty ? qty : 1;
+    
+    -> The previous statement is called a ternary operator and operates like a conditional statement. 
+    -> If the qty variable does not have a value, the quantity variable will be initialized to the
+        default value of 1.
+    -> We can rewrite the previous expression using nullish coalescing as:
+        
+        const quantity = qty ?? 1;
+
+    -> Nullish coalescing helps us make our code readable and smaller.
