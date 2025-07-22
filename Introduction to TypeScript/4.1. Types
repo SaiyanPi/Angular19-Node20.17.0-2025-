@@ -1,0 +1,259 @@
+Types:
+
+
+- Working with TypeScript or any other coding language means working with data, and this data 
+    can represent different sorts of content, called types. Types are used to represent the fact that 
+    data can be text, an integer value, or an array of these value types, among others.
+
+- In JavaScript, any given variable could assume (or return, in the case of functions) 
+    any value. Sometimes, this leads to errors and exceptions in our code because of type collisions 
+    between what our code returned and what we expected to return type-wise. However, statically 
+    typing our variables gives our IDE and us a good picture of what kind of data we should find in 
+    each code instance. 
+
+-----------------------------------------------------------------------------------------------------------
+
+1. String:
+- One of the most widely used primitive types is the string, which populates a variable with text:
+    
+        const product: string = 'Keyboard';
+
+    -> The type is defined by adding a colon and the type name next to the variable.
+_____________________________________________________________________________________________________________
+
+2. Boolean:
+- The boolean type defines a variable that can have a value of either true or false:
+        
+        const isActive: boolean = true;
+    
+    -> The result of a boolean variable represents the fulfillment of a conditional statement.
+_______________________________________________________________________________________________________________
+
+3. Number:
+- The number type is probably the other most widely used primitive data type, along with string 
+    and boolean:
+
+        const price: number = 100;
+    
+    -> We can use the number type to define a floating-point number and hexadecimal, decimal, binary, 
+        and octal literals.
+_________________________________________________________________________________________________________________
+
+4. Array:
+- The array type defines a list of items that contain a certain type only.
+- Handling exceptions that arise from errors, such as assigning wrong member types in a list, can now be
+    easily avoided with this type. We can define arrays using the square bracket syntax or the Array
+    keyword:
+
+        const categories: string[] = ['Computing', 'Multimedia'];
+        const categories: Array<string> = ['Computing', 'Multimedia'];
+
+    -> If we try to add a new item to the categories array with a type other than string, TypeScript will 
+        throw an error, ensuring our typed members remain consistent and that our code is error-free.
+___________________________________________________________________________________________________________________
+
+5. any:
+- In all preceding cases, typing is optional because TypeScript is smart enough to infer the data 
+    types of variables from their values with a certain level of accuracy.
+- However, if it is not possible, the typing system will automatically assign the dynamic any type 
+    to the loosely typed data at the cost of reducing type checking to a bare minimum.
+- Additionally, we can add the any type in our code manually when it is hard to infer the data type from
+    the information we have at any given point. The any type includes all the other existing types, so we 
+    can type any data value with it and assign any value to it later:
+
+        let order: any;
+        function setOrderNo() {
+            order = '0001';
+        }
+
+    ✨
+    TypeScript contains another type, similar to the any type, called unknown. A variable 
+    of the unknown type can have a value of any type. The main difference is that Type
+    Script will not let us apply arbitrary operations to unknown values, such as calling 
+    a method, unless we perform type checking first.
+___________________________________________________________________________________________________________________
+
+6. Custom Types:
+- In TypeScript, you can come up with your own type if you need to by using the type keyword in 
+    the following way:
+
+        type Categories = 'computing' | 'multimedia';
+    
+    We can then create a variable of a specific type as follows:
+ 
+        const category: Categories = 'computing';
+
+    -> The preceding code is perfectly valid as computing is one of the allowed values and works as 
+        intended. Custom types are an excellent way to add types with a finite number of allowed values.
+
+- When we want to create a custom type from an object, we can use the keyof operator. The keyof 
+    operator enables us to iterate over the properties of an object and extract them into a new type:
+
+        type Category = {
+            computing: string;
+            multimedia: string;
+        };
+        type CategoryType = keyof Category;
+    
+    -> In the preceding snippet, the CategoryType produced the same result as the Categories type.
+    -> We will learn how we can use the keyof operator to iterate over object properties dynamically in
+        future chapter.
+______________________________________________________________________________________________________________________
+
+7. Functions:
+- Functions in TypeScript are not that different from regular JavaScript, except that, like everything 
+    else in TypeScript, they can be annotated with static types. Thus, they improve the compiler by 
+    providing the information it expects in their signature and the data type it aims to return, if any.
+
+    Regular function in TypeScript; 
+
+        function getProduct(): string {
+            return 'Keyboard';
+        }
+    
+    -> In the preceding snippet, we annotated the returned value of the function by adding the string 
+        type to the function declaration.
+    -> We can also add types in function parameters, such as:
+
+        function getFullname(firstName: string, lastName: string): string {
+            return `${this.firstName} ${this.lastName}`;
+        }
+
+✨
+As mentioned in the previous section, the TypeScript compiler is smart enough to 
+infer types when no annotation is provided. In both preceding functions, we could 
+omit the type because the compiler could infer it from the arguments provided and 
+the returned statements.
+
+- When a function does not return a type, we can annotate it using the void type:
+        
+        function printFullname(firstName: string, lastName: string): void {
+            console.log(`${this.firstName} ${this.lastName}`);
+        }
+
+- In section 2.2. Function parameters of JavaScript, we learned how to use default and rest parameters in
+    JavaScript functions. TypeScript extends function's capabilities by introducing optional parameters.
+    Parameters are defined as optional by adding the character ? after the parameter name:
+
+        function addtoCart(productId: number, quantity?: number) {
+            const product = {
+                id: productId,
+                qty: quantity ?? 1
+            };
+        }
+
+    -> In the preceding function, we have defined quantity as an optional parameter.
+    -> We have also used the nullish coalescing syntax to set the qty property of the product object if
+        quantity is not passed.
+    -> We can invoke the addToCart function by passing only the productId parameter or both.
+
+🧠🚀
+Optional parameters should be placed last in a function signature.
+______________________________________________________________________________________________________________________
+
+8. Classes:
+-  Consider the User class(from 2.7. JavaScript Modules section) that we defined in the user.js file:
+
+        export class User {
+            firstName = ""; // public property member
+            lastName = "";
+            #isActive = false; // private property member
+
+            // constructor
+            constructor(firstName, lastName, isActive = true) {
+                this.firstName = firstName;
+                this.lastName = lastName;
+                this.#isActive = isActive;
+            }
+
+            // method/function
+            getFullname() {
+                return `${this.firstName} ${this.lastName}`;
+            }
+
+            // property accessor
+            get active() {
+                return this.#isActive;
+            }
+        }
+
+    We will take simple, small steps to add types throughout the class:
+
+    1) Convert the file to TypeScript by renaming it user.ts.
+    2) Add the following types to all class properties:
+
+        firstName: string = '';
+        lastName: string = '';
+        private isActive: boolean = false;
+
+        -> we also used the private modifier to define the isActive property as private.
+    3) Modify the constructor by adding types to parameters:
+
+        constructor(firstName: string, lastName: string, isActive: boolean = true){
+            this.firstName = firstName;
+            this.lastName = lastName;
+            this.isActive = isActive;
+        }
+
+    🚀🧠
+    Alternatively, we could omit class properties and have the constructor create them automatically by
+    declaring parameters as private:
+        
+        constructor(private firstName: string, private lastName: string, private isActive: boolean = true)
+        {}
+
+    4) Finally, add types in the active property accessor and the getFullname method: 
+
+        getFullname(){
+            return `${this.firstName} ${this.lastName}`;
+        }
+
+        get active(){
+            return this.isActive;
+        }
+
+- Another great feature of TypeScript related to classes is the instanceOf keyword. It allows us to 
+    check the class instance type and provides the correct properties according to the related class.
+    Let’s explore it with the Customer class defined in the customer.js file:
+
+    a) Convert the file to TypeScript by renaming it customer.ts.
+    b) Rewrite the Customer class as follows to add types:
+
+        class Customer extends User {
+            taxNumber: number = 3;
+            
+            constructor(firstName: string, lastName: string) {
+                super(firstName, lastName);
+            }
+        
+        }
+
+    c) Create an object outside of the class that can be of both the User and Customer type:
+
+        const account: User | Customer = undefined;
+
+    d) We can now use the instanceOf keyword to access different properties of the account 
+        object according to the underlying class:
+
+        if (account instanceof Customer) {
+            const taxNo = account.taxNumber;
+        } else {
+            const name = account.getFullname();
+        }
+
+        -> since account is a instance of both User and Customer class, we can access taxNumver property
+            of a Customer class in if condition and access getFullname method of a User class in else
+            condition.
+        -> for a case like:
+
+            if (account instanceof Customer) {
+                const taxNo = account.taxNumber;
+            } else {
+                const name = account.taxNumber;
+            }
+
+            TypeScript is smart enough to understand that the account object in the else statement 
+            does not have a taxNumber property because it is of the User type. Even if we try to access 
+            it by mistake, VSCode will throw an error:
+
+                Property 'taxNumber' does not exist on type 'User'.ts(2339)
