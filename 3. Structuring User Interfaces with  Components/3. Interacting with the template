@@ -1,0 +1,11 @@
+Interacting with the template:
+
+- Creating an Angular component using the Angular CLI involves generating a set of accompanying files.
+    One of these files is the component template containing the HTML content displayed on the page.
+    
+- In this section, we will explore how to display and interact with the template through the following
+    topics:
+    • Loading the component template
+    • Displaying data from the component class
+    • Styling the component
+    • Getting data from the template

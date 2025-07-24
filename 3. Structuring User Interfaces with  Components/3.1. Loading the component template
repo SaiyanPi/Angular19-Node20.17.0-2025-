@@ -1,0 +1,44 @@
+Loading the component template:
+
+- We learned that Angular uses the selector property to load the component in an HTML template. 
+    A typical Angular application loads the template of the main component at application startup.
+
+- To load a component we have created, such as the product list component, we must add its 
+    selector inside an HTML template. For this scenario, we will load it in the template of the main 
+    application component:
+
+1) Open the app.component.html file and move the contents of the <style> tag in the app.component.css
+    file.
+2) Modify the app.component.html file by adding the <app-product-list> tag inside the <div> tag with
+    the content class:
+
+        <div class="content">
+            <app-product-list></app-product-list>
+        </div>
+
+3) Run the ng serve command in a terminal window to start the Angular application. The command will fail,
+    stating the following error:
+
+        X [ERROR] NG8001: 'app-product-list' is not a known element:
+
+    -> This error is caused because the main application component does not recognize the product list
+        component yet.
+
+4) Open the app.component.ts file and import the ProductListComponent class:
+
+        import { Component } from '@angular/core';
+        import { RouterOutlet } from '@angular/router';
+    👉  import { ProductListComponent } from './product-list/product-list.component';
+
+        @Component({
+            selector: 'app-root',
+            imports: [RouterOutlet, 👉 ProductListComponent],
+            templateUrl: './app.component.html',
+            styleUrl: './app.component.css'
+        })
+        export class AppComponent {
+            title = 'Chapter3App';
+        }
+
+    After the application has been built successfully, navigate to http://localhost:4200 to preview 
+    it. The web page displays the static text from the template of the product list component.

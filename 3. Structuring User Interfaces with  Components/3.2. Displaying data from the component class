@@ -1,0 +1,87 @@
+Displayiong data from the component class:
+
+- We have already stumbled upon interpolation to display a property value as text from the component
+    class to the template:
+
+        <h1>Hello, {{ title }}</h1>
+
+- An alternative way to perform interpolation is to bind the title property to the innerText property
+    of the <h1> HTML element, a method called property binding:
+
+        <h1 [innerText]="title"></h1>
+    
+    -> we bind to the DOM property of an element and not its HTML attribute, as it looks at first sight.
+    -> The property inside square brackets is called the target property and is the property of the DOM
+        element into which we want to bind.
+    -> The variable on the right is called the template expression and corresponds to the title property
+        of the component.
+
+🚨
+When we open a web page, the browser parses the HTML content of the page and converts it into a tree
+structure, the DOM. Each HTML element of the page is converted into an object called a node, which
+represents part of the DOM. A node defines a set of properties and methods representing the object API.
+The innerText is such a property and is used to set the text inside of an HTML element.
+
+🧠🚀DOM vs HTML
+DOM(Document Object Model)
+- DOM is a model of objects that represents the structure of the documents.
+- programming API for HTML and XML documents.
+- it defines the logical structure of documents and the way a document is accessed and manipulated.
+- essentially a tree of objects in memory.
+- following is the representation of the following HTML table in DOM
+
+                             <TABLE>
+                                |
+                                v
+                              <ROWS>
+                              /    \
+                             v      v
+                          <TR>      <TR>
+                         /   \      /   \
+                        v     v    v     v
+                     <TD>    <TD> <TD>   <TD>
+                      |       |     |      |
+                      v       v     v      v
+                   program   code  .net   angular
+
+
+HTML(Hypertext Markup Language)
+- markup language we use to represent DOM in text.
+
+                        <TABLE>
+                            <ROWS>
+                                <TR>
+                                    <TD>program</TD>
+                                    <TD>code</TD>
+                                </TR>
+                                <TR>
+                                    <TD>.net</TD>
+                                    <TD>angular</TD>
+                                </TR>
+                            </ROWS>
+                        </TABLE>
+
+                        
+- To better understand how the Angular templating mechanism works, we first need to understand how
+    Angular interacts with attributes and properties.
+    IT DEFINES HTML ATTRIBUTES TO INITIALIZE A DOM PROPERTY AND THEN USES DATA BINDING TO INTERACT
+    DIRECTLY WITH THE PROPERTY.
+
+- To set the attribute of an HTML element, we use the attr. syntax through property binding followed
+    by the attribute name. For example, to set the aria-label accessibility attribute of an HTML element,
+    we would write the following:
+
+        <p [attr.aria-label]="myText"></p>
+
+    -> myText is a property of an Angular component. 
+    -> Remember that property binding interacts with the properties of an Angular component.
+        Therefore, if we wanted to set the value of the innerText property directly to the HTML,
+        we would write the text value surrounded by single quotes:
+
+        <h1 [innerText]="'My title'"></h1> 
+
+        In this case, the value passed to the innerText property is static text, not a component property.
+
+- Property binding in the Angular framework binds property values from the component TypeScript 
+    class into the template. As we will see next, the control flow syntax is suitable for coordinating 
+    how those values will be displayed in the template

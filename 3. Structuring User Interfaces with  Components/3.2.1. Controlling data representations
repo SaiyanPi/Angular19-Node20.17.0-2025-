@@ -1,0 +1,103 @@
+Controlling data representations:
+
+- The new control flow syntax introduced in the latest versions of the Angular framework allows us 
+    to manipulate how data will be represented in the component template. It features a set of 
+    built-in blocks that add the following capabilities to the Angular template syntax:
+    • Displaying data conditionally
+    • Iterating through data
+    • Switching through templates
+
+
+# Displaying data conditionally:
+
+- The @if block adds or removes an HTML element in the DOM based on evaluating an expression.
+    If the expression evaluates to true, the element is inserted into the DOM. Otherwise, the element 
+    is removed from the DOM. 
+
+    1) Run the following command to create an interface for products:
+        
+            cmd: ng generate interface product
+    
+    2) Open the product.ts file and add the following properties:
+
+            export interface Product {
+                id: number;
+                title: string;
+            }
+
+        -> The Product interface defines the structure of a Product object.
+    
+    3)  Open the app.component.css file and move the CSS styles that contain the h1 and p selectors in
+        the product-list.component.css file.
+
+    4) Open the product-list.component.ts file and create an empty products array:
+
+            import { Component } from '@angular/core';
+        👉  import { Product } from '../product';
+
+            @Component({
+                selector: 'app-product-list',
+                imports: [],
+                templateUrl: './product-list.component.html',
+                styleUrl: './product-list.component.css'
+            })
+            export class ProductListComponent {
+             👉 products: Product[] = [];
+            }
+
+        -> The products array will be used to store a list of Product objects.
+
+    5) Open the product-list.component.html file and replace its content with the following snippet: 
+
+            @if (products.length > 0) {
+                <h1>Products ({{ products.length }})</h1>
+            }
+
+        -> The <h1> element in the preceding HTML template is rendered on the screen when the products
+            array is not empty. Otherwise, it is removed completely.
+
+    6) The @if block behaves similarly to a JavaScript if statement. Thus, we can add an @else section in
+        the component template to execute custom logic when there are not yet any products:
+
+            @else {
+                <p>No products found!</p>
+            }
+
+    7) Run the ng serve command to preview the application so far:
+            
+            No product found!
+
+- The application we have built does not display any data because the products array is empty. 
+    In the following section, we will learn how to add and display product data on the product list 
+    component.
+
+    
+🧠🚀
+If we had an additional condition that we would like to evaluate, we could use an @else if section:
+
+    @if (products.length > 0) {
+        <h1>Products ({{products.length}})</h1>
+    } @else if (products.length === 100) {
+        <span>
+            Click <a>Load More</a> to see more products
+        </span>
+    } @else {
+        <p>No products found!</p>
+    }
+
+📝
+In applications built with older Angular versions where the control flow syntax is not available, you may
+notice the *ngIf syntax was used to display conditional data:
+
+    <h1 *ngIf="products.length > 0">
+        Products ({{products.length}})
+    </h1>
+
+The *ngIf is an Angular directive with the same behavior as the @if block. We will learn how to create custom
+Angular directives in the following chapter.
+However, it is highly recommended to use the @if block for the following reasons:
+    • Makes templates much more readable
+    • The syntax is closer to JavaScript and is easier to remember
+    • It is built into the framework and immediately available, which results in smaller bundle sizes
+You can find more information about *ngIf at https://angular.dev/guide/directives#adding-or-removing-an-element-with-ngif.
+

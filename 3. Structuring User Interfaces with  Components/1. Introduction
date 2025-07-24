@@ -1,0 +1,14 @@
+Structuring User Interfaces with Components:
+
+- So far, we have had the opportunity to take a bird’s-eye view of the Angular framework. We learned
+    how to create a new Angular application using the Angular CLI and how to interact with an Angular
+    component using template syntax. We also explored TypeScript, which will help us understand how to
+    write Angular code. 
+
+- In this chapter, we will learn about the following concepts:
+    • Creating our first component
+    • Interacting with the template
+    • Component inter-communication
+    • Encapsulating CSS styling
+    • Deciding on a change detection strategy
+    • Introducing the component lifecycle

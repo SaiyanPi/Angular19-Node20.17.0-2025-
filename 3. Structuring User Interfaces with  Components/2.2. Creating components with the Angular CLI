@@ -1,0 +1,57 @@
+Creating components with the Angular CLI:
+
+- In addition to the main application component, we can create other Angular components that provide
+    specific functionality to the application.
+
+- To create a new component in an Angular application, we use the ng generate command of the 
+    Angular CLI, passing the name of the component as a parameter. Run the following command 
+    inside the root folder of the current Angular CLI workspace:
+
+        cmd: ng generate component product-list
+
+    -> The preceding command creates a dedicated folder for the component named product-list that 
+        contains all the necessary files:
+        • The product-list.component.css file, which does not contain any CSS styles yet.
+
+        • The product-list.component.html file, which contains a paragraph element that displays
+            static text: <p>product-list works!</p>
+            
+        • The product-list.component.spec.ts file, which contains a unit test that checks if the 
+            component can be created successfully:
+
+            import { ComponentFixture, TestBed } from '@angular/core/testing';
+
+            import { ProductListComponent } from './product-list.component';
+
+            describe('ProductListComponent', () => {
+                let component: ProductListComponent;
+                let fixture: ComponentFixture<ProductListComponent>;
+
+                beforeEach(async () => {
+                    await TestBed.configureTestingModule({
+                        imports: [ProductListComponent]
+                    })
+                    .compileComponents();
+
+                    fixture = TestBed.createComponent(ProductListComponent);
+                    component = fixture.componentInstance;
+                    fixture.detectChanges();
+                });
+
+                it('should create', () => {
+                    expect(component).toBeTruthy();
+                });
+            });
+
+        • The product-list.component.ts file, which contains the presentational logic of our component:
+
+            import { Component } from '@angular/core';
+            @Component({
+                selector: 'app-product-list',
+                imports: [],
+                templateUrl: './product-list.component.html',
+                styleUrl: './product-list.component.css'
+            })
+            export class ProductListComponent {
+                
+            }

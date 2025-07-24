@@ -1,0 +1,23 @@
+Creating our first component:
+
+- Components are the basic building blocks of an Angular application. They control different web 
+    page parts called views, such as a list of products or an order checkout form. 
+    
+- They are responsible for the presentational logic of an Angular application, and they are organized
+    in a hierarchical tree of components that can interact with each other:
+
+                                    component
+                                    /       \
+                            component       component
+                            /       \       /       \
+                    component  component component  component
+
+- The architecture of an Angular application is based on Angular components. Each Angular component
+    can communicate and interact with one or more components in the component tree.
+
+- A component can simultaneously be a parent of some child components and a child of another parent
+    component.
+
+- In this section, we will explore the following topics about Angular components: 
+    • The structure of an Angular component 
+    • Creating components with the Angular CLI

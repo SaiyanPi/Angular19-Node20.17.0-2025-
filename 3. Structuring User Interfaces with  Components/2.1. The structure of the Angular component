@@ -1,0 +1,54 @@
+The structure of an Angular component:
+
+- A typical Angular application contains at least a main component that consists of multiple files.
+    The TypeScript class of the component is defined in the app.component.ts file:
+
+        import { Component } from '@angular/core';
+        import { RouterOutlet } from '@angular/router';
+
+        @Component({
+            selector: 'app-root',
+            imports: [RouterOutlet],
+            templateUrl: './app.component.html',
+            styleUrl: './app.component.css'
+        })
+        export class AppComponent {
+            title = 'Chapter3App';
+        }
+
+    -> The @Component is an Angular decorator that defines the properties of the Angular component.
+    -> Angular decorator is a method that accepts an object with metadata as a parameter. The metadata 
+        is used to configure a TypeScript class as an Angular component using the following properties:
+
+        a) selector
+        A CSS selector that instructs Angular to load the component in the location that finds the
+        corresponding tag in an HTML template.
+        The Angular CLI adds the app prefix by default, but you can customize it using the --prefix
+        option when creating the Angular project.
+
+        b) imports
+        Defines a list of Angular artifacts that the component needs to be loaded correctly, such as
+        other Angular components.
+        The Angular CLI adds the RouterOutlet in the main application component by default. The
+        RouterOutlet is used when we need routing capabilities in an Angular application. we will learn
+        how to configure routing in future chapter.
+
+        c) templateUrl
+        Defines the path of an external HTML file that contains the HTML template of the component.
+        Alternatively, you can provide the template inline using the template property.
+
+        d) styleUrl
+        Defines the path of an external CSS style sheet file that contains the CSS styles of the component.
+        Alternatively, you can provide the styles inline using the styles property
+
+
+📝
+In applications built with older Angular versions, you may notice that the imports 
+property is missing from the @Component decorator. This is because such components 
+rely on Angular modules to provide the necessary functionality.
+However, starting from Angular v16, the standalone property was introduced as an 
+alternative to Angular modules. With Angular v19, standalone components are now 
+the default and are enforced throughout the project structure. This shift means that 
+applications created with Angular v19 will utilize the imports array in standalone 
+components by default, marking a significant departure from the module-based 
+architecture of earlier versions.
