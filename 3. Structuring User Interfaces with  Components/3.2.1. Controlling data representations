@@ -9,6 +9,7 @@ Controlling data representations:
 
 
 # Displaying data conditionally:
+---------------------------------
 
 - The @if block adds or removes an HTML element in the DOM based on evaluating an expression.
     If the expression evaluates to true, the element is inserted into the DOM. Otherwise, the element 
@@ -100,4 +101,161 @@ However, it is highly recommended to use the @if block for the following reasons
     • The syntax is closer to JavaScript and is easier to remember
     • It is built into the framework and immediately available, which results in smaller bundle sizes
 You can find more information about *ngIf at https://angular.dev/guide/directives#adding-or-removing-an-element-with-ngif.
+______________________________________________________________________________________________________________________
 
+
+# Iterating through data:
+--------------------------
+
+- The @for block allows us to loop through a collection of items and render a template for each, 
+    where we can define convenient placeholders to interpolate item data.
+- Each rendered template is scoped to the outer context, where the loop directive is placed so that we can
+    access other bindings. We can think of the @for block as the JavaScript for loop but for HTML templates.
+- We can use the @for block to display the product list in our component as follows:
+
+    1) Open the app.component.css file and move the CSS styles that contain the .pill-group, .pill, and
+        .pill:hover selectors in the product-list.component.css file.
+
+    2) Modify the products array in the ProductListComponent class of the product-list.component.ts file so
+        that it contains the following data:
+
+    3) Open the product-list.component.html file and add the following snippet after the @if block:
+
+            <ul class = "pill-group">
+                @for (product of products; track product.id) {
+                    <li class = "pill">{{ product.title }}</li>
+                }
+            </ul>
+
+        -> In the preceding code, we use the @for block and turn each item fetched from the products array
+            into a product variable called the template input variable. 
+        -> We reference the template variable in our HTML by binding its title property using Angular
+            interpolation syntax. 
+        -> During the execution of the @for block, data may change, HTML elements may be added, 
+            moved, or removed, and the whole list may even be replaced. Angular must synchronize 
+            data changes with the DOM tree by connecting the iterated array and its corresponding 
+            DOM element. It is a process that can become very slow and expensive and may eventually 
+            result in poor performance. For that purpose, Angular relies on the track property, which 
+            keeps track of data changes.
+            In our case, the track property defines the property name of the product variable that will be
+            used to keep track of every item in the products array.
+    
+    4) Run ng serve command to preview the application.
+            Products (4)
+            Keyboard
+            Microphone
+            Web camera
+            Tablet
+    
+    5) The @for block supports adding an @empty section, which is executed when the array of items is empty.
+        We can refactor our code by removing the @else section of the @if block and adding an @empty section
+        as follows:
+
+            @if (products.length > 0) {
+                <h1>Products ({{products.length}})</h1>
+            }
+            <ul class="pill-group">
+                @for (product of products; track product.id) {
+                    <li class="pill">{{product.title}}</li>
+                } 
+                @empty {
+                    <li class = "pill">No products available</li>
+                }
+            </ul>
+
+- It is also possible to keep track of other useful properties as well. We can use the extended version of
+    the @for block using the following syntax: 
+
+        @for (product of products; track product.id; let variable=property) {}
+    
+    -> The variable is a template input variable that we can reference later in our template.
+    -> The property can have the following values: 
+        • $count: Indicates the number of items in the array 
+        • $index: Indicates the index of the item in the array
+        • $first/$last: Indicates whether the current item is the first or last one in the array
+        • $even/$odd: Indicates whether the index of the item in the array is even or odd
+
+- In the following snippet, Angular assigns the value of the $index property to the i input variable. 
+    The i variable is later used in the template to display each product as a numbered list:
+
+        @for (product of products; track product.id; let i = $index) {
+            <li class="pill">{{i+1}}. {{product.title}}</li>
+        }
+
+🧠🚀
+Use the $index property in the track variable when unsure of which one you should 
+pick from your object data. Additionally, it is recommended to use it when you don’t 
+have any unique property in your object and you are not modifying the order of the 
+list by deleting, adding, or moving elements.
+
+📝
+In applications built with older Angular versions, you may notice the following 
+syntax for iterating over collections:
+    <ul class="pill-group">
+        <li class="pill" *ngFor="let product of products">
+            {{product.title}}
+        </li>
+    </ul>
+The *ngFor is an Angular directive that works similarly to the @for block. However, 
+it is highly recommended to use @for for the same reasons mentioned about the @if block
+in the preceeding section.
+You can find more information about *ngFor at https://angular.dev/guide/
+directives#listing-items-with-ngfor.
+________________________________________________________________________________________________________________________
+
+
+# Switching through templates:
+-------------------------------
+
+- The @switch block switches between parts of the component template and displays each depending on a
+    defined value.
+- You can think of @switch like the JavaScript switch statement. It consists of the following sections:
+    • @switch:Defines the property that we want to check when applying the block 
+    • @case: Adds or removes a template from the DOM tree depending on the value of the 
+            property defined in the @switch block
+    • @default: Adds a template to the DOM tree if the value of the property defined in the @
+                switch block does not meet any @case statement 
+
+- We will learn how to use the @switch block by displaying a different emoji according to the product title.
+
+    1) Open the product-list.component.html file and modify the @for block so that it includes the following
+        @switch block:
+
+            <ul class = "pill-group">
+                @for (product of products; track product.id; let i = $index) {
+                    <li class="pill">
+                        @switch (product.title) {
+                            @case ('Keyboard') {⌨️}
+                            @case ('Microphone') {🎙️}
+                            @default {🏷️}
+                        }
+                        {{i+1}}. {{product.title}}
+                    </li>
+                }
+                @empty {
+                    <li class = "pill">No products available</li>
+                }
+            </ul>
+        
+        -> The @switch block evaluates the title property of each product. When it finds a match,
+            it activates the appropriate @case section. If the value of the title property does not match
+            any @case section, the @default section is activated.
+
+- The simplicity and improved ergonomics of the control flow syntax have enabled the introduction 
+    of the @defer block in the Angular framework. The @defer block helps to enhance UX and improve 
+    application performance by loading parts of the component template asynchronously. We will learn 
+    more in future chapter.
+
+
+📝
+In applications built with older Angular versions, you may notice the following 
+syntax for switching over parts of the template:
+    <div [ngSwitch]="product.title">
+        <p *ngSwitchCase="'Keyboard'"> </p>
+        <p *ngSwitchCase="'Microphone'"> </p>
+        <p *ngSwitchDefault> </p>
+    </div>
+The [ngSwitch] is an Angular directive with the same behavior as the @switch block. 
+However, it is highly recommended to use @switch for the same reasons mentioned 
+about the @if block in the preceeding section.
+You can find more information about [ngSwitch] at https://angular.dev/guide/directives#switching-cases-with-ngswitch.

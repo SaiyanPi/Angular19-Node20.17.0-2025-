@@ -1,0 +1,12 @@
+Component inter-communication:
+
+- Angular components expose a public API that allows them to communicate with other components. 
+- This API encompasses input properties, which we use to feed the component with data. It also exposes
+    output properties we can bind event listeners to, thereby getting timely information about changes
+    in the component state.
+- In this section, we will learn how Angular solves the problem of injecting data into and extracting 
+    data from components through quick and easy examples.
+        1. Passing data using an input binding
+        2. Listening for events using an output binding
+            -> Emitting data through custom events 
+        3. Local reference variables in templates

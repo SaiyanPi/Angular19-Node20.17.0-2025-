@@ -1,0 +1,9 @@
+Listening for events using an output binding:
+
+- We learned that input binding is used when we want to pass data between components. This method is
+    applicable in scenarios where we have two components, one that acts as the parent component and
+    the other as the child. (product list component is a parent component/ Input is used by the child
+    component to receive data from the parent)
+
+- What if we want to communicate the other way, from the child component to the parent? How do we notify
+    the parent component about specific actions in the child component?

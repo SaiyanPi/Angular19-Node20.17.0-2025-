@@ -1,0 +1,82 @@
+Passing data using an input binding:
+
+- The application currently displays the product list and the selected product details in the same 
+    component.
+- To learn how to pass data between different components, we will create a new Angular component that
+    will display the details of the selected product. Data representing the specific product details
+    will be dynamically passed from the product list component.
+
+    1) Run the following Angular CLI command to create the new Angular component:
+
+            cmd: ng generate component product-detail
+    
+    2) Open the product-detail.component.ts file and modify the import statements accordingly:
+
+            import { Component, 👉input } from '@angular/core';
+         👉 import { Product } from '../product';
+
+        -> The input function is part of the Signals API and is used when we want to pass data from 
+            one component down to another component.
+        ->  We will learn more about the Signals API in Chapter 7.
+    
+    3) Define a product property in the ProductDetailComponent class that uses the input function:
+
+            export class ProductDetailComponent {
+            👉product = input<Product>(); // using input decorator to receive product data
+            }
+
+📝
+In older versions of Angular, we use the @Input decorator for passing data between components.
+You can learn more at https://angular.dev/guide/components/inputs.
+
+    4) Open the product-detail.component.html file and add the following contents:
+
+            @if(product()){
+                <p>You selected:
+                    <strong>{{product()!.title}}</strong>
+                </p>
+            }
+
+        -> we use an @if block to check if the product input property has been set before displaying
+            its title.
+
+    5) Open the product-list.component.ts file and import the ProductDetailComponent class:
+
+            import { Component } from '@angular/core';
+            import { Product } from '../product'; // importing interface
+        👉  import { ProductDetailComponent } from '../product-detail/product-detail.component';
+
+            @Component({
+                selector: 'app-product-list',
+                imports: [👉ProductDetailComponent],
+                templateUrl: './product-list.component.html',
+                styleUrl: './product-list.component.css'
+            })
+    
+    6) Finally, replace the last @if block in the product-list.component.html file with the following
+        snippet:
+
+            <app-product-detail [product]="selectedProduct"></app-product-detail>
+
+        -> we use property binding to bind the value of the selectedProduct property into the product input
+            property of the product detail component. This approach is called INPUT BINDING 🥳.
+
+    7) run the application and click on a product from the list, we will see that product selection continues
+        to work as expected.
+
+- The @if block in the template of the product detail component implies that the product input 
+    property is required; otherwise, it does not display its title.
+
+- Angular does not know if the product list component passes a value for the product input binding during
+    build time. If we want to enforce that rule during compile time, we can define an input property as
+    required accordingly:
+
+            product = input.required<Product>();
+    
+        -> If the product list component does not pass a value for the product input property, the Angular
+            compiler will throw the following error:
+
+            [ERROR] NG8008: Required input 'product' from component ProductDetailComponent must be specified.
+
+- That’s it! We have successfully passed data from one component to another. In the following 
+    section, we’ll learn how to listen for events in a component and respond to them.

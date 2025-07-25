@@ -1,0 +1,72 @@
+Styling the component:
+
+- Styles in a web application can be applied using either the class or style attribute, or both, of 
+    an HTML element:
+
+        <p class="star"></p> 
+        <p style="color: greenyellow"></p> 
+
+- The Angular framework provides two types of property binding:
+    • Class binding
+    • Style binding
+
+- Class and style bindings are powerful features that Angular provides out of the box. Together with 
+    the CSS styling configuration that we can define in the @Component decorator, it gives endless 
+    opportunities for styling Angular components.
+______________________________________________________________________________________________________________________
+
+# Class binding:
+
+- We can apply a single class to an HTML element using the following syntax:
+
+        <p [class.star]="isLiked"></p>
+    
+    -> In the preceding snippet, the star class will be added to the paragraph element when the isLiked 
+        expression is true. Otherwise, it will be removed from the element.
+
+- If we want to apply multiple CSS classes simultaneously, we can use the following syntax:
+
+        <p [class]="currentClasses"></p> 
+    
+    -> The currentClasses variable is a component property.
+    ->  The value of an expression that is used in a class binding can be one of the following:
+        • A space-delimited string of class names such as 'star active'.
+        • An object with keys as the class names and values as boolean conditions for each key. A 
+            class is added to the element when the value of the key, with its name, is evaluated to be 
+            true. Otherwise, the class is removed from the element:
+            
+            currentClasses = {
+                star: true, 
+                active: false 
+            }; 
+______________________________________________________________________________________________________________________
+
+# Style binding:
+
+- A single style can be set to an HTML element using the following syntax:
+        
+        <p [style.color]="'greenyellow'"></p>
+
+    -> In the preceding snippet, the paragraph element will have a greenyellow color.
+    -> Some styles can be expanded further in the binding, such as the width of the paragraph element,
+        which we can define along with the measurement unit:
+
+        <p [style.width.px]="100"></p> 
+
+        * The paragraph element will be 100 pixels long.
+
+- If we need to toggle multiple styles at once, we can use the object syntax:
+        
+        <p [style]="currentStyles"></p>
+    
+    -> The currentStyles variable is a component property.
+    -> The value of an expression that is used in a style binding can be one of the following:
+        • A string with styles separated by semicolons such as 'color: greenyellow; width: 100px'
+        • An object where its keys are the names of styles and the values are the actual style values:
+            
+            currentStyles = { 
+                color: 'greenyellow', 
+                width: '100px' 
+            };
+
+        

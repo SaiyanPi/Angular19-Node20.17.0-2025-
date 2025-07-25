@@ -1,0 +1,63 @@
+Getting data from the template:
+
+- In the previous section, we learned how to use property binding to display data from the component class.
+- Real-world scenarios usually involve bidirectional data flow through components. To get data from the
+    template back to the component class, we use a technique called event binding. 
+- We will learn how to use event binding by notifying the component class when a product has been selected
+    from the list:
+
+    1) Open the product-list.component.ts file and add a selectedProduct property:
+
+            selectedProduct: Product | undefined;
+    
+    2) Open the product-list.component.html file and use the interpolation syntax to display the selected
+        product if it exists:
+
+            @if (selectedProduct) {
+                <p>You selected:
+                    <strong>{{ selectedProduct.title }}</strong>
+                </p>
+            }
+    
+    3) Add a click event binding in the <li> tag to set the selectedProduct to the current product variable
+        of the @for block:
+
+            <ul class = "pill-group">
+                @for (product of products; track product.id; let i = $index) {
+                    <li class="pill" 👉(click)="selectedProduct = product">
+                        @switch (product.title) {
+                            @case ('Keyboard') {⌨️}
+                            @case ('Microphone') {🎙️}
+                            @default {🏷️}
+                        }
+                        {{i+1}}. {{product.title}}
+                    </li>
+                }
+                @empty {
+                    <li class = "pill">No products available</li>
+                }
+
+                @if (selectedProduct) {
+                    <p>You selected:
+                    <strong>{{ selectedProduct.title }}</strong>
+                    </p>
+                }
+            </ul>
+
+    4) Run ng serve to start the application and click on a product from the list:
+
+            Products (4)
+            ⌨️ 1. Keyboard
+            🎙️ 2. Microphone
+            🏷️ 3. Web camera
+            🏷️ 4. Tablet
+            You selected: Web camera
+
+- An event binding listens for DOM events on the target HTML element and responds to those events 
+    by interacting with members of the component class. 
+- The event inside parentheses is called the target event and is the event we are currently listening to.
+    The expression on the right is called the template statement and interacts with the component class.
+
+        (click)="selectedProduct = product"
+
+- Event binding in Angular supports all native DOM events found at https://developer.mozilla.org/docs/Web/Events.
