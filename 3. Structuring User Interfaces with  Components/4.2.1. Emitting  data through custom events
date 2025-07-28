@@ -1,0 +1,40 @@
+Emitting data through custom events:
+
+- The emit method of an output event can accept any data to pass up to the parent component.
+    It is best to define the data type that can be passed to enforce static type checking.
+
+- Currently, the product list component already knows the selected product. Let’s assume that the product
+    list component could only realize it after the user clicks on the Add to cart button:
+
+    1) Open the product-detail.component.ts file and use generics to declare the type of data that will be
+        passed into the product list component:
+
+            added = output👉<Product>();
+    
+    2) Modify the addToCart method so that the emit method passes the currently selected product:
+
+            addToCart() {
+                this.added.emit(👉this.product()!);
+            }
+    
+    3) Open the product-list.component.html file and pass the $event variable in the onAdded method:
+
+            <app-product-detail
+                [product]="selectedProduct"
+                (added)="onAdded( 👉$event)">
+            </app-product-detail>
+        
+        -> The $event object is a reserved keyword in Angular that contains the payload data of an event
+            emitter from an output binding, in our case, a Product object.
+    
+    4) Open the product-list.component.ts file and change the signature of the onAdded method accordingly:
+
+            onAdded(👉stuff: Product) {
+                alert(`Added ${👉stuff.title} to cart`);
+            }
+
+- As we saw, output event bindings are a great way to notify a parent component about a change in the
+    component state or send any data.
+
+- Besides using the input and output bindings for communicating with components, we can access 
+    their properties and methods directly using local template reference variables.

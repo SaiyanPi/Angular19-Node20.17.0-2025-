@@ -7,3 +7,109 @@ Listening for events using an output binding:
 
 - What if we want to communicate the other way, from the child component to the parent? How do we notify
     the parent component about specific actions in the child component?
+
+- Consider a scenario where the product detail component should have a button to add the current 
+    product to a shopping cart. THE SHOPPING CART WOULD BE A PROPERTY OF THE PRODUCT LIST COMPONENT. 
+    How would the product detail component notify the product list component that the button was 
+    clicked? Let’s see how we would implement this functionality in our application:
+
+    1) Open the product-detail.component.ts file and import the output function from the @angular/core npm
+        package:
+
+            import { Component, input,👉 output } from '@angular/core';
+        
+        -> The output function is used when we want to create events that will be triggered from 
+            one component up to another.
+    
+    2) Define a new component property inside the ProductDetailComponent class that uses the output function:
+
+            added = output();
+
+📝
+In older versions of Angular, we use the @Output decorator for triggering events between components.
+You can learn more at https://angular.dev/guide/components/outputs.
+
+    3) In the same TypeScript class, create the following method:
+
+            addToCart() {
+                this.added.emit();
+            }
+
+        -> The addToCart method calls the emit method on the added output event we created in the previous step.
+        -> The emit method triggers an event and notifies any component currently listening to that event.
+
+    4) Now, add a <button> element in the component template and bind its click event to the addToCart method:
+
+            @if (product()) {
+                <p>You selected:
+                    <strong>{{product()!.title}}</strong>
+                </p>
+               👉 <button (click)="addToCart()">Add to cart</button>
+            }
+
+    5) Open the product-detail.component.css file and add the following CSS styles that will be applied to the
+        <button> element:
+
+            button {
+                display: flex;
+                align-items: center;
+                --button-accent: var(--bright-blue);
+                background: color-mix(in srgb, var(--button-accent) 65%, transparent);
+                color: white;
+                padding-inline: 0.75rem;
+                padding-block: 0.375rem;
+                border-radius: 0.5rem;
+                border: 0;
+                transition: background 0.3s ease;
+                font-family: var(--inter-font);
+                font-size: 0.875rem;
+                font-style: normal;
+                font-weight: 500;
+                line-height: 1.4rem;
+                letter-spacing: -0.00875rem;
+                cursor: pointer;
+            }
+            button:hover {
+                background: color-mix(in srgb, var(--button-accent) 50%, transparent);
+            }
+
+    6) We are almost there! Now, we need to wire up the binding in the product list component so that the two
+        components can communicate. Open the product-list.component.ts file and create the following method:
+
+            onAdded(){
+                alert(`Added ${this.selectedProduct?.title} to cart`);
+            }
+        
+        -> In the preceding snippet, we use the native alert method of the browser to display a dialog to the
+            user.
+    
+    7) Finally, modify the <app-product-detail> tag in the product-list.component.html file as follows:
+
+            <app-product-detail
+                [product]="selectedProduct"
+            👉  (added)="onAdded()">
+            </app-product-detail>
+        
+        -> In the preceding snippet, we use event binding to bind the onAdded method into the added 
+            output property of the product detail component. This approach is called output binding.
+
+- If we select a product from the list and click on the Add to cart button, a dialog box will display a message
+    such as the following:
+
+        Added Microphone to cart
+
+
+
+
+
+        ProductListComponent                                                    ProductDetailComponent
+                                        [product] = "selectedProduct"
+                        ------------------------------------------------------------>
+            PARENT                                                                     CHILD
+                        <------------------------------------------------------------
+                                            (added) = "onAdded()"
+
+
+- The output event of the product detail component does nothing more and nothing less than emitting an event
+    to the parent component. However, we can use it to pass arbitrary data through the emit method, as we
+    will learn in the following section.

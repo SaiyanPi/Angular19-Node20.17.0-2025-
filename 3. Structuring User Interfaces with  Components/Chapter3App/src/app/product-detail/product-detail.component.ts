@@ -1,4 +1,4 @@
-import { Component, input } from '@angular/core';
+import { Component, input, output } from '@angular/core';
 import { Product } from '../product'; // importing interface
 
 @Component({
@@ -10,4 +10,11 @@ import { Product } from '../product'; // importing interface
 export class ProductDetailComponent {
   product = input<Product>(); // input binding (product is an input property)
   // product = input.required<Product>();
+
+  added = output<Product>(); // output binding (added is an output property)
+
+  addToCart() { // method
+    this.added.emit(this.product()!); // emit the product when the button is clicked
+  }
 }
+

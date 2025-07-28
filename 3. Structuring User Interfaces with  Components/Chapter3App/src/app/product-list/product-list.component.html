@@ -35,7 +35,15 @@
 
   <!-- input binding: bind the value of selectedProduct property of product list component to
   product property of product detail component -->
-  <app-product-detail [product]="selectedProduct"></app-product-detail>
+
+  <!-- output binding: bind the onAdded method of product list component into to added output
+  property of the product detail component -->
+  <app-product-detail
+    #productDetail
+    [product]="selectedProduct"
+    (added)="onAdded($event)">
+  </app-product-detail>
 
 </ul>
+
 

@@ -1,0 +1,34 @@
+Local reference variables in templates:
+
+- We have learned how components communicate by listening to emitted events using output binding or
+    passing data through input binding.
+    But what if we could inspect the component in depth, or at least its exposed properties and methods,
+    and access them without going through the input and output bindings? Setting a local reference on the
+    component opens the door to its public API.
+
+📝
+The public API of a component consists of all public members of the TypeScript class.
+
+- We can declare a template reference variable for the product detail component in the
+    product-list.component.html file as follows:
+
+        <app-product-detail
+            #productDetail
+            [product]="selectedProduct"
+            (added)="onAdded($event)">
+        </app-product-detail>
+
+    -> Now, we can access the component members directly and even bind them in other locations of the
+        template, such as displaying the product title:
+
+        <span>{{productDetail.product()!.title}}</span>
+
+- This way, we do not need to rely on the input and output properties and can manipulate the value of such
+    properties.
+
+🧠🚀
+The local reference variable approach is particularly useful when using libraries where we cannot control the
+child components to add input or output binding properties.
+
+- We have mainly explained how the component class interacts with its template or other components but have
+    barely been concerned about their styling. We explore that in more detail next.

@@ -60,4 +60,13 @@ Getting data from the template:
 
         (click)="selectedProduct = product"
 
+    
+                          [innerText] = "product.title"/ {{product.title}}
+                        --------------------------------------------------->
+            COMPONENT                                                           TEMPLATE
+                        <---------------------------------------------------
+                                (click)="selectedProduct = product"
+
+
+
 - Event binding in Angular supports all native DOM events found at https://developer.mozilla.org/docs/Web/Events.
