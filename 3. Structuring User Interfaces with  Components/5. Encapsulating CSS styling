@@ -1,3 +1,86 @@
 Encapsulating CSS styling:
 
-- 
+- in section 2.1 of this chapter, we learned that we can define CSS styles for the component using an
+    external CSS file through the styleURL property or by defining CSS styles inside the TypeScript
+    component file with the styles property.
+
+- Thanks to scoped styling, CSS management and specificity become a breeze on browsers that support shadow
+    DOM. CSS styles apply to the elements contained in the component, but they do not spread beyond their
+    boundaries. On top of that, Angular embeds style sheets in the <head> element of a web page so that they
+    may affect other elements of our application. We can set up different levels of view encapsulation to
+    prevent this from happening.
+
+📝
+You can find more detail on shadow DOM at https://developer.mozilla.org/docs/Web/API/Web_components/Using_shadow_DOM.
+
+- View encapsulation is how Angular needs to manage CSS scoping within the component. We can change it by
+    setting the encapsulation property of the @Component decorator in one of the following ViewEncapsulation
+    enumeration values:
+    • Emulated
+        Entails an emulation of native scoping in shadow DOM by sandboxing the CSS rules under a specific
+        selector that points to a component. This option is preferred to ensure that component styles do
+        not leak outside the component and are not affected by other external styles. It is the default
+        behavior in Angular CLI projects.
+    • Native
+        Uses the native shadow DOM encapsulation mechanism of the renderer that works only on browsers that
+        support shadow DOM.
+    • None
+        Template or style encapsulation is not provided. The styles are injected as they were added into the
+        <head> element of the document. It is the only option if shadow DOM-enabled browsers are not involved.
+
+- We will explore the Emulated and None options due to their extended support using an example:
+    
+    1) Open the product-detail.component.html file and enclose the contents of the @if block in a
+        <div> element:
+
+            @if(product()){
+                <div>
+                    <p>You selected:
+                    <strong>{{product()!.title}}</strong>
+                    </p>
+
+                    <!-- event binding -->
+                    <button (click)="addToCart()">Add to cart</button>
+                </div>
+            }
+
+    2) Open the product-detail.component.css file and add a CSS style to change the border of a
+        <div> element:
+
+            div {
+                padding-inline: 0.75rem;
+                padding-block: 0.375rem;
+                border: 2px dashed;
+            }
+
+    3) Run the application using the ng serve command and notice that the product detail component has a
+        dashed border around it when you select a product
+
+        -> The style did not affect the <div> element in the app.component.html file because the 
+            default encapsulation scopes all CSS styles defined to the specific component.
+    
+    4) Open the product-detail.component.ts file and set the component encapsulation to 
+        ViewEncapsulation.None:
+
+            import { Component, input, output, 👉ViewEncapsulation } from '@angular/core';
+            import { Product } from '../product'; // importing interface
+
+            @Component({
+                selector: 'app-product-detail',
+                imports: [],
+                templateUrl: './product-detail.component.html',
+                styleUrl: './product-detail.component.css',
+             👉encapsulation: ViewEncapsulation.None // using None to allow global styles to apply
+            })
+
+    5) Now the application output should have border 2 dashed border: one around the product detail component
+        and another around the product list component.
+
+        -> The CSS style leaked to the component tree and affected the <div> element of the main application
+            component.
+        -> View encapsulation can solve many issues when styling our components. However, it should be 
+            used cautiously because, as we already learned, CSS styles may leak into parts of the application 
+            and produce unwanted effects.
+
+- The change detection strategy is another property of the @Component decorator that is very powerful.
+    Let’s examine this next.

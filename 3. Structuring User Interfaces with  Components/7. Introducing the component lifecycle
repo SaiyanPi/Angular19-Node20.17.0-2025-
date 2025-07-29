@@ -1,0 +1,26 @@
+Introducing the component lifecycle:
+
+- Lifecycle events are hooks that allow us to jump into specific stages in the lifecycle of a component
+    and apply custom logic. They are optional to use but might be valuable if you understand how to use
+    them.
+- Some hooks are considered best practices, while others help debug and understand what happens in an
+    Angular application. A hook has an interface defining a method we need to implement. The Angular
+    framework ensures the hook is called, provided we have implemented this method in the component.
+
+🧠🚀
+Defining the interface in the component is not obligatory but is considered a good practice.
+Angular cares only about whether we have implemented the actual method or not.
+
+- The most basic lifecycle hooks of an Angular component are:
+    • ngOnInit: This is called when a component is initialized
+    • ngOnDestroy: This is called when a component is destroyed
+    • ngOnChanges: This is called when values of input binding properties in the component change
+    • ngAfterViewInit: This is called when Angular initializes the view of the current component and its
+                        child components
+    All of these lifecycle hooks are available from the @angular/core npm package of the Angular framework.
+    We will explore each one through an example in the following sections
+
+
+🔗
+A full list of all the supported lifecycle hooks is available in the official Angular documentation at 
+https://angular.dev/guide/components/lifecycle.

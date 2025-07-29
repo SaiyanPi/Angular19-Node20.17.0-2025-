@@ -1,0 +1,103 @@
+Deciding on a change detection strategy:
+
+- Change detection is the mechanism that Angular uses internally to detect changes that occur in component
+    properties and reflect these changes to the view.
+
+- It is triggered on specific events, such as when the user clicks a button, an asynchronous request is
+    completed, or a setTimeout and setInterval method is executed. Angular uses a process called monkey
+    patching to modify such events by overwriting their default behavior using a library called Zone.js.
+
+- Every component has a change detector that detects whether a change has occurred in its properties by
+    comparing the current value of a property with the previous one. If there are differences, it applies
+    the change to the component template.
+    In the product detail component, when the product input property changes as a result of an event that
+    we mentioned earlier, the change detection mechanism runs for this component and updates the template
+    accordingly.
+
+- However, there are cases where this behavior is not desired, such as components that render a large amount
+    of data. In that scenario, the default change detection mechanism is insufficient because it may
+    introduce performance bottlenecks in the application. We could alternatively use the changeDetection
+    property of the @Component decorator, which dictates the selected strategy the component will follow
+    for change detection. 
+
+We will learn how to use a change detection mechanism by profiling our Angular application 
+with Angular DevTools:
+
+1) Open the product-detail.component.ts file and create a getter property that returns the current product
+    title:
+
+        get productTitle() {
+            return this.product()!.title;
+        }
+
+2) Open the product-detail.component.html file and replace the product.title expression inside the
+    <strong> tag with the productTitle:
+
+        @if (product()) {
+            <p>You selected:
+                <strong>{{productTitle}}</strong>
+            </p>
+            <button (click)="addToCart()">Add to cart</button>
+        }
+
+3) Run the application using the ng serve command and preview it at http://localhost:4200.
+
+4) Start Angular DevTools, select the Profiler tab, and click the Start recording button to start profiling
+    the Angular application.
+
+5) Click on the Keyboard product from the product list and select the first bar in the bar chart to review
+    change detection: see Change-Detection_bar_chart.png
+
+        _ProductDetailComponent | 1.8 ms | 1 instance
+        _ProductListComponent | 0.7 ms | 1 instance
+        _AppComponent | 0.4 ms | 1
+
+    -> In the preceding image, we can see that change detection is triggered for each component in the
+        component tree of the application.
+
+6) Click on the Add to cart button and select the second bar in the bar chart:
+    see Change-Detection-bar-chart2.png
+
+        _ProductListComponent | 0.4 ms | 1 instance
+        _AppComponent | 0.3 ms | 1 instance
+        _ProductDetailComponent | 0
+
+    -> Angular executed change detection in the product detail component even though we did not change its
+        properties.
+
+7) Modify the @Component decorator of the product-detail.component.ts file by setting the changeDetection
+    property to ChangeDetectionStrategy.OnPush:
+
+        import {👉 ChangeDetectionStrategy, Component, input, output } from '@angular/core';
+        import { Product } from '../product'; // importing interface
+
+        @Component({
+        selector: 'app-product-detail',
+        imports: [],
+        templateUrl: './product-detail.component.html',
+        styleUrl: './product-detail.component.css',
+        // encapsulation: ViewEncapsulation.None // using None to allow global styles to apply
+        👉changeDetection: ChangeDetectionStrategy.OnPush // using OnPush for performance optimization
+        })
+
+8) Repeat steps 4 to 6 and observe the output of the second bar in the change detection bar chart:
+    see Change-Detection-bar-chart-second-case.png
+
+        _ProductListComponent | 0.3 ms | 1 instance
+        _AppComponent | 0.3 ms | 1 instance
+
+    -> Change detection did not run for the product detail component this time.
+
+9) Click on the Microphone product from the list and observe the new bar in the bar chart:
+
+        _ProductDetailComponent | 0.2 ms | 1 instance
+        _AppComponent | 0.2 ms | 1 instance
+        _ProductListComponent | 0.1 ms | 1 instance
+    
+    -> Change detection ran this time because we changed the reference of the product input property.
+    -> If we had just changed a property using the OnPush change detection strategy, the change detection
+        mechanism would not have been triggered. You can learn about more change detection scenarios at
+        https://angular.dev/best-practices/skippingsubtrees.
+
+- The change detection strategy is a mechanism that allows us to modify the way our components 
+    detect changes in their data, significantly improving performance in large-scale applications.

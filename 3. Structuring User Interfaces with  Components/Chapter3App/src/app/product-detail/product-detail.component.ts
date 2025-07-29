@@ -1,13 +1,24 @@
-import { Component, input, output } from '@angular/core';
+import {Component, input, OnInit, output } from '@angular/core';
 import { Product } from '../product'; // importing interface
 
 @Component({
   selector: 'app-product-detail',
   imports: [],
   templateUrl: './product-detail.component.html',
-  styleUrl: './product-detail.component.css'
+  styleUrl: './product-detail.component.css',
+  // encapsulation: ViewEncapsulation.None // using None to allow global styles to apply
+  // changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class ProductDetailComponent {
+export class ProductDetailComponent implements OnInit {
+
+  constructor() {
+    console.log('Product:', this.product());
+  }
+
+  ngOnInit(): void {
+    console.log('Product:', this.product());
+  }
+
   product = input<Product>(); // input binding (product is an input property)
   // product = input.required<Product>();
 
@@ -16,5 +27,10 @@ export class ProductDetailComponent {
   addToCart() { // method
     this.added.emit(this.product()!); // emit the product when the button is clicked
   }
+
+  get productTitle() {
+    return this.product()!.title;
+  }
 }
+
 

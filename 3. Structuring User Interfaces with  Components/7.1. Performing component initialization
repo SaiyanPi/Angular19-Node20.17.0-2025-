@@ -1,0 +1,48 @@
+Performing component initialization(ngOnInit):
+
+- The ngOnInit lifecycle hook is a method called during the component initialization. All input bindings
+    and data-bound properties have been set appropriately at this stage, and we can safely use them.
+- Using the component constructor to access them may be tempting, but their values would not have been
+    set at that point. We will learn how to use the ngOnInit lifecycle hook through the following example:
+
+1) Open the product-detail.component.ts file and add a constructor that logs the value of the product
+    property in the browser console:
+
+        constructor() {
+            console.log('Product:', this.product());
+        }
+
+2) Import the OnInit interface from the @angular/core npm package:
+
+        import {Component, input,👉 OnInit, output } from '@angular/core';
+
+3) Add the OnInit interface to the list of implemented interfaces of the ProductDetailComponent class:
+
+        export class ProductDetailComponent 👉implements OnInit {
+
+4) Add the following method in the ProductDetailComponent class to log the same information as in step 1:
+
+        ngOnInit(): void {
+            console.log('Product:', this.product());
+        }
+
+5) Open the product-list.component.ts file and set an initial value to the selectedProduct property:
+
+        selectedProduct: Product | undefined = this.products[0];
+
+6) Run the application using the ng serve command and inspect the output of the browser console:
+    see ngOnInit.png
+
+        Product: undefined  (from constructor)
+        Product: Object id: 1 title: "Keyboard" [[Prototype]]: Object (from ngOnInit)
+
+    -> The first message from the constructor contains an undefined value, but in the second message, 
+        the value of the product property is displayed correctly.
+    -> Constructors should be relatively empty and devoid of logic other than setting initial variables. 
+        Adding business logic inside a constructor makes it challenging to mock it in testing scenarios.
+    -> Another good use of the ngOnInit hook is when we need to initialize a component with data from 
+        an external source, such as an Angular service, as we will learn in Chapter 5, Managing Complex 
+        Tasks with Services.
+
+- The Angular framework provides hooks for all stages of the component lifecycle, from initialization to
+    destruction.

@@ -20,3 +20,9 @@ button {
 button:hover {
   background: color-mix(in srgb, var(--button-accent) 50%, transparent);
 }
+div {
+  padding-inline: 0.75rem;
+  padding-block: 0.375rem;
+  border: 2px dashed;
+}
+
