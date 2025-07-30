@@ -1,0 +1,83 @@
+Detecting input binding changes(ngOnChanges):
+
+- We have already learned how to pass data down to a component using an input binding. The Angular framework
+    provides the ngOnChanges lifecycle hook, which we can use to inspect when the value of such a binding
+    has changed.
+
+- The ngOnChanges lifecycle hook is called when Angular detects that the value of an input data binding
+    has changed.
+    We will use it in the product detail component to learn how it behaves when we select a different product
+    from the list:
+
+    1) Import the OnChanges and SimpleChanges interfaces in the product-detail.component.ts file:
+
+            import {
+                Component,
+                input,
+            👉  OnChanges,
+                output,
+            👉 SimpleChanges
+            } from '@angular/core';
+    
+    2) Modify the definition of the ProductDetailComponent class so that it implements the OnChanges
+        interface:
+
+            export class ProductDetailComponent implements OnChanges
+    
+    3) Implement the ngOnChanges method that is defined in the OnChanges interface. It accepts an object of
+        the SimpleChanges type as a parameter that contains one key for each input property that changes.
+        Each key points to another object with the properties currentValue and previousValue, which denote
+        the new and the old value of the input property, respectively:
+
+            ngOnChanges(changes: SimpleChanges): void {
+                const product = changes['product'];
+                const oldValue = product.previousValue;
+                const newValue = product.currentValue;
+                console.log('Old value', oldValue);
+                console.log('New value', newValue);
+            }
+        
+        -> The preceding snippet tracks the product input property for changes and logs old and new values
+            in the browser console window.
+    
+    4) To inspect the application, run the ng serve command, select a product from the list, and notice the
+        output in the console.
+
+            Product: undefined
+            Old value undefined
+            New value undefined
+            Angular is running in development mode.
+            Old value undefined
+            New value {id: 1, title: 'Keyboard'}
+            Old value {id: 1, title: 'Keyboard'}
+            New value {id: 2, title: 'Microphone'}
+        
+        -> In the preceding image, the first two lines state that the product value was changed from 
+            undefined to undefined. It is the actual time when the product detail component is initialized,
+            and the product property has no value yet.
+        -> The OnChanges lifecycle event is triggered once the value is first set and in all subsequent
+            changes that occur through the binding mechanism.
+
+    5) To eliminate the unnecessary log messages, we can check whether it is the first time that the product
+        property is being changed using the isFirstChange method:
+
+            ngOnChanges(changes: SimpleChanges): void {
+                const product = changes['product']; 
+                if (!product.isFirstChange()) {
+                    const oldValue = product.previousValue; 
+                    const newValue = product.currentValue; 
+                    console.log('Old value', oldValue);
+                    console.log('New value', newValue);
+                }
+            }
+
+            Console:    Angular is running in development mode.
+                        Old value undefined
+                        New value {id: 1, title: 'Keyboard'}
+                        Old value {id: 1, title: 'Keyboard'}
+                        New value {id: 2, title: 'Microphone'}
+        
+        -> The ngOnChanges lifecycle hook is a great way to detect when the value of an input property 
+            changes. With the advent of the Signals API, we have much better methods to detect and react 
+            to these changes, as we will learn in Chapter 7, Tracking Application State with Signals.
+            However, for older versions of Angular, the hook is still the preferred solution. 

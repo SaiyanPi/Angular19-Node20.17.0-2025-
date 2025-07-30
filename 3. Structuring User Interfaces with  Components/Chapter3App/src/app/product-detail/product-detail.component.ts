@@ -1,4 +1,4 @@
-import {Component, input, OnInit, output } from '@angular/core';
+import {Component, input, OnChanges, output, SimpleChanges } from '@angular/core';
 import { Product } from '../product'; // importing interface
 
 @Component({
@@ -9,14 +9,16 @@ import { Product } from '../product'; // importing interface
   // encapsulation: ViewEncapsulation.None // using None to allow global styles to apply
   // changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class ProductDetailComponent implements OnInit {
+export class ProductDetailComponent implements OnChanges {
 
-  constructor() {
-    console.log('Product:', this.product());
-  }
-
-  ngOnInit(): void {
-    console.log('Product:', this.product());
+  ngOnChanges(changes: SimpleChanges): void {
+    const product = changes['product'];
+    if(!product.isFirstChange()) {
+      const oldValue = product.previousValue;
+      const newValue = product.currentValue;
+      console.log('Old value', oldValue);
+      console.log('New value', newValue);
+    }
   }
 
   product = input<Product>(); // input binding (product is an input property)

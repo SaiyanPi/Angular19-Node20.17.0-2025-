@@ -1,0 +1,92 @@
+Cleaning up component resource(ngOnDestroy):
+
+- The interface we use to hook on the destruction event of a component is the ngOnDestroy lifecycle hook.
+- We need to import the OnDestroy interface and implement the ngOnDestroy method to start using it:
+
+        import {Component, input,👉 OnDestroy, output } from '@angular/core';
+        import { Product } from '../product'; // importing interface
+
+        @Component({
+            selector: 'app-product-detail',
+            imports: [],
+            templateUrl: './product-detail.component.html',
+            styleUrl: './product-detail.component.css',
+            // encapsulation: ViewEncapsulation.None // using None to allow global styles to apply
+            // changeDetection: ChangeDetectionStrategy.OnPush
+        })
+        export class ProductDetailComponent👉 implements OnDestroy {
+
+            constructor() {
+                console.log('Product:', this.product());
+            }
+
+        👉  ngOnDestroy(): void {
+                
+            }
+
+            product = input<Product>(); // input binding (product is an input property)
+            // product = input.required<Product>();
+
+            added = output<Product>(); // output binding (added is an output property)
+
+            addToCart() { // method
+                this.added.emit(this.product()!); // emit the product when the button is clicked
+            }
+
+            get productTitle() {
+                return this.product()!.title;
+            }
+        }
+
+    -> In the preceding snippet, we have added the OnDestroy interface and implemented its ngOnDestroy
+        method. We can then add any custom logic in the ngOnDestroy method to run code when the component
+        is destroyed.
+
+- A component is destroyed when it is removed from the DOM tree of a web page due to the following reasons:
+    • Using the @if block from the control flow syntax
+    • Navigating away from a component using the Angular router, which we will learn about in Chapter 9,
+        Navigating through Applications with Routing.
+
+- We usually perform a cleanup of component resources inside the ngOnDestroy method, such as the following:
+    • Resetting timers and intervals
+    • Unsubscribing from observable streams, which we will learn about in Chapter 6, Reactive Patterns
+        in Angular
+
+- An alternative method to the ngOnDestroy lifecycle hook is to use a built-in Angular service such 
+    as DestroyRef:
+
+        import {Component,👉 DestroyRef, input, output } from '@angular/core';
+        import { Product } from '../product'; // importing interface
+
+        @Component({
+            selector: 'app-product-detail',
+            imports: [],
+            templateUrl: './product-detail.component.html',
+            styleUrl: './product-detail.component.css',
+            // encapsulation: ViewEncapsulation.None // using None to allow global styles to apply
+            // changeDetection: ChangeDetectionStrategy.OnPush
+        })
+        export class ProductDetailComponent {
+
+        👉  constructor(destroyRef: DestroyRef) {
+                destroyRef.onDestroy(() => {
+
+                });
+            }
+
+            product = input<Product>(); // input binding (product is an input property)
+            // product = input.required<Product>();
+
+            added = output<Product>(); // output binding (added is an output property)
+
+            addToCart() { // method
+                this.added.emit(this.product()!); // emit the product when the button is clicked
+            }
+
+            get productTitle() {
+                return this.product()!.title;
+            }
+        }
+
+    -> destroyRef service exposes the onDestroy method, which accepts a callback function as a parameter.
+        The callback function will be called when the component is destroyed.

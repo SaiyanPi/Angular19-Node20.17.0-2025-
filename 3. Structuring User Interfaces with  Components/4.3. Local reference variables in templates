@@ -13,7 +13,7 @@ The public API of a component consists of all public members of the TypeScript c
     product-list.component.html file as follows:
 
         <app-product-detail
-            #productDetail
+        👉 #productDetail
             [product]="selectedProduct"
             (added)="onAdded($event)">
         </app-product-detail>

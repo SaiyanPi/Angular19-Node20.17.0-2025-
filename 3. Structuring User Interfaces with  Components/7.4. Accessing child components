@@ -1,0 +1,38 @@
+Accessing child components(ngAfterViewInit):
+
+- The ngAfterViewInit lifecycle hook of an Angular component is called when:
+    • The HTML template of the component has been initialized
+    • The HTML templates of all child components have been initialized
+
+    We can explore how the ngAfterViewInit event works using the product list and product detail components:
+
+    1) Open the product-list.component.ts file and import the AfterViewInit and viewChild artifacts from the
+        @angular/core npm package:
+
+            import {👉 AfterViewInit, Component,👉 viewChild } from '@angular/core';
+
+    2) Create the following property in the ProductListComponent class:
+
+            productDetail = viewChild(ProductDetailComponent);
+        
+        -> We have already learned how to query a component class from an HTML template using local
+            reference variables.(section 4.3)
+            Alternatively, we can use the viewChild function to query a child component from the parent
+            component class.
+
+    3) Modify the definition of the ProductListComponent class so that it implements the AfterViewInit
+        interface:
+
+            export class ProductListComponent 👉implements AfterViewInit {}
+
+    4) The AfterViewInit interface implements the ngAfterViewInit method, which we can use to access the
+        productDetail property
+
+            ngAfterViewInit(): void {
+                console.log(this.productDetail()!.product());
+            }
+
+        -> When we query the productDetail property, we get an instance of the ProductDetail Component
+            class. We can then access any member of its public API, such as the product property.
+        -> Running the preceding code will display an undefined value for the product property because
+            we do not set an initial value when the product detail component is initialized.
