@@ -1,0 +1,230 @@
+Manipulating data with pipes:
+
+- Pipes allow us to transform the outcome of our expressions at the view level. They take data as input,
+    transform it into the desired format, and display the output in the template.
+
+- The syntax of a pipe consists of the pipe name following the expression we want to transform, separated
+    by a pipe symbol (|):
+
+        expression | pipe
+    
+    -> Any parameters are added after the pipe name, and they are separated by colons:
+        
+        expression | pipe:param
+
+- Pipes can be used with interpolation and property binding in Angular templates and can be chained to each
+    other. Angular has a wide range of built-in pipe types already baked into it:
+    • uppercase/lowercase: This transforms a string into uppercase or lowercase letters.
+    • percent: This formats a number as a percentage.
+    • date: This formats a date or a string in a particular date format. The default usage of the pipe
+            displays the date according to the local settings of the user’s machine. However, we can pass
+            additional formats Angular has already baked in as parameters.
+    • currency: This formats a number as a local currency. We can override local settings and hange the
+                currency symbol, passing the currency code as a parameter to the pipe.
+    • json: This takes an object as an input and outputs it in JSON format, replacing single quotes with
+            double quotes. The main usage of the json pipe is debugging. It is an excellent way to see what
+            a complex object contains and print it nicely on the screen. 
+    • keyvalue: This converts an object into a collection of key-value pairs, where the key of each item
+                represents the object’s property and the value is its actual value.
+    • slice: This subtracts a subset (slice) of a collection or string. It accepts as parameters a starting
+            index, where it will begin slicing the input data, and, optionally, an end index. When the end
+            index is specified, the item at that index is not included in the resulting array. If the end
+            index is omitted, it falls back to the last index of the data.
+
+📝
+The slice pipe transforms immutable data. The transformed list is always a copy of the original data,
+even when it returns all items.
+
+    • async: This is used when we manage data handled asynchronously by our component class, and we need to
+            ensure that our views promptly reflect the changes. We will learn more about this pipe later in
+            Chapter 8, Communicating with Data Services over HTTP, where we will use it to fetch and display
+            data asynchronously.
+
+----------------------------------------------------------------------------------------------------------------
+
+- We will cover the lowercase, currency, and keyvalue pipes in more detail, but we encourage you to explore
+    the rest in the API reference at https://angular.dev/api:
+
+    1) Open the product-detail.component.ts file and import the CommonModule class:
+
+         👉 import { CommonModule } from '@angular/common';
+            import { Component, input, output } from '@angular/core';
+            import { Product } from '../product'; // importing interface
+
+            @Component({
+                selector: 'app-product-detail',
+                imports: [👉CommonModule],
+                templateUrl: './product-detail.component.html',
+                styleUrl: './product-detail.component.css',
+            })
+        
+        -> The CommonModule class exports the Angular built-in pipes. An Angular component must import
+            CommonModule before using built-in pipes in the component template.
+    
+    2) Open the product.ts file and add the following fields to the Product interface that describe
+        additional properties for a product:
+
+            export interface Product {
+                id: number;
+                title: string;
+            👉  price: number;
+            👉  categories: Record<number, string>;
+            }
+
+        -> The categories property is an object where the key represents the category ID, and the value
+            represents the category description. 
+
+    3) Open the product-list.component.ts file and modify the products array to set values for the new
+        properties: 
+
+            products: Product[] = [
+                {
+                    id: 1,
+                    title: 'Keyboard',
+                👉  price: 1500,
+                👉  categories: {
+                        1: 'Computing',
+                        2: 'Peripherals'
+                    }
+                },
+                {
+                    id: 2,
+                    title: 'Microphone',
+                    price: 4500,
+                    categories: {
+                        3: 'Multimedia'
+                    }
+                },
+                {
+                    id: 3,
+                    title: 'Web camera',
+                    price: 3500,
+                    categories: {
+                        1: 'Computing',
+                        2: 'Multimedia'
+                    }
+                },
+                {
+                    id: 4,
+                    title: 'Tablet',
+                    price: 45000,
+                    categories: {
+                        4: 'Entertainment'
+                    }
+                }
+            ];
+
+    4) Open the product-detail.component.html file and add a paragraph element to display the price of the
+        selected product in rupee:
+
+            @if(product()){
+                <div>
+                    <p>You selected:
+                    <strong>{{product()!.title}}</strong>
+                    </p>
+                👉 <p>{{product()!.price | currency: 'NPR'}}</p>
+
+                    <!-- event binding -->
+                    <button (click)="addToCart()">Add to cart</button>
+                </div>
+            }
+    
+    5) Run ng serve to start the application and select the Microphone from the product list:
+
+            You selected: Microphone
+            NPR4,500.00
+    
+    6) Add the following snippet below the product price to display the product categories:
+
+            <p>{{product()!.price | currency:'NPR'}}</p>
+        👉 <div class="pill-group">
+                @for (cat of product()!.categories | keyvalue; track cat.key) {
+                <p class="pill">{{cat.value | lowercase}}</p>
+                }
+            </div>
+        
+        -> In the preceding snippet, we used the @for block to iterate over the categories property of the
+            product variable.
+        -> The categories property is not iterable because it is a plain object, so, we used the keyvalue
+            pipe to convert it into an array that contains key and value properties.
+        -> The key property represents the category ID, a unique identifier we can use with the track
+            variable. The value property stores the category description.
+        -> Additionally, we used the lowercase pipe to convert the category description to lower case text.
+    
+    7) Add the following CSS styles to the product-detail.component.css file:
+
+            .pill-group {
+                display: flex;
+                flex-direction: row;
+                align-items: start;
+                flex-wrap: wrap;
+                gap: 1.25rem;
+            }
+            .pill {
+                display: flex;
+                align-items: center;
+                --pill-accent: var(--gray-900);
+                background: color-mix(in srgb, var(--pill-accent) 5%, transparent);
+                color: var(--pill-accent);
+                padding-inline: 0.75rem;
+                padding-block: 0.375rem;
+                border-radius: 2.75rem;
+                border: 0;
+                transition: background 0.3s ease;
+                font-family: var(--inter-font);
+                font-size: 0.875rem;
+                font-style: normal;
+                font-weight: 500;
+                line-height: 1.4rem;
+                letter-spacing: -0.00875rem;
+                text-decoration: none;
+            }
+
+    8) While running the application, select the Web camera product from the list: see pipes.png
+
+- Alternative to using the CommonModule, we could have imported each pipe class separately from the
+    @angular/common npm package:
+
+        👉 import { Component, input, output } from '@angular/core';
+            import { Component, input, output } from '@angular/core';
+            import { Product } from '../product'; // importing interface
+
+            @Component({
+                selector: 'app-product-detail',
+                imports: [👉KeyValuePipe, 👉CurrencyPipe, 👉LowerCasePipe],
+                templateUrl: './product-detail.component.html',
+                styleUrl: './product-detail.component.css',
+            })
+
+- In the final product-detail.component.html file, we use the snippet product()! many times to read the
+    value of the product property. Alternatively, we could create an alias using the @let syntax as follows:
+
+            @let selectedProduct = product()!;
+
+    The @let keyword is similar to the let keyword in JavaScript and is used to declare variables that are
+    available only in the component template. In the preceding snippet, we declare the selectedProduct
+    variable, which can be used in the rest of the HTML code as follows:
+
+           👉 @let selectedProduct = this.product()!;
+
+            @if(selectedProduct){
+                <div>
+                    <p>You selected:
+                    <strong>{{selectedProduct.title}}</strong>
+                    </p>
+                    <p>{{selectedProduct.price | currency:'NPR'}}</p>
+                    <div class="pill-group">
+                        @for (cat of selectedProduct.categories | keyvalue; track cat.key) {
+                        <p class="pill">{{cat.value | lowercase}}</p>
+                        }
+                    </div>
+                    <!-- event binding -->
+                    <button (click)="addToCart()">Add to cart</button>
+                </div>
+            }
+    
+    The @let keyword helps us in cases where we want to use complex expressions in templates such as:
+        • Ternary operators
+        • Nested object properties
+        • The async pipe
+

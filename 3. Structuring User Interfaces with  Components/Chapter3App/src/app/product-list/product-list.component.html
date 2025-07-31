@@ -39,10 +39,13 @@
   <!-- output binding: bind the onAdded method of product list component into to added output
   property of the product detail component -->
   <app-product-detail
-    #productDetail  
+    #productDetail
     [product]="selectedProduct"
     (added)="onAdded($event)">
   </app-product-detail>
+
+  <!-- local reference variable in template -->
+  <span>{{productDetail.product()?.title}}</span>
 
 </ul>
 

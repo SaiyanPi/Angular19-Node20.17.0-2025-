@@ -1,0 +1,13 @@
+Enriching Applications Using Pipes and Directives:
+
+- In the previous chapter, we built several components that rendered data on the screen with the help of
+    input and output properties. We’ll leverage that knowledge in this chapter to take our components to
+    the next level using Angular pipes and directives.
+- Pipes allow us to digest and transform the information we bind in our templates.
+    Directives enable more ambitious functionalities, such as manipulating the DOM or altering the
+    appearance and behavior of HTML elements.
+
+- In this chapter, we will learn about the following concepts:
+    • Manipulating data with pipes
+    • Building pipes
+    • Building directives

@@ -1,0 +1,9 @@
+Building pipes:
+
+- We have already seen what pipes are and what their purpose is in the Angular ecosystem. Next, we will
+    dive deeper into how we can build a pipe to provide custom transformations to data bindings.
+    In the following section, we will create a pipe that sorts our list of products by title.
+        3.1. Sorting data using pipes 
+        3.2. Passing parameters to pipes 
+        3.3. Change detection with pipes 
+        
