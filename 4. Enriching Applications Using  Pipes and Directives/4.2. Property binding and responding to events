@@ -1,0 +1,87 @@
+Property binding and responding to events:
+
+- Attribute directives are also concerned with the behavior of an HTML element. They can extend the 
+    functionality of the element and add new features.
+- The Angular framework provides two helpful decorators that we can use in our directives to enhance
+    the functionality of an HTML element:
+
+    • @HostBinding:This binds a value to the property of the native host element.
+
+    • @HostListener: This binds to an event of the native host element.
+
+📝
+The native host element is the element where our directive takes action.
+
+- The native <input> HTML element can support different input types, including simple text, radio 
+    buttons, and numeric values. When we use the latter, the input adds two arrows inline, up and 
+    down, to control its value. It is this feature of the input element that makes it look incomplete.
+    If we type a non-numeric character, the input still renders it.
+    We will create an attribute directive that rejects non-numeric values entered by the keyboard:
+
+1) Run the following Angular CLI command to create a new directive named numeric:
+
+        cmd: ng generate directive numeric
+
+2) Open the numeric.directive.ts file and import the two decorators that we are going to use:
+
+        import { Directive,👉 HostBinding,👉 HostListener } from '@angular/core';
+
+3) Define a currentClass property using the @HostBinding decorator that will be bound to the class
+    property of the <input> element:
+
+4) Define an onKeyPress method using the @HostListener decorator that will be bound to the keypress
+    native event of the <input> element:
+
+        export class NumericDirective {
+
+            constructor() { }
+
+            @HostBinding('class') currentClass = '';
+
+            @HostListener('keypress', ['$event']) onKeyPress(event: KeyboardEvent) {
+                const charCode = event.key.charCodeAt(0);
+                if (charCode > 31 && (charCode < 48 || charCode > 57)) {
+                    this.currentClass = 'invalid';
+                    event.preventDefault();
+                } else {
+                    this.currentClass = 'valid';
+                }
+            }
+        }
+    
+    -> The onKeyPress method contains the logic of how our directive works under the hood.
+    -> When the user presses a key inside an <input> element, Angular knows to call the onKeyPress 
+        method because we have registered it with the @HostListener decorator.
+    -> The @HostListener decorator accepts the event name and a list of arguments as parameters.
+        In our case, we pass the keypress event name and the $event argument, respectively.
+    -> The $event is the current object that triggered the event, which is of the KeyboardEvent type
+        and contains the keystrokes entered by the user.
+    -> Every time the user presses a key, we extract it from the $event object, convert it into a
+        Unicode character using the charCodeAt method, and check it against a non-numeric code.
+        
+        * charCode > 31: ignore control characters (like Tab, Enter, etc.)
+        * (charCode < 48 || charCode > 57):
+            - in ASCII, digits 0–9 have char codes from 48 to 57
+            - So if charCode is less than 48 or greater than 57, it's not a digit
+    -> If the character is non-numeric, we call the preventDefault method of the $event object to 
+        cancel the user action and roll back the <input> element to its previous state. At the same
+        time, we set the respective class to valid if the key is numeric and invalid if it is not. 
+
+5) We can apply the directive in an <input> tag as follows: see app.component.html file
+        
+        <label for="age">Your age:</label>
+        <input appNumeric id="age" name="age" required />
+
+    -> since input type is not specified, user can enter anything but we have used the numeric
+        derictive so users won't be able to type other than numbers
+
+📝
+We will see a real-world usage of the directive in Chapter 10, Collecting User Data with Forms.
+
+-----------------------------------------------------------------------------------------------------------
+
+Now that we have reached this point, it is fair to say that you have met almost every Angular 
+artifact for building Angular components, which are indeed the wheels and the engine of all An
+gular applications. In the forthcoming chapters, we will see how we can design our application 
+architecture better, manage dependency injection throughout our component tree, consume 
+data services, and leverage the new Angular router to show and hide components when required.

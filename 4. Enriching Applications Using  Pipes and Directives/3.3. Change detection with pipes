@@ -1,0 +1,71 @@
+Change detection with pipes:
+
+- There are two categories of pipes: pure and impure. All pipes are considered pure by default unless 
+    we set the pure property explicitly to false in the @Pipe decorator:
+
+        @Pipe({
+            name: 'sort',
+            pure: false
+        })
+
+- Angular executes pure pipes when there is a change to the reference of the input variable.
+    For example, if the products array in the ProductListComponent class is assigned to a new value, 
+    the pipe will correctly reflect that change. However, if we add a new product to the array using 
+    the native Array.push method, the pipe will not be triggered because the object reference of the 
+    array does not change
+    Another example is when we have created a pure pipe that operates on a single object. Similarly, if 
+    the reference of the value changes, the pipe executes correctly. If a property of the object changes, 
+    the pipe cannot detect the change.
+
+        CASE I: No change in Reference, using .push()
+
+            let arr = [1, 2, 3];
+            let originalRef = arr;
+
+            arr.push(4);
+
+            console.log(arr);         // [1, 2, 3, 4]
+            console.log(arr === originalRef);  // true ✅ 
+        
+        -> REFERENCE DID NOT CHANGED ONLY THE CONTENT DID
+        -> Angular's pure pipe won't detect this change and does not execute
+
+            
+    -----------------------------------------------------------------------------------------------------
+       
+        CASE II: Change in Reference, using spread operator ...()
+
+            let arr = [1, 2, 3];
+            let arr2 = [...arr, 4];
+
+            console.log(arr2);         // [1, 2, 3, 4]
+            console.log(arr === arr2); // false ❌
+            
+        -> REFERENCE CHANGED
+        -> Angular's pure pipe detects this change and gets execute
+
+- A word of caution, however—impure pipes call the transform method every time the change detection
+    cycle is triggered. So, this might not be good for performance.
+    Alternatively, you could leave the pure property unset and try to cache the value or work with
+    reducers and immutable data to solve this in a better way, like the following:
+
+        this.products= [ 
+            ...this.products,
+            {
+                id: 5,
+                title: 'Headphones',
+                price: 55,
+                categories: { 3: 'Multimedia' }
+            }
+        ];
+    
+    -> In the preceding snippet, we used the spread parameter syntax to create a new reference of the 
+        products array by appending a new item to the reference of the existing array.
+
+- Alternatively to a pure pipe, we can use a computed signal, which is more effective and ergonomic 
+    due to the following reasons:
+    • We can access the value of the signal in the component class, as opposed to pipes, where their
+        values can be read only in the template
+    • A computed signal is a simple plain function so we do not need to use a TypeScript class as in
+        pipes
+    We will learn more about signals in Chapter 7, Tracking Application State with Signals.  

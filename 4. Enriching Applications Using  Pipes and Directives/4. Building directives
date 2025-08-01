@@ -1,0 +1,24 @@
+Building directives:
+
+- Angular directives are HTML attributes that extend the behavior or the appearance of a standard 
+    HTML element. When we apply a directive to an HTML element or even an Angular component, we can
+    add custom behavior or alter its appearance. There are three types of directives:
+    • Components: 
+        Components are directives that contain an associated HTML template.
+
+    • Structural directives:
+        These add or remove elements from the DOM.
+
+    • Attribute directives:
+        These modify the appearance of a DOM element or define a custom behavior. We met attribute
+        directives in class and style bindings in the previous chapter. 
+
+- If a directive has a template attached, then it becomes a component. In other words, components are
+    Angular directives with a view.
+    This rule is handy when deciding whether to create a component or a directive for your needs.
+    IF YOU NEED A TEMPLATE, CREATE A COMPONENT; OTHERWISE, MAKE IT A DIRECTIVE.
+
+- Custom directives allow us to attach advanced behaviors to elements in the DOM or modify their 
+    appearance. In the following sections, we will explore how to create attribute directives.
+    4.1. Displaying dynamic data
+    4.2. Property binding and responding to events 

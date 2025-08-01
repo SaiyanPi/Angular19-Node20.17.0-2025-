@@ -1,0 +1,112 @@
+Displaying dynamic data:
+
+- Attribute directives are commonly used to alter the appearance of an HTML element.
+- We have all probably found ourselves in a situation where we want to add copyrighted information to
+    our applications. Ideally, we want to use this information in various parts of our application, on
+    a dashboard or a contact page. The content of the information should also be dynamic. The year 
+    or range of years (it depends on how you want to use it) should update dynamically according to 
+    the current date.
+    Our first intention is likely to be to create a component, but what about making  it a directive
+    instead? This way, we could attach the directive to any element we want and not bother with a
+    particular template. So, let’s begin!
+
+    1) We will use the ng generate command of the Angular CLI, passing the name of the directive as 
+        a parameter:
+
+            cmd: ng generate directive copyright
+        
+        -> The preceding command will generate all the necessary files of the copyright directive
+            inside the folder where we run the ng generate command.
+        -> The TypeScript class of the directive is defined in the copyright.directive.ts file:
+
+            import { Directive } from '@angular/core';
+
+            @Directive({
+                selector: '[appCopyright]'
+            })
+            export class CopyrightDirective {
+
+                onstructor() { }
+
+            }
+
+        -> The @Directive is an Angular decorator that defines the properties of the Angular directive.
+        -> It configures a TypeScript class as an Angular directive using the selector property. It is
+            a CSS selector that instructs Angular to load the directive in the location that finds the
+            corresponding attribute in an HTML template.
+            The Angular CLI adds the app prefix by default, but you can customize it using the 
+            --prefix option when creating the Angular project.
+
+📝
+When we use the selector in an HTML template, we do not add the square brackets.
+
+    2) Open the styles.css file and add the following CSS styles:
+
+            .copyright {
+                font-family: "Inter", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto,
+                    Helvetica, Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji","Segoe UI Symbol";
+                width: 100%;
+                min-height: 100%;
+                display: flex;
+                justify-content: center;
+                align-items: center;
+                padding: 1rem;
+                box-sizing: inherit;
+                position: relative;
+            }
+        
+        -> we added the CSS styles for our copyright directive in the global CSS stylesheet.
+            Directives do not have an accompanying CSS file that we can use, such as components.
+
+    3) Open the copyright.directive.ts file and import the ElementRef class from the  @angular/core
+        npm package:
+
+            import { Directive, 👉 ElementRef } from '@angular/core';
+
+    4) Modify the constructor of the directive as follows:
+
+            constructor(👉el: ElementRef) {
+                👉const currentYear = new Date().getFullYear();
+                👉const targetEl: HTMLElement = el.nativeElement;
+                👉targetEl.classList.add('copyright');
+                👉targetEl.textContent = `Copyright ©${currentYear} All Rights Reserved`;
+            }
+        
+        -> In the preceding snippet, we used the ElementRef class to access and manipulate the
+            underlying HTML element attached to the directive.
+        -> The nativeElement property contains the actual native HTML element.
+        -> We also add the copyright class using the add method of the classList property.
+        -> Finally, we change the text of the element by modifying the textContent property.
+    
+    5) Open the app.component.ts file and import the CopyrightDirective class:
+
+            import { Component } from '@angular/core';
+            import { RouterOutlet } from '@angular/router';
+            import { ProductListComponent } from './product-list/product-list.component';
+         👉 import { CopyrightDirective } from './copyright.directive';
+
+            @Component({
+            selector: 'app-root',
+            imports: [RouterOutlet, ProductListComponent, 👉 CopyrightDirective],
+            templateUrl: './app.component.html',
+            styleUrl: './app.component.css'
+            })
+
+    6) Open the app.component.html file and add a <footer> element to display copyright information:
+
+            <main class = "main">
+                <div class="content">
+                    <app-product-list></app-product-list>
+                </div>
+            </main>
+         👉<footer appCopyright></footer>
+            <router-outlet />
+
+    7) Run the application using the ng serve command and observe the application output:
+        see dynamic-data.png
+
+- When creating directives, it is important to consider reusable functionality that doesn’t necessarily 
+    relate to a particular feature.
+    The topic we looked at was copyrighted information, but we could build other functionalities, such
+    as tooltips and collapsible or infinite scrolling features, with relative ease. In the following
+    section, we will build another attribute directive that explores the options available further.

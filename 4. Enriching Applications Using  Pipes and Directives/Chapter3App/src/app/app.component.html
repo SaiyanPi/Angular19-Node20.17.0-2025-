@@ -1,5 +1,16 @@
-<div class="left-side">
+<main class = "main">
+  <div class="content">
+    <app-product-list></app-product-list>
+  </div>
 
-  <app-product-list></app-product-list>
 
-</div>
+  <form>
+    <h2>Directives: Property binding and responsing to events</h2>
+    <label for="age">Your age:</label>
+    <input appNumeric id="age" name="age" required />
+  </form>
+
+
+</main>
+<footer appCopyright></footer>
+<router-outlet />
