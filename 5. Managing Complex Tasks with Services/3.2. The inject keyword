@@ -1,0 +1,35 @@
+The inject keyword:
+
+- The Angular framework contains a built-in inject method that we can use to inject services without
+    using the constructor. There are some cases where we would like to use the inject method:
+
+    • The constructor contains many injected services, making our code unreadable.
+
+    • Constructors cannot be used when working with pure functions in the Angular router or the HTTP 
+        client, as we will learn in the following chapters.
+
+-  Let’s see how we could refactor the product list component to use the inject method:
+
+1) Open the product-list.component.ts file and import the inject method from the  @angular/core npm
+    package:
+
+        import { Component, OnInit,👉 Inject } from '@angular/core';
+
+2) Declare the following property in the ProductListComponent class:
+
+        private readonly productService = inject(ProductsService);
+
+3) Remove the constructor from the ProductListComponent class.
+
+- The application should still work as expected if we run the ng serve command. The product list should
+    be displayed as in the preceding section.
+
+- We will explore additional use cases for the inject method in Chapter 8, Communicating with Data
+    Services over HTTP, and Chapter 9, Navigating through Applications with Routing.
+
+- Compared to the constructor approach, the inject method provides more accurate types, enforcing
+    strongly typed Angular applications. 
+
+- As we learned, when we create a new Angular service, the Angular CLI registers this service with 
+    the root injector of the application by default. In the following section, we’ll learn about the 
+    internals of the DI mechanism and how the root injector works.

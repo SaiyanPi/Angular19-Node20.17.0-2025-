@@ -29,6 +29,9 @@ The native host element is the element where our directive takes action.
 3) Define a currentClass property using the @HostBinding decorator that will be bound to the class
     property of the <input> element:
 
+        @HostBinding('class') currentClass = '';
+
+
 4) Define an onKeyPress method using the @HostListener decorator that will be bound to the keypress
     native event of the <input> element:
 

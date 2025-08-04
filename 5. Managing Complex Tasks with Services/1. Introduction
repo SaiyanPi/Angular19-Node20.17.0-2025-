@@ -1,0 +1,18 @@
+Managing Complex Tasks with Services:
+
+- We have reached a point in our journey where we can successfully develop more complex applications by
+    nesting components within other components in a sort of component tree. 
+- However, bundling all our business logic into a single component is not the way to go. Our application 
+    might become unmaintainable very soon as it develops.
+- In this chapter, we’ll investigate the advantages that Angular’s dependency management mechanism can bring
+    to the table to overcome such problems. We will learn how to use the Angular Dependency Injection (DI)
+    mechanism to declare and consume our dependencies across the application with minimum effort and optimal
+    results. By the end of this chapter, you will be able to create an Angular application that is correctly
+    structured to enforce the Separation of Concerns (SoC) pattern using services.
+
+- We will cover the following concepts relating to Angular services:
+    • Introducing Angular DI
+    • Creating our first Angular service
+    • Providing dependencies across the application
+    • Injecting services in the component tree
+    • Overriding providers in the injector hierarchy

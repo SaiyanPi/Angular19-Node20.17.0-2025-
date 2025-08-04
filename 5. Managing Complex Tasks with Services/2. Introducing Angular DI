@@ -1,0 +1,69 @@
+Introducing Angular DI:
+
+- DI is an application design pattern we also come across in other languages, such as C# and Java. As our
+    applications grow and evolve, each code entity will internally require instances of other objects, better
+    known as dependencies. Passing such dependencies to the consumer code entity is known as an injection,
+    and it also entails the participation of another code entity called an injector.
+    An injector is responsible for instantiating and bootstrapping the required dependencies to be ready for
+    use when injected into a consumer. The consumer knows nothing about how to instantiate its dependencies
+    and is only aware of the interface they implement to use them.
+
+- Angular includes a top-notch DI mechanism to expose required dependencies to any Angular artifact of an
+    Angular application. Before delving deeper into this subject, let’s look at the problem that DI in
+    Angular is trying to address.
+
+Problem:
+In Chapter 3, Structuring User Interfaces with Components, we learned how to display a list of objects 
+using the @for block. We used a static list of Product objects that were declared in the
+product-list.component.ts file, as:
+
+        products: Product[] = [
+            {
+                id: 1,
+                title: 'Keyboard',
+                price: 1500,
+                categories: {
+                    1: 'Computing',
+                    2: 'Peripherals'
+                }
+            },
+            {
+                id: 2,
+                title: 'Microphone',
+                price: 4500,
+                categories: {
+                    3: 'Multimedia'
+                }
+            },
+            {
+                id: 3,
+                title: 'Web camera',
+                price: 3500,
+                categories: {
+                    1: 'Computing',
+                    2: 'Multimedia'
+                }
+            },
+            {
+                id: 4,
+                title: 'Tablet',
+                price: 45000,
+                categories: {
+                    4: 'Entertainment'
+                }
+            }
+        ];
+
+This previous approach has two main drawbacks:
+1. In real-world applications, we rarely work with static data. It usually comes from a back end API or some
+    other external source.
+2. The product list is tightly coupled with the component. Angular components are responsible for the
+    presentation logic and should not be concerned with how to get data. They only need to display it in the
+    HTML template. Thus, they should delegate business logic to services to handle such tasks.
+
+- In the following section, we’ll learn how to avoid these obstacles using Angular services. We will create an
+    Angular service that will return the product list. Thus, we will effectively delegate business logic tasks
+    away from the component.
+
+⚠️
+Remember: THE COMPONENT SHOULD ONLY BE CONCERNED WITH PRESENTATION LOGIC.

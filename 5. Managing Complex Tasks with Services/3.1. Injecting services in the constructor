@@ -1,0 +1,82 @@
+Injecting services in the constructor:
+
+- The most common way to use a service in an Angular component is through its constructor:
+
+1) Open the product-list.component.ts file and modify the products property so that it is initialized to an
+    empty array:
+
+        products: Product[] = [];
+
+2) Add the following statement to import the ProductsService class:
+
+        import { ProductsService } from '../products.service';
+
+3) Create a component property called productService and give it a type of ProductsService: 
+
+        private productService: ProductsService;
+
+4) Instantiate the property using the new keyword in the component’s constructor:
+
+        constructor(){
+            this.productService = new ProductsService();
+        }
+
+5) Import the OnInit interface from the @angular/core npm package:
+
+        import { Component,👉 OnInit } from '@angular/core';
+
+6) Add the OnInit interface to the list of implemented interfaces of the ProductListComponent class:
+
+        export class ProductListComponent 👉 implements OnInit{
+            // omitted
+        }
+
+7) Add the following ngOnInit method that calls the getProducts method of the productService property and
+    assigns the returned value to the products property:
+
+        ngOnInit(): void {
+            this.products = this.productService.getProducts();
+        }
+
+- Run the application to verify that the list of products is still shown correctly on the page.
+
+- Awesome! We have successfully wired up our component with the service, and our application looks great.
+    Well, this seems to be the case, but it’s actually not. There are some problems with the actual
+    implementation. If the ProductsService class must change, maybe to accommodate another dependency,
+    ProductListComponent should also change the implementation of its constructor. Thus, it is evident
+    that the product list component is tightly coupled to the implementation of ProductsService.
+    It prevents us from altering, overriding, or neatly testing the service if required. It also entails
+    that a new ProductsService object is created every time we render a product list component, which
+    might not be desired in specific scenarios, such as when we expect to use an actual singleton service.
+
+    DI systems try to solve these issues by proposing several patterns, and the constructor injection 
+    pattern is the one enforced by Angular. We could remove the productService component property and
+    inject the service directly into the constructor. The resulting ProductListComponent class would be
+    the following:
+
+        export class ProductListComponent implements OnInit {
+            products: Product[] = [];
+
+            selectedProduct: Product | undefined;
+
+            constructor(private productService: ProductsService) {
+                this.productService = new ProductsService();
+            }
+
+            onAdded(stuff: Product) {
+                alert(`Added ${stuff.title} to cart`);
+            }
+
+            ngOnInit(): void {
+                this.products = this.productService.getProducts();
+            }
+        }
+
+🧠🚀
+Consider declaring injected services as readonly to provide more stable code and prevent
+re-assignment of the service. In the preceding snippet, the constructor could be re-written
+as constructor(private readonly productService: ProductsService) {}.
+
+- The component does not need to know how to instantiate the service. On the other hand, it expects 
+    such a dependency to be available before it is instantiated so that it can be injected through its 
+    constructor. This approach is easier to test as it allows us to override it or mock it up.

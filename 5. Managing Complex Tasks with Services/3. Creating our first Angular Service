@@ -1,0 +1,84 @@
+Creating our first Angular service:
+
+- To create a new Angular service, we use the ng generate command of the Angular CLI while passing the name
+    of the service as a parameter:
+
+        cmd: ng generate service products
+    
+    -> Running the preceding command will create the products service, which consists of the products.service.ts
+        file and its accompanying unit test file, products.service.spec.ts.
+
+- We usually name a service after the functionality that it represents. Every service has a business context
+    or domain within which it operates. When it starts to cross boundaries between different contexts, this
+    is an indication that you should break it into different services. A products service should be concerned
+    with products. Similarly, orders should be managed by a separate orders service.
+
+- An Angular service is a TypeScript class marked with the @Injectable decorator. The decorator identifies
+    the class as an Angular service that can be injected into other Angular artifacts such as components,
+    directives, or even other services.It accepts an object as a parameter with a single property named
+    providedIn, which defines which injector provides the service. 
+
+- An Angular service, by default, is registered with an injector – the root injector of the Angular 
+    application, as defined in the products.service.ts file:
+
+        import { Injectable } from '@angular/core';
+
+        @Injectable({
+            providedIn: 'root'
+        })
+        export class ProductsService {
+
+            constructor() { }
+        }
+
+    Our service does not contain any implementation. Let’s add some logic so that our component can use it:
+
+    1) Import the Product interface:
+
+            import { Injectable } from '@angular/core';
+        👉  import { Product } from './product';
+    
+    2) Create the following method in the ProductsService class:
+
+            getProdcuts() : Product[]{
+                return[
+                    {
+                        id: 1,
+                        title: 'Keyboard',
+                        price: 1500,
+                        categories: {
+                            1: 'Computing',
+                            2: 'Peripherals'
+                        }
+                    },
+                    {
+                        id: 2,
+                        title: 'Microphone',
+                        price: 4500,
+                        categories: {
+                            3: 'Multimedia'
+                        }
+                    },
+                    {
+                        id: 3,
+                        title: 'Web camera',
+                        price: 3500,
+                        categories: {
+                            1: 'Computing',
+                            2: 'Multimedia'
+                        }
+                    },
+                    {
+                        id: 4,
+                        title: 'Tablet',
+                        price: 45000,
+                        categories: {
+                            4: 'Entertainment'
+                        }
+                    }
+                ];
+            }
+
+    In the following sections, we will learn how to use the service in our application.
+        - Injecting services in the constructore
+        - The inject keyword
