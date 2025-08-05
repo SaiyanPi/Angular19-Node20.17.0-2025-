@@ -185,7 +185,7 @@ even when it returns all items.
 - Alternative to using the CommonModule, we could have imported each pipe class separately from the
     @angular/common npm package:
 
-        👉 import { Component, input, output } from '@angular/core';
+        👉 import { CurrencyPipe, KeyValuePipe, LowerCasePipe } from '@angular/common';
             import { Component, input, output } from '@angular/core';
             import { Product } from '../product'; // importing interface
 

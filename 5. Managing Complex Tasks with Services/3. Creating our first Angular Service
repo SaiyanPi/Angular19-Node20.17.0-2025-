@@ -15,7 +15,7 @@ Creating our first Angular service:
 
 - An Angular service is a TypeScript class marked with the @Injectable decorator. The decorator identifies
     the class as an Angular service that can be injected into other Angular artifacts such as components,
-    directives, or even other services.It accepts an object as a parameter with a single property named
+    directives, or even other services. It accepts an object as a parameter with a single property named
     providedIn, which defines which injector provides the service. 
 
 - An Angular service, by default, is registered with an injector – the root injector of the Angular 

@@ -13,7 +13,7 @@ Injecting services in the constructor:
 
 3) Create a component property called productService and give it a type of ProductsService: 
 
-        private productService: ProductsService;
+        private readonly productService: ProductsService;
 
 4) Instantiate the property using the new keyword in the component’s constructor:
 
@@ -59,9 +59,7 @@ Injecting services in the constructor:
 
             selectedProduct: Product | undefined;
 
-            constructor(private productService: ProductsService) {
-                this.productService = new ProductsService();
-            }
+            constructor(private productService: ProductsService) {}
 
             onAdded(stuff: Product) {
                 alert(`Added ${stuff.title} to cart`);

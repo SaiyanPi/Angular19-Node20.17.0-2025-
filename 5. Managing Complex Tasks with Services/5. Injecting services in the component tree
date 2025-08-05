@@ -1,0 +1,16 @@
+Injecting services in the component tree:
+
+- As we learned in the preceding section, Angular uses an element injector to provide services in 
+    components through the providers property of the @Component decorator.
+    A service that registers with the element injector can serve two purposes:
+
+    • It can be shared with its child components
+
+    • It can create multiple copies of the service every time the component that provides the 
+        service is rendered
+
+- In the following sections, we’ll learn how to apply each approach.
+    5.1. Sharing dependencies through components
+    5.2. Root and component injectors
+    5.3. Sandboxing components with multiple instances
+    5.4. Restricting provider lookup

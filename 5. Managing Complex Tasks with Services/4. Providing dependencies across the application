@@ -1,0 +1,101 @@
+Providing dependencies across the application:
+
+- The Angular framework offers a DI mechanism to provide dependencies in Angular artifacts such as
+    components, directives, pipes, and services. The Angular DI is based on an injector hierarchy 
+    where at the top there is the root injector of an Angular application.
+
+- Injectors in Angular can examine the dependencies in the constructor of an Angular artifact and 
+    return an instance of the type represented by each dependency, so that we can use it straight away 
+    in the implementation of our Angular class. 
+
+- The injector maintains a list of all dependencies that an Angular application needs. When a component
+    or other artifact wants to use a dependency, the injector first checks to see if it has already
+    created an instance of this dependency. If not, it creates a new one, returns it to the component,
+    and keeps a copy for further use. The next time the same dependency is requested, it returns the
+    copy previously created.
+
+    But how does the injector know which dependencies an Angular application needs?
+
+    When we create an Angular service, we use the providedIn property of the @Injectable decorator 
+    to define how it is provided to the application. That is, we create a provider for this service.
+    A provider is a recipe containing guidelines on creating a specific service. During application start
+    up, the framework is responsible for configuring the injector with providers of services so that it 
+    knows how to create one upon request. An Angular service is configured with the root injector by 
+    default when created with the CLI. The root injector creates singleton services that are globally 
+    available through the application
+
+- In Chapter 1, Building Your First Angular Application, we learned that the application configuration 
+    object defined in the app.config.ts file has a providers property where we can register application
+    services.
+    We could remove the providedIn property from the @Injectable decorator of the products.service.ts
+    file and add it in that array directly. Registering a service in this way is the same as configuring
+    the service with providedIn: 'root'. The main difference between them is that the providedIn syntax
+    is tree shakable.
+    When you provide a service through the application configuration object, the Angular compiler 
+    cannot say if the service is used somewhere in the application. So, it includes the service in the 
+    final bundle a priori. Thus, using the @Injectable decorator over the providers array of the 
+    application configuration is preferable.
+
+💡
+Tree shaking is the process of finding dependencies that are not used in an application 
+and removing them from the final bundle. In the context of Angular, the Angular compiler
+can detect and delete Angular services that are not used, resulting in a smaller bundle.
+
+📝
+You should always register singleton services with the root injector.
+
+- The root injector is not the only injector in an Angular application. Components have their injectors,
+    too. Angular injectors are also hierarchical. Whenever an Angular component defines a token in its
+    constructor, the injector searches for a type that matches that token in the pool of registered
+    providers. If no match is found, it delegates the search to the parent component’s provider and
+    keeps bubbling the component injector tree until it reaches the root injector. If no match is found,
+    Angular throws an exception. 
+
+- Let’s explore the injector hierarchy of the product list component using Angular DevTools:
+
+1) Run the application using the ng serve command and preview it at http://localhost:4200.
+
+2) Start Angular DevTools and select the Components tab.
+
+3) Select the app-product-list component from the component tree: see ComponentsTab.png
+    -> the Injected Services section contains the services injected in the component whic is
+        ProdcutService
+
+4) Click on the down arrow next to the ProductsService label, and you will see the following diagram:
+    see Product-list-injector-hierarchy.png
+
+            root
+              ^
+              |
+        Standalone[_AppComponent]
+              ^
+              |
+        AppComponent
+              ^
+              |
+    ProductListComponent
+
+📝
+The injector hierarchy diagram in Angular DevTools is in horizontal orientation. Here, we show it
+vertically for readability.. 
+
+    -> The preceding diagram depicts the injector hierarchy of the product list component. It contains 
+        two main injector hierarchy types common to an Angular application: environment and element 
+        injectors. 
+    -> Environment injectors are configured using the providedIn property(products.service.ts) and the
+        providers array in the application configuration object(app.config.ts). 
+    -> In our case, we see the Root and Standalone[_AppComponent] injectors because the products service
+        is provided from the root injector using the providedIn property.
+    -> Angular creates an element injector for each component which can be configured from the providers
+        array of the @Component decorator, as we will see in the following section.
+    -> In our case, we see the AppComponent and ProductListComponent injectors because these components 
+        are related directly to the product list.
+
+💡
+You can select the Injector Tree tab of Angular DevTools for a more detailed analysis of the application
+injector hierarchy per type (see Environment-Elemet-hierarchy). You can also learn more about the
+different kinds of injectors at
+https://angular.dev/guide/di/hierarchicaldependency-injection#types-of-injector-hierarchies.
+
+- Components create injectors, so they are immediately available to their child components. We’ll 
+    learn about this in detail in the following section.

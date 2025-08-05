@@ -1,9 +1,9 @@
 import { Injectable } from '@angular/core';
 import { Product } from './product';
 
-@Injectable({
-  providedIn: 'root'
-})
+@Injectable(
+  // { providedIn: 'root' } //Environment Injectors
+)
 export class ProductsService {
 
   constructor() { }
