@@ -5,12 +5,13 @@
 <ul class = "pill-group">
   @for (product of products | sort; track product.id; let i = $index) {
     <li class="pill" (click)="selectedProduct = product">
-      @switch (product.title) {
+      <!-- @switch (product.title) {
         @case ('Keyboard') {⌨️}
         @case ('Microphone') {🎙️}
         @default {🏷️}
       }
-      {{product.title}}
+      {{product.title}} -->
+      <app-product-view [id]="product.id"></app-product-view>
     </li>
   }
   @empty {

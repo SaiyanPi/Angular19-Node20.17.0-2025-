@@ -1,0 +1,24 @@
+Overriding providers in the injector hierarchy:
+
+-  We already learned how to use the providers array of the @Component decorator in the 5.1. Sharing 
+    dependencies through components section:
+
+        providers: [ProductsService]
+    
+    -> The preceding syntax is called class provider syntax and is shorthand for the provide object 
+        literal syntax shown below:
+
+        providers: [
+            { provide: ProductsService, useClass: ProductsService }
+        ]
+
+        The preceding syntax uses an object with the following properties:
+        • provide:
+        This is the token used to configure the injector. It is the actual class that consumers of the
+        dependency inject into their constructors.
+        • useClass:
+        This is the actual implementation the injector will provide to the consumers. The property
+        name will differ according to the implementation type provided. The type can be a class, a
+        value, or a factory function. In this case, we use useClass because we are providing a class.
+
+-  Let’s look at some examples to get an overview of how to use the provide object literal syntax.

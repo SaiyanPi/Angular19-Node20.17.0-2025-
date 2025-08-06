@@ -1,0 +1,189 @@
+Sandboxing components with multiple instances:
+
+- When we provide a service through the element injector and inject it into the component’s 
+    constructor, a new instance is created every time the component is rendered on the page.
+
+- It can come in handy in cases such as when we want to have a local cache service for each component. 
+    We will explore this scenario by transforming our Angular application so that the product list 
+    displays a quick view of each product using an Angular service:
+
+1) Run the following command to create a new Angular component for the product view:
+
+        CMD: ng generate component product-view
+
+2) Open the product-view.component.ts file and declare an input property named id so we can pass a
+    unique identifier of the product we want to display:
+
+        import { Component,👉 input} from '@angular/core';
+
+        @Component({
+            selector: 'app-product-view',
+            imports: [],
+            templateUrl: './product-view.component.html',
+            styleUrl: './product-view.component.css'
+        })
+        export class ProductViewComponent {
+          👉  id = input<number>();
+        }
+
+3) Run the following Angular CLI command inside the product-view folder to create an Angular service
+    that will be dedicated to the product view component:
+
+        cmd: ng generate service product-view
+
+4) Open the product-view.service.ts file and remove the providedIn property from the @Injectable
+    decorator because we will provide it later in the product view component.
+
+5) Inject ProductsService into the constructor of the ProductViewService class:
+
+        import { Injectable } from '@angular/core';
+    👉 import { ProductsService } from '../products.service';
+
+        @Injectable()
+        export class ProductViewService {
+         👉  constructor(private productService: ProductsService) {}
+        }
+
+    -> This technique is called service-in-a- service because we inject one angular service into
+        another.
+
+6) In product-view.service.ts, Create a method named getProduct that takes an id property as a
+    parameter. The method will call the getProducts method of the ProductsService class and search
+    through the product list based on the id. If it finds the product, it will keep it in a local
+    variable named product:
+
+        import { Injectable } from '@angular/core';
+        import { ProductsService } from '../products.service';
+      👉  import { Product } from '../product';
+
+
+        @Injectable()
+        export class ProductViewService {
+
+            constructor(private productService: ProductsService) {}
+
+           👉 private product: Product | undefined;
+
+           👉 getProduct(id: number): Product | undefined {
+                const products = this.productService.getProducts()
+                if(!this.product){
+                this.product = products.find(product => product.id === id)
+                }
+                return this.product;
+            }
+        }
+
+- We now have created the essential Angular artifacts for working with the product view component.
+    All we need to do now is connect them and wire them up to the product list
+
+1) Inject ProductViewService in the constructor of the ProductViewComponent and implement the
+    ngOnInit method:
+
+        import { Component, input,👉 OnInit} from '@angular/core';
+     👉   import { ProductViewService } from './product-view.service';
+
+        @Component({
+            selector: 'app-product-view',
+            imports: [],
+            templateUrl: './product-view.component.html',
+            styleUrl: './product-view.component.css',
+          👉  providers: [ProductViewComponent]
+        })
+        export class ProductViewComponent implements OnInit {
+
+            id = input<number>();
+
+           👉 constructor(private productViewService: ProductViewService){}
+
+           👉 ngOnInit(): void {
+                
+            }
+        }
+
+2) Create a component property to keep the product that we will fetch from the ProductViewService
+    class:
+
+        import { Component, input, OnInit} from '@angular/core';
+        import { ProductViewService } from './product-view.service';
+      👉  import { Product } from '../product';
+
+        @Component({
+            selector: 'app-product-view',
+            imports: [],
+            templateUrl: './product-view.component.html',
+            styleUrl: './product-view.component.css',
+            providers: [ProductViewComponent]
+        })
+        export class ProductViewComponent implements OnInit {
+
+            id = input<number>();
+          👉  product: Product | undefined;
+
+            constructor(private productViewService: ProductViewService){}
+
+            ngOnInit(): void {
+                
+            }
+        }
+
+3) Modify the ngOnInit method so that it calls the getProduct method of the ProductViewService class
+    as follows:
+
+        ngOnInit(): void {
+          👉  this.product = this.productViewService.getProduct(this.id()!);
+        }
+    
+    -> In the preceding snippet, we pass the id component property to the getProduct method 
+        as a parameter and assign the returned value to the product property.
+
+4) Open the product-view.component.html file and replace its content with the following HTML template:
+
+        @switch (product?.title) {
+            @case ('Keyboard') {⌨️}
+            @case('Microphone') {🎙️}
+            @default {🏷️}
+        }
+        {{product?.title}}
+
+5) Open the product-list.component.ts file and import the ProductViewComponent class:
+
+        import { Component, OnInit, inject } from '@angular/core';
+        import { Product } from '../product'; // importing interface
+        import { ProductDetailComponent } from '../product-detail/product-detail.component';
+        import { SortPipe } from '../sort.pipe';
+        import { ProductsService } from '../products.service';
+        import { FavoritesComponent } from '../favorites/favorites.component';
+    👉  import { ProductViewComponent } from '../product-view/product-view.component';
+
+        @Component({
+            selector: 'app-product-list',
+            imports: [ProductDetailComponent, SortPipe, FavoritesComponent,👉 ProductViewComponent],
+            templateUrl: './product-list.component.html',
+            styleUrl: './product-list.component.css',
+            providers: [ProductsService]
+        })
+
+6) Finally, open the product-list.component.html file and modify the @for block to use the product
+    view component:
+
+        @for (product of products | sort; track product.id; let i = $index) {
+            <li class="pill" (click)="selectedProduct = product">
+            <!-- @switch (product.title) {
+                @case ('Keyboard') {⌨️}
+                @case ('Microphone') {🎙️}
+                @default {🏷️}
+            }
+            {{product.title}} -->
+            <app-product-view [id]="product.id"></app-product-view>
+            </li>
+        }
+        @empty {
+            <li class = "pill">No products available</li>
+        }
+
+- If we run our application with the ng serve command, we will see that the product list is still 
+    displayed correctly.
+
+- Each rendered product view component creates a dedicated sandboxed ProductViewService 
+    instance for its purpose. Any other component cannot share the instance or be changed except 
+    by the component that provides it.

@@ -1,0 +1,77 @@
+Root and component injectors:
+
+- We have already learned that when we create an Angular service using the Angular CLI, the service 
+    is provided in the application’s root injector by default. How does this differ when providing a 
+    service through the element injector of a component?
+
+- Services provided with the application root injector are available throughout the whole application.
+    When a component wants to use such a service, it only needs to inject it, nothing more. 
+
+- Now, if the component provides the same service through its element injector, it will get an
+    instance of the service entirely different from the one from the root injector.
+    This technique is called service scope limiting because we limit the scope of the service to
+    a specific part of the component tree: see Service-scope-limiting.png
+
+    1) Our current scenario:
+
+            ProductsService
+    ---------------------------------
+    root        ProductListComponent
+     |                  |
+     |                  |     constructor(private productService: ProductsService)
+     |                  |<-----------------------------------------------------------| Favorites
+     |                  |                   new ProductService()                     | Products
+     |                  |----------------------------------------------------------->| Copmponent  
+    
+    -> Illustrates ProductsService can be provided through two injectors: the application root
+        injector and the element injector of the product list component. 
+
+    -> The FavoritesComponent class injects ProductsService through constructor to use it.
+
+    -> According to the injector hierarchy, it will first ask the injector of its parent component, 
+        ProductListComponent, about providing the service. The ProductListComponent class indeed
+        provides ProductsService, so it creates a new instance of the service and returns it to 
+        FavoritesComponent.
+
+
+    2) consider a scenario where another component in our application, CmpA, which is not a child of
+        ProductListComponent and does not contain any parent component that provides the required
+        service, wants to use ProductsService:
+
+                ProductsService
+    ---------------------------------
+    root        ProductListComponent
+     |                  |
+     |                  |     constructor(private productService: ProductsService)
+     |<------------------------------------------------------------------------------| 
+     |                  |     const productService = new ProductService()            | CmpA
+     |------------------------------------------------------------------------------>|   
+     |                  |
+     |                  |
+
+    -> Since it is not a child component of ProductListComponent and does not contain any parent 
+        component that provides the required service, it will finally reach the application root
+        injector.
+    -> The root injector that provides ProductsService checks if it has already created an instance
+        for that service. If not, it creates a new one, called productService, and returns it to CmpA.
+        It also keeps productService in the local pool of services for later use.
+
+    -> 📝: currently our root injector is removed/commented out because no such component exists in our
+        application yet. But if such component to be exist we need to have a root injector
+    
+    3) consider a scenario where there is another component CmpB like CmpA which wants to use 
+        productService:
+
+                 ProductsService
+    ---------------------------------
+    root        ProductListComponent
+     |                  |
+     |                  |     constructor(private productService: ProductsService)
+     |<------------------------------------------------------------------------------| 
+     |                  |                 ProductService                             | CmpA
+     |------------------------------------------------------------------------------>|   
+     |                  |
+     |                  |
+
+    -> The root injector knows it has already created the productService instance when CmpA 
+        requested it and returns it immediately to the CmpB component.

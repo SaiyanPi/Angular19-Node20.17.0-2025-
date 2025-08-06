@@ -1,0 +1,82 @@
+Restricting provider lookup:
+
+
+- We can only constrain dependency lookup to the next upper level. To do so, we need to apply the 
+    @Host decorator to those dependency parameters whose provider lookup we want to restrict.
+
+    In the favorite component:
+
+        import { CommonModule } from '@angular/common';
+        import { Component,👉 Host, OnInit } from '@angular/core';
+        import { Product } from '../product';
+        import { ProductsService } from '../products.service';
+
+        @Component({
+            selector: 'app-favorites',
+            imports: [CommonModule],
+            templateUrl: './favorites.component.html',
+            styleUrl: './favorites.component.css'
+        })
+        export class FavoritesComponent implements OnInit {
+
+            products: Product[] = [];
+
+            constructor(👉 @Host() private productService: ProductsService) {}
+
+            ngOnInit(): void {
+                this.products = this.productService.getProducts();
+            }
+        }
+    
+    -> Now, the element injector of favorite component will look for the ProductsService class in its
+        providers. If it does not find the ProductsService, it will not bubble up the injector
+        hierarchy; instead it will stop and throw an exception in the console window of the browser:
+
+        ❌ Error: NG0201: No provider for _ProductsService found in NodeInjector.
+
+    -> Even though favorite component is the child of product list component and can access the
+        service though product list component, as mentioned, it will not bubble up the injector
+        hierarchy and throw an exception. 
+
+- We can configure the injector so that it does not throw an error if we decorate the service with 
+    the @Optional decorator:
+
+        import { CommonModule } from '@angular/common';
+        import { Component, Host, OnInit, 👉Optional } from '@angular/core';
+        import { Product } from '../product';
+        import { ProductsService } from '../products.service';
+
+        @Component({
+            selector: 'app-favorites',
+            imports: [CommonModule],
+            templateUrl: './favorites.component.html',
+            styleUrl: './favorites.component.css',
+        })
+        export class FavoritesComponent implements OnInit {
+
+            products: Product[] = [];
+
+            constructor(👉 @Optional() @Host() private productService: ProductsService) {}
+
+            ngOnInit(): void {
+                this.products = this.productService.getProducts();
+            }
+        }
+    
+    -> However, using the @Optional decorator does not solve the actual problem. The preceding snippet 
+        will still throw an error, different than the previous one, because we still use the @Host
+        decorator that limits searching the ProductsService class in the injector hierarchy. 
+    
+    -> We need to refactor the ngOnInit lifecycle hook event so that it takes care of not finding the
+        service instance.
+
+- The @Host and @Optional decorators define the level at which the injector searches for dependencies.
+    There are two other decorators, called @Self and @SkipSelf. When using the @Self decorator, the
+    injector looks for dependencies in the injector of the current component. On the contrary, the
+    @SkipSelf decorator instructs the injector to skip the local injector and search further up in
+    the injector hierarchy.
+
+📝
+The @Host and @Self decorators work similarly. For more information about when to use each,
+have a look at https://angular.dev/guide/di/hierarchical-dependency-injection#self
+and https://angular.dev/guide/di/hierarchical-dependency-injection#host.

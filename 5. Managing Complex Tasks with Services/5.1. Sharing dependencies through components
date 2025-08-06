@@ -138,9 +138,9 @@ Sharing dependencies through components:
     provided through the element injector of its parent component, ProductListComponent.
 
     📝
-    If we remove the providers array(element injector) from the @Component decorator
-    from product-list.component.ts, then there will be error because we don't have providedIn
-    property(environment injectors) anymore in the product.service.ts. So in order for our app to work
-    there should be either a environment injectors or element injectors.
-    Since we have used element injector in product-list.component.ts, favorite.component.ts will have
-    an access to the injector so we don't need to add providers array in the @Component decorator.
+    If we remove the providers array(element injector/component injectors) from the @Component
+    decorator from product-list.component.ts, then there will be error because we don't have providedIn
+    property(environment injectors/ root injectors) anymore in the product.service.ts. So in order
+    for our app to work there should be either a component injectors or root injectors.
+    Since we have used element/component injector in product-list.component.ts, favorite.component.ts
+    will have an access to the injector because it is a child component of product-list.component.
