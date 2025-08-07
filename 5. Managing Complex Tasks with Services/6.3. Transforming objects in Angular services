@@ -1,0 +1,109 @@
+Transforming objects in Angular services:
+
+- We have already learned how to provide an alternate class implementation for an Angular service
+    (Whenever someone asks for ProductsService, give them an instance of AlternativeService instead)
+    in section 6.1..
+
+- What if the dependency we want to provide is not a class but a string or an object? We can use 
+    the useValue syntax to accomplish this task.
+
+- It is common to keep application settings in a constant object in real-world applications. How 
+    could we use the useValue syntax to provide these settings in our components? We will learn 
+    more by creating settings for our application, such as the version number and the title:
+
+1) Create an app.settings.ts file in the src\app folder of the Angular CLI workspace and add the
+    following contents:
+
+        export interface AppSettings {
+            title: string;
+            version: string;
+        }
+        export const appSettings: AppSettings = {
+            title: 'My e-shop',
+            version: '1.0'
+        };
+    
+    -> You may think we could provide these settings as { provide: AppSettings, useValue: appSettings },
+        but this would throw an error because AppSettings is an interface, not a class.
+    -> Interfaces are syntactic sugar in TypeScript that are thrown away during compilation. Instead,
+        we should provide an InjectionToken object.
+
+2) Add the following statement to import the InjectionToken class from the @angular/core npm package:\
+
+    👉  import { InjectionToken } from "@angular/core";
+
+        export interface AppSettings {
+            title: string;
+            version: string;
+        }
+        export const appSettings: AppSettings = {
+            title: 'My e-shop',
+            version: '1.0',
+        };
+
+3) Declare the following constant variable that uses the InjectionToken type:
+
+        import { InjectionToken } from "@angular/core";
+
+        export interface AppSettings {
+        title: string;
+        version: string;
+        }
+
+        export const appSettings: AppSettings = {
+        title: 'My e-shop',
+        version: '1.0',
+        };
+
+    👉  export const APP_SETTINGS = new InjectionToken<AppSettings>('app.settings');
+
+4) Open the app.component.ts file and modify the import statements as follows:
+
+        import { Component } from '@angular/core';
+        import { RouterOutlet } from '@angular/router';
+        import { ProductListComponent } from './product-list/product-list.component';
+        import { CopyrightDirective } from './copyright.directive';
+    👉  import { APP_SETTINGS, appSettings} from './app.settings';
+
+5) Add the application settings token in the providers array of the @Component decorator:
+
+        @Component({
+
+            selector: 'app-root',
+            imports: [RouterOutlet, ProductListComponent, CopyrightDirective],
+            templateUrl: './app.component.html',
+            styleUrl: './app.component.css',
+            providers: [
+                { provide: APP_SETTINGS, useValue: appSettings }
+            ]
+        })
+
+💡
+The useValue syntax is particularly useful when testing Angular applications
+We will use it extensively when we learn about unit testing in Chapter 13,
+Unit Testing Angular Applications.
+
+6) Add the following property in the AppComponent class:
+
+        export class AppComponent {
+            title = 'Chapter5App';
+            settings = inject(APP_SETTINGS);
+        }
+
+
+7) Open the app.component.html file and modify the <footer> tag to include the application version:
+
+        <footer appCopyright> 👉 - v{{ settings.version }}</footer>
+
+8) Run the application using the ng serve command and observe the footer in the application output:
+
+    Copyright ©2025 All Rights Reserved - v1.0
+
+
+- Note that although the AppSettings interface did not play a significant role in the injection
+    process, we need it to provide typing on the configuration object.
+
+- Angular DI is a powerful and robust mechanism that allows us to manage the dependencies of our 
+    applications efficiently. The Angular team has put much effort into making it simple to use and 
+    removed the burden from the developer’s side. As we have seen, the combinations are plentiful, 
+    and how we will use them depends on the use case.

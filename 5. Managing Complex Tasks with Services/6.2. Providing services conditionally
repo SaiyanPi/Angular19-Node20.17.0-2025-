@@ -1,0 +1,63 @@
+Providing services conditionally:
+
+- In the example in the previous section, we used the useClass syntax to replace the implementation
+    of the injected ProductsService class.
+- Alternatively, we could create a factory function that decides whether it will return an instance
+    of the FavoritesService or ProductsService class according to a condition.
+    
+    1) The function would reside in a simple TypeScript file named favorites.ts:
+
+        import { FavoritesService } from './favorites.service';
+        import { ProductsService } from './products.service';
+
+        export function favoritesFactory(isFavorite: boolean) {
+            return () => {
+                if (isFavorite) {
+                return new FavoritesService();
+                }
+                return new ProductsService();
+            };
+        }
+
+    2)  We could then modify the providers array in the favorites.component.ts file as follows:
+
+        import { Component, OnInit } from '@angular/core';
+        import { Product } from '../product';
+        import { ProductsService } from '../products.service';
+        import { favoritesFactory } from '../favorite';
+
+        @Component({
+            selector: 'app-favorites',
+            imports: [],
+            templateUrl: './favorites.component.html',
+            styleUrl: './favorites.component.css',
+            providers: [
+                { provide: ProductsService,👉 useFactory: favoritesFactory(true) }
+            ]
+        })
+
+⚠️ It is worth noting that if one of the services also injected other dependencies, the previous
+    syntax would not suffice. For example, if the FavoritesService class was dependent on the 
+    ProductViewService class, 
+    
+    a) we would add it to the deps property of the provide object literal syntax:
+
+        providers: [
+            {
+                provide: ProductsService,
+                useFactory: favoritesFactory(true),
+               👉 deps: [ProductViewService]
+            }
+        ]
+    
+    b) We could then use it in the factory function of the favorites.ts file as follows:
+
+        export function favoritesFactory(isFavorite: boolean) {
+            return (👉productViewService: ProductViewService) => {
+                if (isFavorite) {
+                    return new FavoritesService();
+                }
+                return new ProductsService();
+            };
+        }
+

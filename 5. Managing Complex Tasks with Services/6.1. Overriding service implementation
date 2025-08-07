@@ -1,2 +1,85 @@
 Overriding service implementation:
 
+- We have already learned that a component could share its dependencies with its child components. 
+    Consider the FavoritesComponent, where we used the slice pipe to display a list of favorite
+    products in its template. What if it needs to get data through a trimmed version of
+    ProductsService and not directly from the service instance of ProductListComponent?
+    We could create a new service extending the ProductsService class and filtering out data using
+    the native Array.lice method. Let’s create the new service and learn how to use it:
+
+1) Run the following command to generate the service:
+
+        cmd: ng generate service favorites
+
+2) Open the favorites.service.ts file and add the following import statements:
+
+        import { Injectable } from '@angular/core';
+      👉 import { Product } from './product';
+      👉 import { ProductsService } from './products.service';
+
+3) Use the extends keyword in the class definition to indicate that ProductsService is the base class
+    of FavoritesService:
+
+        export class FavoritesService extends ProductsService {
+            constructor() { }
+        }
+
+4) Modify the constructor to call the super method and execute any business logic inside the base
+    class constructor:
+
+        export class FavoritesService extends ProductsService {
+
+            constructor() {
+                super();
+            }
+        }
+
+5) Create the following service method that uses the slice method to return only the second and fourth
+    products from the list:
+
+        override getProducts(): Product[] {
+            return super.getProducts().slice(1, 3);
+        }
+    
+    -> The preceding method is marked with the override keyword to indicate that the implementation
+        of the method replaces the corresponding method of the base class.
+
+6) Open the favorites.component.ts file and add the following import statement:
+
+        import { FavoritesService } from '../favorites.service';
+
+7) Add the FavoritesService class in the providers array of the @Component decorator as follows:
+
+        import { Component, OnInit } from '@angular/core';
+        import { Product } from '../product';
+        import { ProductsService } from '../products.service';
+        import { FavoritesService } from '../favorites.service';
+
+        @Component({
+            selector: 'app-favorites',
+            imports: [],
+            templateUrl: './favorites.component.html',
+            styleUrl: './favorites.component.css',
+        👉  providers: [
+                { provide: ProductsService, useClass: FavoritesService }
+            ]
+        })
+    
+    -> we also removed CommonModule from the imports array because we no longer need the slice pipe.
+
+8) Finally, open the favorites.component.html file and remove the slice pipe from the @for block.
+
+        <ul class="pill-group">
+          👉  @for (product of products; track product.id){
+                <li class="pill">
+                ⭐ {{product.title}}
+                </li>
+            }
+        </ul>
+
+- If we run the application using the ng serve command, we will see that the Favorites section is 
+    still displayed correctly.
+
+- THE useClass PROPERTY ESSENTIALLY OVERWROTE THE INITIAL IMPLEMENTATION OF THE PRODUCTSSERVICE 
+    CLASS FOR THE FAVORITES COMPONENT. ALTERNATIVELY, WE CAN GO THE EXTRA MILE AND USE A FUNCTION TO 
+    RETURN A SPECIFIC OBJECT INSTANCE THAT WE NEED, AS WE WILL LEARN IN THE FOLLOWING SECTION.
