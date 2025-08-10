@@ -1,0 +1,60 @@
+Observables in a nutshell:
+
+- An observable is an object that maintains a list of dependents, called observers, and informs 
+    them about state and data changes by emitting events asynchronously.
+
+- To do so, the observable implements all the necessary machinery to produce and emit such events.
+    It can be triggered and canceled at any time, regardless of whether it has emitted the expected
+    data already.
+
+- Observers must subscribe to an observable to be notified and react to reflect the state change. 
+    This pattern, known as the observer pattern, allows concurrent operations and more advanced 
+    logic. These observers, also known as subscribers, keep listening to whatever happens in the 
+    observable until it is destroyed.
+    We can see all this with more transparency in an actual example: Note athat we are working
+    on app.component.ts
+
+1) Import the Observable artifact from the rxjs npm package:
+
+        import { Observable } from 'rxjs';
+
+2) Create a component property named title$ that creates an Observable object. The constructor of
+    an observable accepts an observer object as a parameter. The observer is an arrow function that
+    contains the business logic that will be executed when someone uses the observable. Call the next
+    method of the observer every two seconds to indicate a data or application state change:
+
+        title$ = new Observable(observer => {
+            setInterval(() => {
+                observer.next();
+            }, 2000);
+        });
+
+💡
+When we define an observable variable, we tend to append the $ sign to the variable name.
+It is a convention that we follow to identify observables in our code efficiently and quickly.
+
+3) Modify the constructor component to use the newly created title$ property:
+
+        constructor() {
+            this.title$.subscribe(this.setTitle);
+        }
+    
+    -> We use the subscribe method to register to the title$ observable and get notified of any changes. 
+        If we do not call this method, the setTitle method will never execute.
+
+📝
+An observable will not do anything unless a subscriber subscribes to it.
+
+- If you run the application, you will notice that the timestamp changes every two seconds.
+    Congratulations! You have entered the world of observables and reactive programming!
+
+- Observables return a stream of events, and our subscribers receive prompt notifications of those 
+    events so that they can act accordingly. They do not perform an asynchronous operation and 
+    terminate (although we can configure them to do so) but start a stream of ongoing events to 
+    which we can subscribe.
+
+- That’s not all, however. This stream can combine many operations before hitting observers subscribed
+    to it. Just as we can manipulate arrays with methods such as map or filter to transform them, we
+    can do the same with the stream of events emitted by observables. It is a pattern known as
+    reactive programming, and Angular makes the most of this paradigm to handle asynchronous 
+    information.

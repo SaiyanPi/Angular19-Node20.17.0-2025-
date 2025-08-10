@@ -1,0 +1,190 @@
+Shifting from callback hell to promises:
+
+- Sometimes we might need to build functionalities in our application that change its state
+    asynchronously once time has elapsed. In these cases we must introduce code patterns, such as the 
+    callback pattern, to handle this deferred change in the application state.
+
+- In a callback, the function that triggers asynchronous action accepts another function as a
+    parameter. The function is executed when the asynchronous operation has been completed.
+    Let’s see how to use a callback through an example:
+
+1) Open the app.component.html file and add a <header> HTML element to display the title component
+    property using interpolation:
+
+    👉  <header>{{ title }}</header>
+        <main class = "main">
+            <div class="content">
+                <app-product-list></app-product-list>
+            </div>
+        </main>
+        <footer appCopyright>- v{{ settings.version }}</footer>
+        <router-outlet />
+
+2) Open the app.component.ts file and create the following property:
+
+        export class AppComponent {
+            title = 'Chapter6App';
+            settings = inject(APP_SETTINGS);
+            
+        👉  private setTitle = () => {
+                this.title = this.settings.title;
+            };
+        }
+
+    -> The setTitle property is used to change the title component property based on the title property
+        from application settings.
+    -> It returns an arrow function because we will use it as a callback to another method.
+
+3) Next, create a changeTitle method that calls another method, named, by convention, callback, after
+    two seconds:
+
+        export class AppComponent {
+            title = 'Chapter6App';
+            settings = inject(APP_SETTINGS);
+
+            constructor() {
+                this.changeTitle(this.setTitle);
+            }
+
+            private setTitle = () => {
+                this.title = this.settings.title;
+            };
+
+        👉  private changeTitle(callback: Function) {
+                setTimeout(() => {
+                callback();
+                }, 2000);
+            }
+        }
+
+4) Add a constructor to call the changeTitle method, passing the setTitle property as a parameter:
+
+        export class AppComponent {
+            title = 'Chapter6App';
+            settings = inject(APP_SETTINGS);
+
+         👉 constructor() {
+                this.changeTitle(this.setTitle);
+            }
+
+            private setTitle = () => {
+                this.title = this.settings.title;
+            };
+
+            private changeTitle(callback: Function) {
+                setTimeout(() => {
+                callback();
+                }, 2000);
+            }
+        }
+    
+    -> In the preceding snippet, we use the setTitle property without parentheses because we pass
+        function signatures and not actual function calls when we use callbacks.
+
+- If we run the Angular application using the ng serve command, we see that the title property 
+    changes after two seconds. The problem with the pattern we just described is that the code can 
+    become confusing and cumbersome as we introduce more nested callbacks.
+
+- Consider the following scenario where we need to drill down into a folder hierarchy to access 
+    photos on a device:
+
+        getRootFolder(folder => { 
+            getAssetsFolder(folder, assets => {
+                getPhotos(assets, photos => {}); 
+            });   
+        });
+
+- We depend on the previous asynchronous call and the data it brings back before we can do the next 
+    call. We must execute a method inside a callback that executes another method with a callback. 
+    The code quickly looks complex and difficult to read, leading to a situation known as callback hell.
+
+-------------------------------------------------------------------------------------------------------------
+
+PROMISES:
+
+- We can avoid callback hell using promises. Promises introduce a new way of envisioning asynchronous
+    data management by conforming to a neater and more solid interface. Different asynchronous
+    operations can be chained at the same level and even be split and returned from other functions.
+
+- To better understand how promises work, let’s refactor our previous callback example:
+
+1) Create a new method in the AppComponent class named onComplete that returns a Promise object.
+    A promise can either be resolved or rejected. The resolve parameter indicates that the promise was
+    completed successfully and optionally returns a result:
+
+        private onComplete() {
+            return new Promise<void>(resolve => {
+            });
+        }
+
+2) Introduce a timeout of two seconds in the promise so that it resolves after this time has 
+    elapsed:
+
+        private onComplete() {
+            return new Promise<void>((resolve) => {
+            👉  setTimeout(() => {
+                    resolve();
+                }, 2000);
+            });
+        }
+
+3) Now, replace the changeTitle call in the constructor with the promise-based method. 
+    To execute a method that returns a promise, we invoke the method and chain it with the 
+    then method:
+
+        
+        constructor() {
+          👉  this.onComplete().then(this.setTitle);
+        }
+
+- We should not notice any significant difference if we rerun the Angular application. The real value 
+    of promises lies in the simplicity and readability afforded to our code. We could now refactor the 
+    previous folder hierarchy example accordingly:
+
+        getRootFolder()
+        .then(getAssetsFolder)
+        .then(getPhotos); 
+
+- The chaining of the then method in the preceding code shows how we can line up one asynchronous
+    call after another. Each previous asynchronous call passes its result in the upcoming asynchronous
+    method.
+
+- Promises allow us to resolve or reject an asynchronous operation, but sometimes we might want to
+    abort everything before getting to that point.
+    On top of that, promises behave as one-time operations. Once they are resolved, we cannot expect 
+    to receive any further information or state change notifications unless we run everything from 
+    scratch. To summarize the limitations of promises:
+
+        • They cannot be canceled
+        • They are immediately executed
+        • They are one-time operations; there is no easy way to retry them
+        • They respond with only one value
+
+    Let’s illustrate some of the limitations with an example:
+
+    a) Replace setTimeout with setInterval in the onComplete method:
+
+        private onComplete() {
+            return new Promise<void>((resolve) => {
+            👉  setInterval(() => {
+                    resolve();
+                }, 👉 10000);
+            });
+        }
+    
+        -> The promise will now resolve repeatedly every two seconds
+
+    b) Modify the setTitle property to append the current timestamp in the title property of 
+        the component:  
+
+        private setTitle = () => {
+            const timestamp = new Date();
+            this.title = `${this.settings.title} (${timestamp})`;
+        }
+
+    c) Run the Angular application and you will notice that the timestamp is set only once after 
+        10 seconds and never changes again. The promise resolves itself, and the entire asynchronous
+        event terminates at that very moment.
+
+- We may need a more proactive implementation of asynchronous data handling to fix the preceding 
+    behavior, which is where observables come into the picture.

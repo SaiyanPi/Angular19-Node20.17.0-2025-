@@ -1,0 +1,22 @@
+Reactive Patterns in Angular:
+
+- Handling asynchronous information is a common task in our everyday lives as developers. Reactive
+    programming is a paradigm that helps us consume, digest, and transform asynchronous 
+    information using data streams. RxJS is a JavaScript library that provides methods to manipulate 
+    data streams using observables.
+
+- Angular provides an unparalleled toolset to help us when working with asynchronous data. Observable
+    streams are at the forefront of this toolset, giving developers a rich set of capabilities 
+    when creating Angular applications.
+
+- The core of the Angular framework is lightly dependent on RxJS. Other Angular packages, such as
+    the router and the HTTP client, are more tightly coupled with observables. However, at the time
+    of writing, the Angular team is currently investigating making the preceding packages less
+    dependent on observables.
+
+- In this chapter, we will learn about the following concepts:
+    • Strategies for handling asynchronous information
+    • Reactive programming in Angular
+    • The RxJS library
+    • Subscribing to observables
+    • Unsubscribing from observables

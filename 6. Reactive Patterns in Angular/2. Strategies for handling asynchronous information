@@ -1,0 +1,20 @@
+Strategies for handling asynchronous information:
+
+- We manage data asynchronously in different forms, such as consuming data from a backend 
+    API, a typical operation in our daily development workflow, or reading contents from the local 
+    file system. 
+
+- We always consume data over HTTP, such as when authenticating users by sending credentials to an
+    authentication service. We also use HTTP when fetching the latest posts in our favorite social
+    network application. 
+
+- Modern mobile devices have introduced a unique way of consuming remote services. They defer 
+    requests and response consumption until mobile connectivity is available. Responsivity and 
+    availability have become a big deal.
+
+- Although internet connections are high-speed nowadays, response time is always involved when 
+    serving such information. Thus, as we will see in this section, we put in place mechanisms to 
+    handle the state of our applications transparently for the end user.
+
+    2.1. Shifting from callback hell to promises
+    2.2. Observables in a nutshell
