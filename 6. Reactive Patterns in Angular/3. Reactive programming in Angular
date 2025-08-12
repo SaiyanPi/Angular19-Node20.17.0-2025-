@@ -1,0 +1,119 @@
+Reactive programming in Angular:
+
+- The observer pattern stands at the core of reactive programming. The most basic implementation 
+    of a reactive script encompasses several concepts that we need to become familiar with:
+    • An observable
+    • An observer
+    • A timeline
+    • A stream of events
+    • A set of composable operators
+
+📝
+Reactive programming entails applying asynchronous subscriptions and transformations to observable
+streams of events
+
+- Let’s explain through a more descriptive example. Think about an interaction device such as a 
+    keyboard. It has keys that the user presses. Each one of those keystrokes triggers a specific key
+    board event, such as keyUp. The keyUp event features a wide range of metadata, including—but 
+    not limited to—the numeric code of the specific key the user pressed at a given moment. As the 
+    user continues hitting keys, more keyUp events are triggered and piped through an imaginary 
+    timeline. The timeline is a continuous stream of data where the keyUp event can happen at any 
+    time; after all, the user decides when to press those keys.
+
+    Recall the example with observables from the previous section. That code could notify an observer
+    that every two seconds, another value was emitted. We know how often a timer interval 
+    is triggered. In the case of keyUp events, we don’t know because they are not under our control. 
+    Let’s try to explain it further by implementing a key logger in our application:
+
+1) Create a new Angular component named key-logger:
+
+        cmd: ng generate component key-logger
+
+2) Open the key-logger.component.html file and replace its content with the following HTML template:
+
+        <input type="text" #keyContainer />
+        You pressed: {{keys}}
+    
+    -> In the preceding template, we added an <input> HTML element and attached the keyContainer
+        template reference variable.
+    ->  We also display a keys property representing all the keyboard keys the user has pressed.
+
+💡
+A template reference variable can be added to any HTML element, not just components.
+
+3) Open the key-logger.component.ts file and import the OnInit, viewChild, and ElementRef artifacts
+    from the @angular/core npm package: 7364042982
+
+        import { Component, ElementRef, OnInit, viewChild } from '@angular/core';
+
+4) Create the following properties in the KeyLoggerComponent class:
+
+        input = viewChild<ElementRef>('keyContainer');
+        keys = '';
+
+    -> The input property is used to query the <input> HTML element using the keyContainer template
+        reference variable.
+
+5) Add the following import statement to import the fromEvent artifact from the rxjs npm 
+    package:
+
+        import { fromEvent } from 'rxjs';
+    
+    -> The RxJS library has various helpful artifacts, called operators, that we can use with
+        observables.
+    -> The fromEvent operator creates an observable from the DOM event of a native HTML element.
+
+6) Implement the ngOnInit method from the OnInit interface to listen for keyup events in the <input>
+    element and save pressed keys in the keys property:
+
+        export class KeyLoggerComponent 👉 implements OnInit {
+
+            input = viewChild<ElementRef>('keyContainer');
+            keys = '';
+
+            ngOnInit(): void {
+                const logger$ = fromEvent<KeyboardEvent>(this.input()!.nativeElement, 'keyup');
+                logger$.subscribe(evt => this.keys += evt.key);
+            }
+        }
+    
+    -> Notice that we get access to the native HTML input element through the nativeElement property
+        of the template reference variable.
+    -> The result of querying using the viewChild function is an ElementRef object, which is a wrapper
+        over the actual HTML element.
+
+7) Open the app.component.ts file and import the KeyLoggerComponent class:
+
+        // omitted
+    👉 import { KeyLoggerComponent } from './key-logger/key-logger.component';
+
+
+
+        @Component({
+            selector: 'app-root',
+            imports: [RouterOutlet, ProductListComponent, CopyrightDirective, 👉 KeyLoggerComponent],
+            templateUrl: './app.component.html',
+            styleUrl: './app.component.css',
+            providers: [{ provide: APP_SETTINGS, useValue: appSettings }],
+        })
+
+8) Open the app.component.html file and add the <app-key-logger> selector in the template:
+
+        <header>{{ title }}</header>
+        <main class = "main">
+            <div class="content">
+                <app-product-list></app-product-list>
+            </div>
+        </main>
+        <footer appCopyright> - v{{ settings.version }}</footer>
+        <router-outlet />
+        <app-key-logger></app-key-logger>
+
+- Run the application using the ng serve command and start pressing keys to verify the usage of the key
+    logger that we have just created. see KeyLoggerOutput.png
+
+- An essential aspect of observables is using operators and chaining observables together, enabling
+    rich composition. Observable operators look like array methods when we want to use them. For 
+    example, a map operator for observables is used similarly to the map method of an array.
+    In the following section, we will learn about the RxJS library, which provides these operators,
+    and learn about some of them through examples.

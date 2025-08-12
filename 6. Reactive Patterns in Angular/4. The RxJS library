@@ -1,0 +1,52 @@
+The RxJS library:
+
+- Angular comes with a peer dependency on RxJS, the JavaScript flavor of the ReactiveX library, which
+    allows us to create observables out of a large variety of scenarios, including the following:
+    • Interaction events
+    • Promises
+    • Callback functions
+    • Events
+
+- Reactive programming does not aim to replace asynchronous patterns like promises or callbacks. 
+    All the way around, it can leverage them as well to create observable sequences.
+
+- RxJS has built-in support for various composable operators to transform, filter, and combine the 
+    resulting event streams. Its API provides convenient methods for observers to subscribe to these 
+    streams so that our components can respond accordingly to state changes or input interaction.
+    Let’s see some of these operators in action in the following subsections.
+
+-----------------------------------------------------------------------------------------------------
+
+1) Creating observables:
+
+- We have already learned how to create an observable from a DOM event using the fromEvent 
+    operator in the  previous section. Two other popular operators concerned with observable
+    creation are the of and from operators.
+
+    1. The of operator is used to create an observable from values such as numbers:
+
+            const values = of(1, 2, 3);
+            values.subscribe(value => console.log(value));
+    
+        -> The previous snippet prints the numbers 1, 2, and 3 in the browser console window in order.
+
+    2. The from operator is also very useful when converting promises or callbacks to observables.
+        We could wrap the onComplete method in the constructor of the AppComponent class as follows:
+
+            constructor() {
+                const complete$ = from(this.onComplete());
+                complete$.subscribe(this.setTitle);
+            }
+    
+💡
+The from operator is an excellent way to migrate to observables if you use promises in an existing
+application!
+
+- Besides creating observables, the RxJS library also contains a couple of handy operators to
+    manipulate and transform data emitted from observables.
+
+------------------------------------------------------------------------------------------------------
+
+2) Transforming observables:
+
+- 

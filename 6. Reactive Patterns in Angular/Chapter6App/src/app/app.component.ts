@@ -4,11 +4,13 @@ import { ProductListComponent } from './product-list/product-list.component';
 import { CopyrightDirective } from './copyright.directive';
 import { APP_SETTINGS, appSettings} from './app.settings';
 import { Observable } from 'rxjs';
+import { KeyLoggerComponent } from './key-logger/key-logger.component';
+
 
 
 @Component({
   selector: 'app-root',
-  imports: [RouterOutlet, ProductListComponent, CopyrightDirective],
+  imports: [RouterOutlet, ProductListComponent, CopyrightDirective, KeyLoggerComponent],
   templateUrl: './app.component.html',
   styleUrl: './app.component.css',
   providers: [{ provide: APP_SETTINGS, useValue: appSettings }],
@@ -16,11 +18,11 @@ import { Observable } from 'rxjs';
 export class AppComponent {
   title = 'Chapter6App';
 
-  title$ = new Observable(observer => {
-    setInterval(() => {
-      observer.next();
-    }, 10000);
-  });
+  // title$ = new Observable(observer => {
+  //   setInterval(() => {
+  //     observer.next();
+  //   }, 10000);
+  // });
 
   settings = inject(APP_SETTINGS);
 
@@ -29,10 +31,10 @@ export class AppComponent {
     this.title = `${this.settings.title} (${timestamp})`;
   };
 
-  constructor() {
-    // this.onComplete().then(this.setTitle);
-    this.title$.subscribe(this.setTitle);
-  }
+  // constructor() {
+  //   // this.onComplete().then(this.setTitle);
+  //   this.title$.subscribe(this.setTitle);
+  // }
 
 
   // private changeTitle(callback: Function) {
