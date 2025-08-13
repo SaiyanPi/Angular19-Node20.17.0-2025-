@@ -1,0 +1,19 @@
+Unsubscribing from observables:
+
+- When we subscribe to an observable, we create an observer that listens for changes in a data
+    stream.
+
+- The observer watches the stream continuously while the subscription remains active. When a 
+    subscription is active, it reserves memory in the browser and consumes certain resources.
+
+- If we do not tell the observer to unsubscribe at some point and clean up any resources, the
+    subscription to the observable will possibly lead to a memory leak.
+
+📝
+An observer usually needs to unsubscribe when the Angular component that created the subscription
+must be destroyed.
+
+- Some of the most well-known techniques to use for unsubscribing from observables are the
+    following:
+    • Unsubscribe from an observable manually
+    • Use the async pipe in a component template

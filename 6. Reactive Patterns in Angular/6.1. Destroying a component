@@ -1,0 +1,92 @@
+Destroying a component:
+
+- A component has lifecycle events we can use to hook on and perform custom logic, as we learned 
+    in Chapter 3, Structuring User Interfaces with Components. One of them is the ngOnDestroy event, 
+    which is called when the component is destroyed and no longer exists.
+
+- Recall ProductListComponent and ProductViewComponent, which we used earlier in our examples. 
+    They subscribe to the appropriate methods of ProductsService and ProductViewService upon 
+    component initialization.
+
+- When components are destroyed, the reference of the subscriptions stays active, which may lead
+    to unpredictable behavior. We need to manually unsubscribe when components are destroyed to
+    clean up any resources properly
+
+1) Open the product-list.component.ts file and add the following import statement:
+
+        import { Subscription } from 'rxjs';
+
+2) Create the following property in the ProductListComponent class:
+
+        private productsSub: Subscription | undefined;
+
+3) Assign the productsSub property to the subscription result in the getProducts method:
+
+        private getProducts() {
+        👉 this.productsSub = this.productService.getProducts().subscribe(products => {
+                this.products = products;
+            });
+        }
+
+4) Import the OnDestroy lifecycle hook from the @angular/core npm package:
+
+        import { Component, OnInit,👉 OnDestroy } from '@angular/core';
+
+5) Add OnDestroy to the implemented interface list of the ProductListComponent class:
+        
+        export class ProductListComponent implements OnInit, 👉OnDestroy {
+            // omitted
+        }
+
+6) Implement the ngOnDestroy method as follows:
+
+        ngOnDestroy(): void {
+            this.productsSub?.unsubscribe();
+        }
+
+    -> The unsubscribe method removes an observer from the active listeners of a subscription and
+        cleans up any reserved resources.
+
+- That’s a lot of boilerplate code to unsubscribe from a single subscription. It may quickly become 
+    unreadable and unmaintainable if we have many subscriptions.
+
+------------------------------------------------------------------------------------------------------
+
+- Alternatively, we can use a particular type of operator called takeUntilDestroyed, which is 
+    available in the @angular/core/rxjs-interop package.
+    We will explore the way of unsubscribing from observables using this operator in the product
+    list component
+
+a) Open the product-list.component.ts file and import the inject, DestroyRef, and takeUntilDestroyed
+    artifacts as follows:
+
+        import { Component, OnInit, 👉 inject, DestroyRef } from '@angular/core';
+        import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
+
+    -> The takeUntilDestroyed artifact is an operator that unsubscribes from an observable 
+        when the component is destroyed.
+
+b) Declare the following property to inject the DestroyRef service:
+
+        private destroyRef = inject(DestroyRef);
+
+c) Modify the getProducts method as follows:
+
+        private getProducts() {
+            this.productService.getProducts().pipe( takeUntilDestroyed(this.destroyRef))
+            .subscribe(products => {
+                this.products = products;
+            });
+        }
+
+    -> In the preceding method, we use the pipe operator to chain the takeUntilDestroyed 
+        operator with the subscription from the getProducts method of the ProductsService 
+        class. 
+    -> The takeUntilDestroyed operator accepts a parameter of the DestroyRef service.
+
+d) Remove any code related to the ngOnDestroy method.
+
+- That’s it! We have now converted our subscription to be more declarative and readable. However, 
+    the problem of maintainability still exists. Our components are now unsubscribing from their 
+    observables manually. We can solve that using a special-purpose Angular pipe, the async pipe, 
+    which allows us to unsubscribe automatically with less code.

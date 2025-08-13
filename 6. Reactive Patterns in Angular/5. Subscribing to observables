@@ -1,0 +1,94 @@
+Subscribing to observables:
+
+- We have already learned that an observer needs to subscribe to an observable to get emitted data. 
+
+- The observer in our case will be the product list component and the observable will reside inside 
+    the products.service.ts file. Thus, we first need to convert the ProductsService class to use 
+    observables instead of plain arrays so that components can subscribe to get data:
+
+1) Open the products.service.ts file and add the following import statement:
+
+        import { Observable } from 'rxjs';
+
+2) Extract the product data used in the getProducts method into a separate service property 
+    to enhance code readability:
+
+        private products: Product[] = [
+            {
+                id: 1,
+                title: 'Keyboard',
+                price: 1500,
+                categories: {
+                    1: 'Computing',
+                    2: 'Peripherals'
+                }
+            },
+            {
+                id: 2,
+                title: 'Microphone',
+                price: 4500,
+                categories: {
+                    3: 'Multimedia'
+                }
+            },
+            {
+                id: 3,
+                title: 'Web camera',
+                price: 3500,
+                categories: {
+                    1: 'Computing',
+                    2: 'Multimedia'
+                }
+            },
+            {
+                id: 4,
+                title: 'Tablet',
+                price: 45000,
+                categories: {
+                    4: 'Entertainment
+                }
+            }
+        ];
+
+3) Modify the getProducts method so that it returns the products property as an observable:
+
+        getProducts() : 👉 Observable<Product[]> {
+            return of(this.products);
+        }
+    
+    -> In the preceding snippet, we use the of operator to create a new observable from the products
+        array.
+
+- The ProductsService class now emits product data using observables. We must modify the component
+    to subscribe and get this data:
+
+a) Open the product-list.component.ts file and create a getProducts method in theProductListComponent
+    class:
+
+        private getProducts() {
+            this.productService.getProducts().subscribe(products => {
+                this.products = products;
+            });
+        }
+    
+    -> In the preceding method, we subscribe to the getProducts method of the ProductsService 
+        class because it returns an observable instead of a plain array.
+    -> The products array is returned inside the subscribe method, where we set the products
+        component property to the array emitted from the observable.
+
+b) Modify the ngOnInit method so that it calls the newly created getProducts method:
+
+        ngOnInit(): void {
+            this.getProducts();
+        }
+
+💡
+We could have added the body of the getProducts method inside the ngOnInit method directly.
+We did not as component lifecycle event methods should be as clear and concise as possible.
+Always try to extract their logic in a separate method for clarity.
+
+c) Run the application using the ng serve command, and you should see the product list displayed 
+    on the page successfully.
+
+- When we subscribe to observables, we are prone to potential memory leaks if we do not clean 
+    them up on time. In the following section, we will learn about different ways to accomplish that.

@@ -49,4 +49,111 @@ application!
 
 2) Transforming observables:
 
-- 
+- We have already learned how to create a numeric-only directive in Chapter 4, Enriching Applica
+    tions Using Pipes and Directives. We will now use RxJS operators to accomplish the same thing
+    in our key logger component:
+
+    a) Open the key-logger.component.ts file and import the tap operator from the rxjs npm 
+        package:
+
+            import { fromEvent, 👉 tap } from 'rxjs';
+    
+    b) Refactor the ngOnInit method as follows:
+
+            ngOnInit(): void {
+                const logger$ = fromEvent<KeyboardEvent>(this.input()!.nativeElement, 'keyup');
+                logger$.pipe(
+                    tap(evt => this.keys += evt.key)
+                ).subscribe();
+            }
+        
+        -> The pipe operator links and combines multiple operators separated by commas. We can 
+            think of it as a recipe that defines the operators that should be applied to an observable. 
+        -> One of them is the tap operator, which is used when we want to do something with the 
+            data emitted without modifying it.
+    
+    c) We want to exclude non-numeric values that the logger$ observable emits. We already get the
+        actual key pressed from the evt property, but it returns alphanumeric values. It would not
+        be efficient to list all non-numeric values and exclude them manually. Instead, we will use
+        the map operator to get the actual Unicode value of the key. It behaves similarly to the
+        map method of an array as it returns an observable with a modified version of the initial
+        data. Import the map operator from the rxjs npm package:
+
+            import { fromEvent, tap,👉 map } from 'rxjs';
+
+    d) Add the following snippet above the tap operator in the ngOnInit method:
+
+            logger$.pipe(
+            👉  map(evt => evt.key.charCodeAt(0)),
+                tap(evt => this.keys += evt.key)
+            ).subscribe();
+    
+    e) We can now add the filter operator, which operates similarly to the filter method of an array
+        for excluding non-numeric values. Import the filter operator from the rxjs npm package:
+
+            import { fromEvent, tap, map,👉 filter } from 'rxjs';
+
+    f) Add the following snippet after the map operator in the ngOnInit method:
+
+            logger$.pipe(
+                map(evt => evt.key.charCodeAt(0)),
+            👉  filter(code => (code > 31 && (code < 48 || code > 57)) === false),
+                tap(evt => this.keys += evt.key)
+            ).subscribe();
+    
+    g) The observable currently emits Unicode character codes. We must convert them back to keyboard
+        characters to display them on the HTML template. Refactor the tap operator to accommodate
+        this change:
+
+            logger$.pipe(
+                map(evt => evt.key.charCodeAt(0)),
+                filter(code => (code > 31 && (code < 48 || code > 57)) === false),
+            👉  tap(digit => this.keys += String.fromCharCode(digit))
+            ).subscribe();
+
+- As a final touch, we will add an input binding in the component to toggle the numeric-only feature
+    on and off conditionally:
+
+    i) Add the input function in the import statement of the @angular/core npm package:
+
+            import { Component, ElementRef, OnInit, viewChild,👉 input } from '@angular/core';
+
+    ii) Add a numeric input property in the KeyLoggerComponent class:
+
+            numeric = input(false);
+
+    iii) Refactor the filter operator in the ngOnInit method so that it takes into account the 
+        numeric property:
+
+            ngOnInit(): void {
+                const logger$ = fromEvent<KeyboardEvent>(this.input()!.nativeElement, 'keyup');
+                logger$.pipe(
+
+                map(evt => evt.key.charCodeAt(0)),
+
+            👉 filter(code => {
+                    if (this.numeric()) {
+                    return (code > 31 && (code < 48 || code > 57)) === false;
+                    }
+                    return true;
+                }),
+
+                tap(digit => this.keys += String.fromCharCode(digit))
+
+                ).subscribe();
+            }
+        
+        -> The logger$ observable will filter non-numeric values only if the numeric input property 
+            is true.
+
+    iv) Open the app.component.html file and add a binding to the numeric property in the 
+        <app-key-logger> selector:
+
+            <app-key-logger 👉 [numeric]="true"></app-key-logger>
+
+- Run the application using the ng serve command and enter Angular 19 inside the input box.
+    see NUMeric-keylogger.png
+
+- We have seen RxJS operators manipulating observables that return primitive data types such as 
+    numbers, strings, and arrays. In the following section, we will learn how to use observables in 
+    our e-shop application.
