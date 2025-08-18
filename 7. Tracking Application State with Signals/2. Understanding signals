@@ -1,0 +1,34 @@
+Understanding signals:
+
+- As we learned in Chapter 3, Structuring User Interfaces with Components, Zone.js plays a
+    significant role in the performance of an Angular application. It triggers the Angular change
+    detection mechanism when particular events occur inside the application. The framework checks
+    every application component in each detection cycle and evaluates its bindings, degrading
+    application performance.
+
+- The rationale of change detection with Zone.js is based on the fact that Angular cannot know 
+    when or where a change has happened inside the application. Inevitably, Angular developers try 
+    to limit change detection cycles using the following techniques:
+
+    • Configuring components with the OnPush change detection strategy
+
+    • Interacting manually with the change detection mechanism using the ChangeDetectorRef service
+
+    Signals improve how developers interact with the Angular change detection mechanism by
+    simplifying and enhancing the preceding techniques according to application needs.
+
+- Angular signals provide more robust and ergonomic management of the change detection cycle 
+    based on reactivity. They watch how the application state changes and allow the framework to 
+    react by triggering change detection only in parts affected by the change.
+
+📝
+Signals are an innovative feature of the Angular framework that will enable further improvements in
+the application’s performance by introducing zone-less applications and signal-based components in
+the future. 
+
+- Signals also act as containers for values, which the change detection mechanism must check. When 
+    a value changes, signals notify the framework about that change. The framework is responsible 
+    for triggering change detection and updating any signal consumers.
+
+- A signal value can change either directly using writable signals or indirectly using read-only
+    or computed signals. In the following section, we will learn how writable signals work.

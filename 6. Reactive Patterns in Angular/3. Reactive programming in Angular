@@ -42,7 +42,7 @@ streams of events
 A template reference variable can be added to any HTML element, not just components.
 
 3) Open the key-logger.component.ts file and import the OnInit, viewChild, and ElementRef artifacts
-    from the @angular/core npm package: 7364042982
+    from the @angular/core npm package:
 
         import { Component, ElementRef, OnInit, viewChild } from '@angular/core';
 

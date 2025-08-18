@@ -1,0 +1,54 @@
+Using the async pipe:
+
+- The async pipe is a built-in Angular pipe used in conjunction with observables, and its role is
+    two fold. It helps us to type less code and saves us from having to set up and tear down a
+    subscription. 
+
+- It automatically subscribes to an observable and unsubscribes when the component is destroyed. 
+    We will use it to simplify the code of the product list component:
+
+1) Open the product-list.component.ts file and add the following import statements:
+
+        import { AsyncPipe } from '@angular/common';
+        import { Observable } from 'rxjs';
+
+2) Add the AsyncPipe class into the imports array of the @Component decorator:
+
+        @Component({
+            selector: 'app-product-list',
+            imports: [ProductDetailComponent, SortPipe,👉 AsyncPipe],
+            templateUrl: './product-list.component.html',
+            styleUrl: './product-list.component.css',
+            providers: [ProductsService]
+        })
+
+3) Convert the products component property to an observable:
+
+        products$: Observable<Product[]> | undefined;
+
+4) Assign the getProducts method of the ProductsService class to the products$ component property:
+
+        private getProducts() {
+            this.products$ = this.productService.getProducts();
+        }
+    
+    -> The body of the getProducts method has now been reduced to one line and has become more
+        readable.
+
+5) Open the product-list.component.html file and add the following snippet at the beginning of the
+    file:
+
+        @let products = (products$ | async)!;
+    
+    -> In the preceding snippet, we subscribe to the products$ observable using the async pipe 
+        and create a template variable using the @let keyword.
+    -> The template variable has the same name as the respective component property we had previously,
+        so we do not need to change the component template further.
+
+- That’s it! We do not need to subscribe or unsubscribe from the observable manually anymore! 
+    The async pipe takes care of everything for us.
+
+- We have learned that observables react to application events and emit values asynchronously in 
+    registered observers. We could visualize observables as wrapper objects around emitted values. 
+    Angular enriches the reactivity field of web applications by providing a similar wrapper that 
+    works synchronously and reacts to application state changes.

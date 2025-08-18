@@ -1,0 +1,16 @@
+Tracking Application State with Signals:
+
+- Angular empowers developers to use built-in reactivity in their applications using signals.
+    Angular signals are a synchronous approach to reactive programming that efficiently improves
+    application performance and manages application state.
+
+- We met signals in previous chapters where we used the input method to exchange data between 
+    components and the viewChild method to query child components. The Signals API can be used 
+    in different parts of an Angular application, thus, its usage is scattered throughout the
+    chapters of this book.
+
+- In this chapter, we will cover the following topics:
+    • Understanding signals
+    • Reading and writing signals
+    • Computed signals
+    • Cooperating with RxJS

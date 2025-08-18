@@ -1,0 +1,83 @@
+Reading and writing signals:
+
+- A writable signal is indicated by the signal type from the @angular/core npm package.
+    Let’s get started and learn how we can write a value in a signal:
+
+1) Open the app.component.ts file and import the signal artifact from the @angular/core npm
+    package:
+
+        import { Component, inject,👉 signal } from '@angular/core';
+
+2) Declare the following property in the AppComponent class as a signal and initialize it:
+
+        currentDate = signal(new Date());
+
+3) Replace the timestamp variable in the setTitle property with the following snippet:
+
+        private setTitle = () => {
+        👉  this.currentDate.set(new Date());
+            this.title = `${this.settings.title} (${timestamp})`;
+        };
+    
+    -> In the preceding snippet, we use the set method to write a new value in the signal.
+    -> The set method notifies the Angular framework that the value has changed, and it must run
+        the change detection mechanism.
+
+4) Modify the title property to use the value of the currentDate signal:
+
+        private setTitle = () => {
+            this.currentDate.set(new Date());
+        👉  this.title = `${this.settings.title} (${this.currentDate()})`;
+        };
+    
+    -> In the preceding snippet, we call the currentDate getter method to read the value of the 
+        signal.
+
+- Signals are a great choice in cases where the speed and performance of an application matters, 
+    such as:
+
+    1. A dashboard page with widgets and live data that must be updated regularly, such as a 
+        stock exchange application.
+    
+    2. A component that needs to display properties from a large or complex object, such as the 
+        following:
+
+            const order = {
+                no: '1',
+                date: new Date(),
+                products: [
+                { 
+                    id: 1,
+                    title: 'Keyboard',
+                    price: 100
+                },
+                {
+                    id: 2,
+                    title: 'Microphone',
+                    price: 35
+                }
+                ],
+                customerCode: '0002',
+                isCompleted: false
+            };
+        
+        -> in this case we can extract the object properties we want in a signal without involving
+            the whole object in the change detection cycle, such as:
+
+            const orderDetails = signal({
+                no: '1',
+                customerCode: '0002',
+                isCompleted: false
+            });
+
+- A similar method of signals that also triggers change detection is the update method. It is used 
+    when we want to set a new value on a signal based on its current value:
+
+        this.currentDate.update(d => {
+            return new Date(d.getFullYear(), d.getMonth(), d.getDate(), 0, 0);
+        });
+    
+    -> The preceding snippet will get the value of the currentDate signal in the d variable and use
+        it to return a new Date object.
+
+- In the following section, we will explore how computed signals behave in an Angular application.
