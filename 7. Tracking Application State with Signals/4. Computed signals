@@ -1,0 +1,64 @@
+Computed signals:
+
+- A computed or read-only signal depends on other signals, writable or computed.
+
+- The value of a computed signal cannot change directly using the set or the update method, it can
+    only change indirectly when the value of any of the other signals changes. 
+    Let’s see how it works:
+
+1) Open the app.component.ts file and import the computed and Signal artifacts from the 
+    @angular/core npm package:
+
+        import { Component, inject,👉 computed, signal} from '@angular/core';
+
+2) Change the type of the title component property to Signal:
+
+        title: Signal<string> = signal('');
+
+    -> The Signal type indicates that the signal is a computed one.
+
+3) Remove the title assignment from the setTitle method and add it inside the constructor as follows:
+
+        constructor(){
+            this.title$.subscribe(this.setTitle);
+            this.title = computed(() => {
+                return `${this.settings.title} (${this.currentDate()})`;
+            });
+        }
+    
+    -> In the preceding snippet, we use the computed function to set the value of the title signal. 
+    -> The value of the title signal depends on the currentDate signal. It is updated every 2 
+        seconds when the value of the currentDate signal changes.
+
+4) Open the app.component.html file and modify the <header> HTML element as follows:
+
+        <header>{{ title() }}</header>
+
+5) Run the application using ng serve and verify that the title is updated correctly.
+
+---------------------------------------------------------------------------------
+NOTE) this is not working out, getting the error:
+
+    X [ERROR] TS2554: Expected 1 arguments, but got 0. [plugin angular-compiler]
+
+    src/app/app.component.ts:21:15:
+      21 │       observer.next();
+         ╵                ~~~~
+
+  An argument for 'value' was not provided.
+
+    node_modules/rxjs/dist/types/internal/Subscriber.d.ts:42:9:
+      42 │     next(value: T): void;
+
+---------------------------------------------------------------------------------
+
+- Computed signals have great performance when it comes to more complicated calculations than the
+    preceding one due to the following reasons
+
+    • The computed function executes when the signal value is first read on the template
+    • A new signal value is calculated only when the derived signals change
+    • Computed signals use a cache mechanism to memoize values and return them without recalculating
+
+- Although signals are a modern reactive approach for Angular, they are relatively new to the
+    Angular ecosystem compared to RxJS. In the following section, we will learn how they can cooperate 
+    with RxJS in an Angular application.

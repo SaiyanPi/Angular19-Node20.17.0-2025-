@@ -1,39 +1,29 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, inject } from '@angular/core';
 import { Product } from '../product'; // importing interface
 import { ProductDetailComponent } from '../product-detail/product-detail.component';
 import { SortPipe } from '../sort.pipe';
 import { ProductsService } from '../products.service';
-import { AsyncPipe } from '@angular/common';
-import { Observable } from 'rxjs';
+import { toSignal } from '@angular/core/rxjs-interop';
 
 
 @Component({
   selector: 'app-product-list',
-  imports: [ProductDetailComponent, SortPipe, AsyncPipe],
+  imports: [ProductDetailComponent, SortPipe],
   templateUrl: './product-list.component.html',
   styleUrl: './product-list.component.css',
   providers: [ProductsService]
 })
-export class ProductListComponent implements OnInit {
+export class ProductListComponent {
 
-  products: Product[] = [];
+  // products: Product[] = [];
+  products = toSignal(inject(ProductsService).getProducts(), {
+    initialValue: []
+  });
 
   selectedProduct: Product | undefined;
 
-  products$: Observable<Product[]> | undefined;
-
-  constructor(private productService: ProductsService) {}
-
-  onAdded(stuff: Product) {
-    alert(`Added ${stuff.title} to cart`);
-  }
-
-  ngOnInit(): void {
-    this.getProducts();
-  }
-
-  private getProducts() {
-    this.products$ = this.productService.getProducts();
+  onAdded() {
+    alert(`${this.selectedProduct?.title} added to the cart!`);
   }
 
 }
