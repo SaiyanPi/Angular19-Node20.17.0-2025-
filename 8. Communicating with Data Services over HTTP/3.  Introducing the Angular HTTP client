@@ -1,0 +1,55 @@
+Introducing the Angular HTTP client:
+
+- The HTTP client of the Angular framework is a separate Angular library that resides in the  
+    @angular/common npm package under the http namespace. The Angular CLI installs this package 
+    by default when creating a new Angular project.
+
+📝
+You will need the source code of the Angular application we created in Chapter 6, Reactive Patterns
+in Angular, to follow along with the rest of the chapter. After you get the code, we suggest you
+remove the key-logger folder for simplicity.
+
+1) To start using the Angular HTTP client, we need to import the provideHttpClient method in 
+    the app.config.ts file:
+
+        import { provideHttpClient } from '@angular/common/http';
+        import { ApplicationConfig, provideZoneChangeDetection } from '@angular/core';
+        import { provideRouter } from '@angular/router';
+
+        import { routes } from './app.routes';
+        import { provideClientHydration, withEventReplay } from '@angular/platform-browser';
+
+        export const appConfig: ApplicationConfig = {
+            providers: [
+                provideZoneChangeDetection({ eventCoalescing: true }),
+                provideRouter(routes),
+                provideClientHydration(withEventReplay()),
+                provideHttpClient()
+            ]
+        };
+
+📝
+Suppose we want to use the HTTP client in applications built with older versions of Angular.
+In that case, we need to import an Angular module, called HttpClientModule, from the
+@angular/common/http namespace into one of the modules of our application.
+
+- The provideHttpClient method exposes various Angular services we can use to handle asynchronous HTTP
+    communication. The most basic is the HttpClient service, which provides a robust API and abstracts
+    all operations required to handle asynchronous connections through the following HTTP methods:
+    • get: This performs a GET operation to fetch data
+    • post: This performs a POST operation to add new data
+    • put/patch: This performs a PUT/PATCH operation to update existing data
+    • delete: This performs a DELETE operation to remove existing data
+
+- The previous HTTP methods constitute the primary operations for Create, Read, Update, Delete (CRUD)
+    applications. All the earlier methods of the Angular HTTP client return an observable data stream.
+    Angular components can use the RxJS library to subscribe to those methods and interact with a remote
+    API.
+
+📝
+The Angular team is currently investigating and experimenting to see if they can make the use of RxJS
+optional in the framework. In that case, we might see an HTTP implementation that is based on signals.
+For the rest of this chapter, WE WILL STICK WITH OBSERVABLES BECAUSE THE ANGULAR HTTP CLIENT DOES NOT
+SUPPORT SIGNALS OUT OF THE BOX.
+
+In the following section, we will explore how to use these methods and communicate with a remote API.

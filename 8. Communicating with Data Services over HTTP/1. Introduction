@@ -1,0 +1,19 @@
+Communicating with Data Services over HTTP:
+
+- A real-world scenario for enterprise Angular applications is to connect to remote services and APIs 
+    to exchange data.
+    
+- The Angular HTTP client provides out-of-the-box support for communicating with services over HTTP.
+    The interaction of an Angular application with the HTTP client is based on RxJS observable streams,
+    giving developers a rich set of capabilities for data access.
+
+- There are many ways to connect to APIs through HTTP. In this book, we will only scratch the surface.
+    Still, the insights covered in this chapter will give you all you need to connect your Angular 
+    applications to HTTP services in no time, leaving all you can do with them up to your creativity.
+
+- In this chapter, we will explore the following concepts:
+    • Communicating data over HTTP
+    • Introducing the Angular HTTP client
+    • Setting up a backend API
+    • Handling CRUD data in Angular
+    • Authentication and authorization with HTTP

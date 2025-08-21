@@ -1,0 +1,74 @@
+Communicating data over HTTP:
+
+- Before we dive into describing the Angular HTTP client and how to use it to communicate with servers,
+    let’s talk about native HTTP implementations first.
+
+- Currently, if we want to communicate with a server over HTTP using JavaScript, we can use the
+    JavaScript-native fetch API. It contains all the necessary methods to connect with a server and
+    exchange data. 
+
+- We can see an example of how to fetch data in the following code:
+    
+        fetch(url)
+        .then(response => {
+            return response.ok ? response.text() : '';
+        })
+        .then(result => {
+            if (result) {
+                console.log(result);
+            } else {
+                console.error('An error has occurred');
+            }
+        });
+
+    -> Although the fetch API is promise-based, the promise it returns is not rejected if there is an
+        error. Instead, the request is unsuccessful when the ok property is not in the response object. 
+    -> If the request to the remote URL is completed, we can use the text() method of the response 
+        object to return the response text inside a new promise. Finally, in the second then callback,
+        we display either the response text or a specific error message to the browser console.
+
+💡
+To learn more about the fetch API, check out the official documentation at
+https://developer.mozilla.org/docs/Web/API/fetch.
+
+- We have already learned that observables are flexible for managing asynchronous operations. 
+    You are probably wondering how we can apply this pattern when consuming information from 
+    an HTTP service. So far, you will be becoming used to submitting asynchronous requests to AJAX 
+    services and then passing the response to a callback or a promise. Now, we will handle the call by 
+    returning an observable. The observable will emit the server response as an event in the context 
+    of a stream, which can be funneled through RxJS operators to better digest the response.
+
+----------------------------------------------------------------------------------------------------------
+
+- Let’s convert the previous example with the fetch API to an observable. We use the Observable 
+    class to wrap the fetch call in an observable stream and replace the console methods with the 
+    appropriate observer object methods:
+
+     👉 const request$ = new Observable(observer => {
+        fetch(url)
+            .then(response => {
+                return response.ok ? response.text() : '';
+            })
+            .then(result => {
+                if (result) {
+                    👉 observer.next(result);
+                    👉 observer.complete();
+                } else {
+                    👉 observer.error('An error has occurred');
+                }
+            });
+        });
+    
+    -> In the preceding snippet, we use the following observer methods:
+        • next: This returns the response data to subscribers when they arrive
+        • complete: This notifies subscribers that no other data will be available in the stream
+        • error: This alerts subscribers that an error has occurred
+
+- That’s it! We have now built a custom HTTP client. Of course, this isn’t much. Our custom HTTP 
+    client only handles a GET operation to get data from a remote endpoint. We are not handling 
+    many other operations of the HTTP protocol, such as POST, PUT, and DELETE.
+
+- It was, however, essential to realize all the heavy lifting the HTTP client in Angular is doing for us.
+    Another important lesson is how easy it is to turn an asynchronous API into an observable API that
+    fits nicely with the rest of our asynchronous concepts. So, let’s continue with Angular’s
+    implementation of an HTTP service.

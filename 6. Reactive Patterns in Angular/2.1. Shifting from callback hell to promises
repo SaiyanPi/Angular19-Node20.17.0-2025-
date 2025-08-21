@@ -172,7 +172,7 @@ PROMISES:
             });
         }
     
-        -> The promise will now resolve repeatedly every two seconds
+        -> The promise will now resolve repeatedly every ten seconds
 
     b) Modify the setTitle property to append the current timestamp in the title property of 
         the component:  
