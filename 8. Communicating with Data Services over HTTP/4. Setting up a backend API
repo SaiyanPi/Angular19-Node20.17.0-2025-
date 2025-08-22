@@ -1,0 +1,26 @@
+Setting up a backend API:
+
+- A web CRUD application usually connects to a server and uses an HTTP backend API to perform 
+    operations on data. It fetches existing data, updates it, creates new data, or deletes it.
+
+- In a real-world scenario, you will most likely interact with a real backend API service through 
+    HTTP. In this book, we will use a fake API called Fake Store API.
+
+📝
+The official Fake Store API documentation can be found at https://fakestoreapi.com.
+
+- The Fake Store API is a backend REST API available online that you can use when you need fake 
+    data for an e-commerce or e-shop web application. It can manage products, shopping carts, and 
+    users available in the JSON format. It exposes the following main endpoints:
+    • products: This manages a set of product items
+    • cart: This manages the shopping cart of a user
+    • user: This manages a collection of application users
+    • login: This handles user authentication
+
+📝
+In this chapter, we will work only with the products and login endpoints. However, we will revisit the
+cart endpoint later in the book.
+
+- All operations that modify data do not persist them physically in a database. However, they return
+    an indication of whether the operation was successful. All operations that get data return 
+    a predefined collection of items.

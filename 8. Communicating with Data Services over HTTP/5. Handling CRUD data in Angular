@@ -1,0 +1,14 @@
+Handling CRUD data in Angular:
+
+- CRUD applications are widely used in the Angular world. You will hardly find any web application 
+    that does not follow this pattern. Angular does a great job of supporting this type of application 
+    by providing the HttpClient service. In this section, we will explore the Angular HTTP client by 
+    interacting with the products endpoint of the Fake Store API.
+
+- we will look into following sub sections in this section:
+
+    5.1. Fetching data through HTTP
+    5.2. Modifying data through HTTP
+    5.2.1. Adding new products
+    5.2.2. Updating product price
+    5.2.3. Removing a product

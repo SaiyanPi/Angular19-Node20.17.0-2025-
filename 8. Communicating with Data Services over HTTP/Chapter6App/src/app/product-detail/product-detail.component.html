@@ -7,12 +7,12 @@
     </p>
     <p>{{selectedProduct.price | currency:'NPR'}}</p>
      <div class="pill-group">
-        @for (cat of selectedProduct.categories | keyvalue; track cat.key) {
+        <!-- @for (cat of selectedProduct.categories | keyvalue; track cat.key) {
           <p class="pill">{{cat.value | lowercase}}</p>
-        }
+        } -->
+          <p class="pill">{{ selectedProduct.category }}</p>
       </div>
     <!-- event binding -->
     <button (click)="addToCart()">Add to cart</button>
   </div>
-
 }

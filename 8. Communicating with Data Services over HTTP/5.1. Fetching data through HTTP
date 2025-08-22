@@ -1,0 +1,214 @@
+Fetching data through HTTP:
+
+- The ProductListComponent class uses the ProductsService class to fetch and display product data.
+    Data is currently hardcoded into the products property of the ProductsService class.
+
+- In this section, we will modify our Angular application to work with live data from the Fake
+    Store API:
+
+1) Open the app.component.ts file and remove the providers property from the @Component decorator.
+    We will provide APP_SETTINGS directly through the application configuration file.
+
+2) At this point, we can also remove the title property, the title$ observable, the setTitle 
+    property, and the constructor of the component class:
+
+        export class AppComponent {
+            settings = inject(APP_SETTINGS);
+        }
+
+3) Open the app.component.html file and modify the <header> HTML element so that it uses the settings
+    object directly:
+
+        <header>{{ settings.title }}</header>
+
+4) Open the app.config.ts file and add the APP_SETTINGS provider as follows
+
+        import { provideHttpClient } from '@angular/common/http';
+        import { ApplicationConfig, provideZoneChangeDetection } from '@angular/core';
+        import { provideRouter } from '@angular/router';
+
+        import { routes } from './app.routes';
+        import { provideClientHydration, withEventReplay } from '@angular/platform-browser';
+    👉 import { APP_SETTINGS, appSettings } from './app.settings';
+
+        export const appConfig: ApplicationConfig = {
+            providers: [
+                provideZoneChangeDetection({ eventCoalescing: true }),
+                provideRouter(routes),
+                provideClientHydration(withEventReplay()),
+                provideHttpClient(),
+            👉  { provide: APP_SETTINGS, useValue: appSettings },
+            ]
+        };
+
+    -> We provide APP_SETTINGS from the application configuration file because we want it to be
+        accessible globally in the application.
+
+5) Open the app.settings.ts file and add a new property in the AppSettings interface that represents
+    the URL of the Fake Store API:
+
+        import { InjectionToken } from "@angular/core";
+
+        export interface AppSettings {
+            title: string;
+            version: string;
+            apiUrl: string;
+        }
+
+        export const appSettings: AppSettings = {
+            title: 'My e-shop',
+            version: '1.0',
+            apiUrl: 'https://fakestoreapi.com'
+        };
+
+        export const APP_SETTINGS = new InjectionToken<AppSettings>('app.settings');
+
+📝
+The URL of a backend API can also be added in environment files, as we will learn in Chapter 14,
+Bringing Applications to Production.
+
+6) Open the products.service.ts file and modify the import statements accordingly:
+
+    👉  import { HttpClient } from '@angular/common/http';
+        import { Injectable, 👉 inject } from '@angular/core';
+        import { Product } from './product';
+        import { Observable, of } from 'rxjs';
+    👉  import { APP_SETTINGS } from './app.settings';
+
+7) Create the following property in the ProductsService class that represents the API products endpoint:
+
+        private productsUrl = inject(APP_SETTINGS).apiUrl + '/products';
+
+8) Modify the constructor to inject the HttpClient service:
+
+        constructor( private http: HttpClient) { }
+
+9) Modify the getProducts method so that it uses the HttpClient service to get the list of products:
+
+        getProducts() : Observable<Product[]> {
+            return 👉 this.http.get<Product[]>(this.productsUrl);
+        }
+
+10) Convert the products property to an empty array:
+
+        private products: Product[] = [];
+    
+    -> We will use this for local cache purposes later, in the Modifying data through HTTP section.
+
+11) Open the product-list.component.html file and modify the @if block so that it checks if the products
+    template variable exists:
+
+        @if (👉 products) {
+            <h1>Products ({{ products.length }})</h1>
+        }
+    
+    -> We need to check if the variable exists because data is now fetched from the Fake Store API and
+        there will be a network delay before the variable has a value.
+
+- If we run the application using the ng serve cmd, we should see the extended list of products from
+    the API similar to the API_ProductList.png
+
+------------------------------------------------------------------------------------------------------------
+
+# Passing Query parameter:
+
+- The products endpoint supports passing a request parameter to limit the results returned from 
+    the API. As indicated at https://fakestoreapi.com/docs#p-limit, we can use a query parameter
+    named limit to accomplish that task. 
+
+- Let’s see how we can pass query parameters in the Angular HTTP client:
+
+a) Open the products.service.ts file and import the HttpParams class from the @angular/common/http
+    namespace:
+
+        import { HttpClient, 👉 HttpParams } from '@angular/common/http';
+
+    -> The HttpParams class is used to pass query parameters in an HTTP request.
+
+b) Create the following variable inside the getProducts method:
+
+        getProducts() : Observable<Product[]> {
+        👉 const options = new HttpParams().set('limit', 10);
+            return this.http.get<Product[]>(this.productsUrl);
+        }
+    
+    -> The set method of the HttpParams class creates a new query parameter.
+    -> If we wanted to pass additional parameters, we should chain more set methods, such as:
+
+        const options = new HttpParams()
+            .set('limit', 10)
+            .set('page', 1);
+
+
+📝❌
+The HttpParams class is immutable. The following would not work because every operation returns a new
+instance:
+        const options = new HttpParams();
+        options.set('limit', 10)
+
+c) We use the second parameter of the get method to pass query parameters using the params property:
+
+        return this.http.get<Product[]>(this.productsUrl, 👉 {
+            params: options
+        });
+
+d) Save your changes, wait for the application to reload, and observe the application’s output:
+    QueryParam_ProductList.png
+
+    -> all products are displayed with the same tag icon, which is the default one according to the
+        @switch block in the product-list.component.html file:
+
+        @switch (product.title) {
+            @case ('Keyboard') {⌨️}
+            @case ('Microphone') {🎙️}
+            @default {🏷️}
+        }
+    
+    -> The @switch block relies on the product title property. We will change it so that it is 
+        based on the category property, which comes from the products endpoint of the API.
+
+e) Open the product.ts file and replace the categories property with the following property:
+
+        category: string;
+
+f) Open the product-list.component.html file and modify the @switch block as follows:
+
+        @switch (product.👉category) {
+        👉 @case ('electronics') {⌨️}
+        👉 @case ('jewelry') {💎}
+            @default {🏷️}
+        }
+
+g) We also need to modify the product-detail.component.html file because we replaced the categories
+    property in step e)
+        
+        @let selectedProduct = this.product()!;
+        @if(selectedProduct){
+            <div>
+                <p>You selected:
+                    <strong>{{selectedProduct.title}}</strong>
+                </p>
+                <p>{{selectedProduct.price | currency:'NPR'}}</p>
+                <div class="pill-group">
+                   👉 <p class="pill">{{ selectedProduct.category }}</p>
+                </div>
+                <!-- event binding -->
+                <button (click)="addToCart()">Add to cart</button>
+            </div>
+        }
+
+        OR 
+
+        @if (product()) {
+            <p>You selected:
+                <strong>{{product()!.title}}</strong>
+            </p>
+            <p>{{product()!.price | currency:'EUR'}}</p>
+            <div class="pill-group">
+               👉 <p class="pill">{{ product()!.category }}</p>
+            </div>  
+            <button (click)="addToCart()">Add to cart</button>
+        }
+
+h) Save your changes, wait for the application to reload, and observe the application’s output:
+    ProductList_with_categories.png

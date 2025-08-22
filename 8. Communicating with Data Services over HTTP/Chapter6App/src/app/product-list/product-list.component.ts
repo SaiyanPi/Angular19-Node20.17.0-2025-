@@ -19,13 +19,6 @@ export class ProductListComponent implements OnInit {
 
   products: Product[] = [];
 
-  // private destroyRef = inject(DestroyRef);
-
-  // private productsSub: Subscription | undefined;
-
-  // using inject keyword:
-  // private productService = inject(ProductsService);
-
   selectedProduct: Product | undefined;
 
   products$: Observable<Product[]> | undefined;
@@ -41,20 +34,6 @@ export class ProductListComponent implements OnInit {
     // this.products = this.productService.getProducts();
     this.getProducts();
   }
-
-  // ngOnDestroy(): void {
-  //   this.productsSub?.unsubscribe();
-  // }
-
-  // private getProducts() {
-    // this.productsSub = this.productService.getProducts().subscribe(products => {
-    //   this.products = products;
-    // });
-    // this.productService.getProducts().pipe( takeUntilDestroyed(this.destroyRef))
-    //   .subscribe(products => {
-    //   this.products = products;
-    // });
-  // }
 
   private getProducts() {
     this.products$ = this.productService.getProducts();
