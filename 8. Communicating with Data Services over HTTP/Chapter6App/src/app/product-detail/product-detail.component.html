@@ -1,4 +1,4 @@
-@let selectedProduct = this.product()!;
+<!-- @let selectedProduct = this.product()!;
 
 @if(selectedProduct){
   <div>
@@ -7,12 +7,33 @@
     </p>
     <p>{{selectedProduct.price | currency:'NPR'}}</p>
      <div class="pill-group">
-        <!-- @for (cat of selectedProduct.categories | keyvalue; track cat.key) {
-          <p class="pill">{{cat.value | lowercase}}</p>
-        } -->
-          <p class="pill">{{ selectedProduct.category }}</p>
+        <p class="pill">{{ selectedProduct.category }}</p>
       </div>
-    <!-- event binding -->
     <button (click)="addToCart()">Add to cart</button>
   </div>
+} -->
+
+<!-- @if (product()) {
+  <p>You selected:
+    <strong>{{product()!.title}}</strong>
+  </p>
+  <p>{{product()!.price | currency:'NPR'}}</p>
+  <div class="pill-group">
+    <p class="pill">{{ product()!.category }}</p>
+  </div>
+  <button (click)="addToCart()">Add to cart</button>
+} -->
+
+@let product = (product$ | async);
+
+@if (product) {
+  <p>You selected:
+    <strong>{{product.title}}</strong>
+  </p>
+  <p>{{product.price | currency:'NPR'}}</p>
+  <div class="pill-group">
+    <p class="pill">{{ product.category }}</p>
+  </div>
+  <!--<button (click)="addToCart()">Add to cart</button>-->
 }
+

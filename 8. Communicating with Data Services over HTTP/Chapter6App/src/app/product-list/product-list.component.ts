@@ -5,12 +5,13 @@ import { SortPipe } from '../sort.pipe';
 import { ProductsService } from '../products.service';
 import { AsyncPipe } from '@angular/common';
 import { Observable } from 'rxjs';
+import { ProductCreateComponent } from '../product-create/product-create.component';
 // import { Subscription } from 'rxjs';
 // import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 
 @Component({
   selector: 'app-product-list',
-  imports: [ProductDetailComponent, SortPipe, AsyncPipe],
+  imports: [ProductDetailComponent, SortPipe, AsyncPipe, ProductCreateComponent],
   templateUrl: './product-list.component.html',
   styleUrl: './product-list.component.css',
   providers: [ProductsService]

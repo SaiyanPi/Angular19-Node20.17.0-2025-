@@ -1,0 +1,42 @@
+Modifying data through HTTP:
+
+- Modifying data in a CRUD application usually refers to adding new data and updating or deleting 
+    existing data. To demonstrate how to implement such functionality in an Angular application 
+    using the HTTP client, we will make the following changes to our application:
+    • Create an Angular component to add new products
+    • Modify the product detail component to change the price of an existing product
+    • Add a button in the product detail component to delete an existing product
+
+- We have already mentioned that no HTTP operations persist data physically in the Fake Store 
+    API, so we need to implement a local cache mechanism for our product data and interact with
+    it directly in the products service:
+
+1) Open the products.service.ts file and import the map RxJS operator:
+
+        import { Observable,👉 map, of } from 'rxjs';
+
+2) Modify the getProducts method as follows:
+
+        getProducts() : Observable<Product[]> {
+            const options = new HttpParams().set('limit', 10);
+            return this.http.get<Product[]>(this.productsUrl, {
+                params: options
+            })👉.pipe(map(products => {
+                this.products = products;
+                return products;
+            }));
+        }
+    
+    -> The preceding method fills the products array with data from the API and returns product 
+        data as an observable.
+
+3) Modify the getProduct method so that it uses the products array to return a product object
+    instead of the Fake Store API:
+
+        getProduct(id: number): Observable<Product> {
+            const product = this.products.find(p => p.id === id);
+            return of(product!);
+        }
+
+- We now have our products service in place and can start building the component for adding new 
+    products.

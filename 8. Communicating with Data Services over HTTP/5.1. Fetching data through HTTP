@@ -212,3 +212,96 @@ g) We also need to modify the product-detail.component.html file because we repl
 
 h) Save your changes, wait for the application to reload, and observe the application’s output:
     ProductList_with_categories.png
+
+- The product details component continues to work as expected because we pass the selected 
+    product as an input property from the product list:
+
+        <app-product-detail
+        [product]="selectedProduct"
+        (added)="onAdded()"
+        ></app-product-detail>
+
+---------------------------------------------------------------------------------------------------------
+
+# GET THE PRODUCT DETAILS DIRECTLY FROM API
+
+- We will change the previous behavior and get the product details directly from the API using
+    an HTTP GET request. The Fake Store API contains an endpoint method that we can use to get
+    the details for a specific product based on its ID:
+
+i) Open the products.service.ts file and create a new getProduct method that accepts 
+    the product id as a parameter and initiates a GET request to the API based on that id:
+
+        getProduct(id: number): Observable<Product> {
+            return this.http.get<Product>(`${this.productsUrl}/${id}`);
+        }
+
+    -> The preceding method uses the get method of the HttpClient service. It accepts the 
+        products endpoint URL followed by the product id as a parameter.
+
+ii) Open the product-detail.component.ts file and modify the import statements as follows:
+
+        import { CommonModule } from '@angular/common';
+        import { Component, input, output,👉 OnChanges } from '@angular/core';
+        import { Product } from '../product'; // importing interface
+       👉 import { Observable } from 'rxjs';
+       👉 import { ProductsService } from '../products.service';
+
+iii) Add the following property in the ProductDetailComponent class:
+
+        id = input<number>();
+    
+    -> The id component property will be used to pass the ID of the selected product from the
+        list.
+
+iv) Replace the product input property with the following observable:
+
+        product$: Observable<Product> | undefined;
+    
+    -> The product$ property will be used to call the getProduct method from the service.
+
+v) Add a constructor in the ProductDetailComponent class and inject ProductsService:
+
+        constructor(private productService: ProductsService) { }
+
+vi) Add OnChanges in the list of implemented interfaces:
+
+        export class ProductDetailComponent 👉 implements OnChanges{
+            // omitted
+        }
+
+vii) Implement the ngOnChanges method as follows:
+
+        ngOnChanges(): void {
+            this.product$ = this.productService.getProduct(this.id()!);
+        }
+    
+    -> In the preceding method, we assign the value of the getProduct method from ProductsService
+        to the product$ component property every time a new id is passed using the input binding.
+
+viii) Open the product-detail.component.html file and modify its content so that it uses the
+    product$ observable:
+
+       👉 @let product = (product$ | async);
+
+        @if (👉 product) {
+            <p>You selected:
+                <strong>{{👉product.title}}</strong>
+            </p>
+            <p>{{👉product.price | currency:'NPR'}}</p>
+            <div class="pill-group">
+                <p class="pill">{{ 👉product.category }}</p>
+            </div>
+            <button (click)="addToCart()">Add to cart</button>
+        }
+
+ix) Finally, open the product-list.component.html file and bind the id of the selectedProduct 
+    property to the id input binding of the <app-product-detail> component:
+
+        <app-product-detail
+        [id] = "selectedProduct?.id"
+        (added)="onAdded($event)">
+        </app-product-detail>
+
+- If we run the application using the ng serve command and select a product from the list, we
+    will verify that the product detail is displayed correctly.

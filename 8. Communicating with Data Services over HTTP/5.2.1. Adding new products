@@ -1,0 +1,144 @@
+Adding new products:
+
+- To add a new product through our application, we need to send its details to the Fake Store
+    API:
+
+1) Open the products.service.ts file and add the following method:
+
+        addProduct(newProduct: Partial<Product>): Observable<Product> {
+            return this.http.post<Product>(this.productsUrl, newProduct).pipe(
+                map(product => {
+                    this.products.push(product);
+                    return product;
+                })
+            );
+        }
+    
+    -> In the preceding snippet, we use the post method of the HttpClient class and pass the 
+        products endpoint of the API along with a new product object as parameters.
+    
+📝
+We define the new product as Partial because new products do not have an ID.
+
+    -> The generic type defined in the post method indicates that the returned product from the 
+        API is a Product object. We also add the new product into the local cache and return it.
+
+2) Run the following Angular CLI command to create a new component:
+
+        CMD: ng generate component product-create
+
+3) Open the product-create.component.ts file and add the following import statement:
+
+        import { ProductsService } from '../products.service';
+
+4) Create a constructor and inject the ProductsService class:
+
+        constructor(private productsService: ProductsService) {}
+
+5) Add the following method to the component class:
+
+        createProduct(title: string, price: string, category: string) {
+            this.productsService.addProduct({
+                title,
+                price: Number(price),
+                category
+            }).subscribe();
+        }
+
+📝
+We do not need to unsubscribe when interacting with the Angular HTTP client because the framework
+will do it automatically for us.
+
+    -> The preceding method accepts the product details as parameters and calls the addProduct 
+        method of the ProductsService class. 
+    -> We use the native Number function to convert the price value to a number because it will
+        be passed as a string from the template.
+
+6) Open the product-create.component.html file and replace its content with the following 
+    HTML template:
+
+        <h1>Add new product</h1>
+        <div>
+            <label for="title">Title</label>
+            <input id="title" #title />
+        </div>
+        <div>
+            <label for="price">Price</label>
+            <input id="price" #price type="number" />
+        </div>
+        <div>
+            <label for="category">Category</label>
+            <select id="category" #category>
+                <option>Select a category</option>
+                <option value="electronics">Electronics</option>
+                <option value="jewelery">Jewelery</option>
+                <option>Other</option>
+            </select>
+        </div>
+        <div>
+            <button (click)="createProduct(title.value, price.value, category.value)">Create</button>
+        </div>
+    
+    -> In the preceding template, we bind the createProduct method to the click event of the 
+        Create button and pass the value of the <input> and <select> HTML elements using the 
+        respective template reference variables.
+
+7) Open the global styles.css file and add the following CSS style:
+
+        input {
+            border-radius: 4px;
+            padding: 8px;
+            margin-bottom: 16px;
+            border: 1px solid #BDBDBD;
+        }
+    
+    Also, move the button-related styles from the product-detail.component.css file in the 
+    global CSS styles file.
+
+8) Open the product-create.component.css file and add the following CSS styles to give a nice
+    look and feel to our new component:
+
+        input {
+            width: 200px;
+        }
+        select {
+            border-radius: 4px;
+            padding: 8px;
+            margin-bottom: 16px;
+            border: 1px solid #BDBDBD;
+            width: 220px;
+        }
+        label {
+            margin-bottom: 4px;
+            display: block;
+        }
+
+9) Open the product-list.component.ts file and import the ProductCreateComponent class:
+
+        import { Component, OnInit, inject, DestroyRef } from '@angular/core';
+        import { Product } from '../product'; // importing interface
+        import { ProductDetailComponent } from '../product-detail/product-detail.component';
+        import { SortPipe } from '../sort.pipe';
+        import { ProductsService } from '../products.service';
+        import { AsyncPipe } from '@angular/common';
+        import { Observable } from 'rxjs';
+    👉  import { ProductCreateComponent } from '../product-create/product-create.component';
+
+        @Component({
+        selector: 'app-product-list',
+        imports: [ProductDetailComponent, SortPipe, AsyncPipe,👉 ProductCreateComponent],
+        templateUrl: './product-list.component.html',
+        styleUrl: './product-list.component.css',
+        providers: [ProductsService]
+        })
+
+10) Finally, open the product-list.component.html file and add the following snippet at the end
+    of the template:
+
+        <app-product-create></app-product-create>
+
+- If we now run our Angular application using the ng serve command, we should see the component
+    for adding new products at the end of the page: CreateProduct.png
+
+- To experiment, try to add a new product by filling in its details, clicking on the Create
+    button, and verifying that the new product has been added to the list.
