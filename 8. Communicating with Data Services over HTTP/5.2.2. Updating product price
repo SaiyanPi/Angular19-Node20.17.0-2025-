@@ -1,0 +1,80 @@
+Updating product price:
+
+- The price of a product in an e-commerce application may need to change at some point. We need 
+    to provide a way for our users to update that price through our application:
+
+1) Open the products.service.ts file and add a new method for updating a product:
+
+        updateProduct(id: number, price: number): Observable<Product> {
+            return this.http.patch<Product>(`${this.productsUrl}/${id}`, {
+                price
+            }).pipe(
+                map(product => {
+                    const index = this.products.findIndex(p => p.id === id);
+                    this.products[index].price = price;
+                    return product;
+                })
+            );
+        }
+    
+    -> In the preceding method, we use the patch method of the HttpClient class to send the 
+        details of the product that we want to modify to the API.
+    -> We also update the price of the selected product in the local cache of products and
+        return it.
+
+💡
+Alternatively, we could have used the put method of the HTTP client. The patch method should be
+used when we want to update only a subset of an object, whereas the put method interacts with all
+object properties. In this case, we do not want to update the product title, so we use the patch 
+method. Both methods accept the API endpoint and the object we want to update as parameters.
+
+2) Add the following method to the ProductDetailComponent class:
+
+        changePrice(product: Product, price: string) {
+            this.productService.updateProduct(product.id, Number(price)).subscribe();
+        }
+    
+    -> The preceding method accepts an existing product and its new price as parameters and 
+        calls the updateProduct method of the ProductsService class.
+
+3) Open the product-detail.component.html file and add an <input> and a <button> element after
+    the paragraph element of the price:
+
+        @let product = (product$ | async);
+
+        @if (product) {
+            <p>You selected:
+                <strong>{{product.title}}</strong>
+            </p>
+            <p>{{product.price | currency:'NPR'}}</p>
+
+        👉  <input placeholder="New price" #price type="number" />
+        👉  <button
+                class="secondary"
+                (click)="changePrice(product, price.value)">
+                Change
+            </button>
+
+            <div class="pill-group">
+                <p class="pill">{{ product.category }}</p>
+            </div>
+            <!--<button (click)="addToCart()">Add to cart</button>-->
+        }
+
+4) Finally, open the product-detail.component.css file and add the following CSS styles.
+
+        button.secondary {
+            display: inline;
+            margin-left: 5px;
+            --button-accent: var(--vivid-pink);
+        }
+
+5) Run the ng serve command to start the Angular application and select a product from the list.
+    The product details should look like the UpdatePrice.png
+
+6) Enter a price in the New price input box and click the Change button. The existing price 
+    should be updated to reflect the change
+
+📝
+Remember that changes in products that come from the Fake Store API are not physically persisted.
+If you change the price and refresh the browser, it will restore the initial price.

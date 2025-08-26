@@ -23,7 +23,8 @@
 
 <app-product-detail
   [id] = "selectedProduct?.id"
-  (added)="onAdded($event)">
+  (added)="onAdded($event)"
+  (deleted)="selectedProduct = undefined">
 </app-product-detail>
 
 <app-product-create></app-product-create>

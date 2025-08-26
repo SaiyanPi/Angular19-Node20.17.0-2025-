@@ -17,6 +17,8 @@ export class ProductDetailComponent implements OnChanges{
 
   id = input<number>();
 
+  deleted = output();
+
   product$: Observable<Product> | undefined;
 
   added = output<Product>(); // output binding (added is an output property)
@@ -30,6 +32,17 @@ export class ProductDetailComponent implements OnChanges{
   ngOnChanges(): void {
     this.product$ = this.productService.getProduct(this.id()!);
   }
+
+  changePrice(product: Product, price: string) {
+    this.productService.updateProduct(product.id, Number(price)).subscribe();
+  }
+
+  remove(product: Product) {
+    this.productService.deleteProduct(product.id).subscribe(() => {
+      this.deleted.emit();
+    });
+  }
+
 
 }
 

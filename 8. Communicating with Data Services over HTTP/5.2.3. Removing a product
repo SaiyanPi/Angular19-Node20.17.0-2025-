@@ -1,0 +1,126 @@
+Removing a product:
+
+-  Deleting a product from an e-shop application is not very common. However, we need to provide 
+    functionality for it in case users enter incorrect or invalid data and want to delete it
+    afterward.
+
+- In our application, deleting an existing product will be done with the product details
+    component:
+
+1) Open the products.service.ts file and import the tap operator from the rxjs package:
+
+        import { Observable, map, of,👉 tap } from 'rxjs';
+
+2) Add the following method to the ProductsService class:
+
+        deleteProduct(id: number): Observable<void> {
+            return this.http.delete<void>(`${this.productsUrl}/${id}`).pipe(
+                tap(() => {
+                    const index = this.products.findIndex(p => p.id === id);
+                    this.products.splice(index, 1);
+                })
+            );
+        }
+
+    -> In the preceding method, we use the delete method of the HttpClient class, passing the 
+        products endpoint and the product id we want to delete in the API.
+    -> We are also using the splice method of the products array to remove the product from the
+        local cache.
+    -> The return type of the method is set to Observable<void> because we are not currently 
+        interested in the result of the HTTP request. We only need to know if it was successful 
+        or not.
+    -> We also use the tap RxJS operator because we are not altering the returned value 
+        from the observable.
+
+3) Open the product-detail.component.ts file and create a new output property in the
+    ProductDetailComponent class:
+
+        deleted = output();
+
+    -> The preceding property will notify the ProductListComponent that the selected product 
+        has been deleted.
+
+4) Create the following method, which calls the deleteProduct method of the ProductsService class
+    and triggers the deleted output event:
+
+        remove(product: Product) {
+            this.productService.deleteProduct(product.id).subscribe(() => {
+                this.deleted.emit();
+            });
+        }
+
+5) Open the product-detail.component.html file, create a <button> element, and bind its click
+    event to the emit method of the deleted output:
+
+        @let product = (product$ | async);
+
+        @if (product) {
+            <p>You selected:
+                <strong>{{product.title}}</strong>
+            </p>
+            <p>{{product.price | currency:'NPR'}}</p>
+
+            <input placeholder="New price" #price type="number" />
+            <button
+                class="secondary"
+                (click)="changePrice(product, price.value)">
+                Change
+            </button>
+
+            <div class="pill-group">
+                <p class="pill">{{ product.category }}</p>
+            </div>
+
+         👉 <div class="button-group">
+                <!-- <button (click)="addToCart()">Add to cart</button> -->
+                <button class="delete" (click)="remove(product)">Delete</button>
+            </div>
+        }
+
+    -> In the preceding snippet, we grouped the two buttons in a <div> HTML element so that 
+        they appear side by side.
+
+6) Add an appropriate style for the new button and the button group in the product-detail.
+    component.css file:
+
+        button.delete {
+            display: inline;
+            margin-left: 5px;
+            --button-accent: var(--hot-red);
+        }
+        .button-group {
+            display: flex;
+            flex-direction: row;
+            align-items: start;
+            flex-wrap: wrap;
+        }
+
+7) Open the product-list.component.html file and add a binding to the deleted event of the
+    <app-product-detail> component:
+
+        <app-product-detail
+        [id] = "selectedProduct?.id"
+        (added)="onAdded($event)"
+    👉  (deleted)="selectedProduct = undefined">
+        </app-product-detail>
+
+
+- If we run the application using the ng serve command and select a product from the list, we 
+    should see something like ProductDelete.png
+
+- The product detail component now has a Delete button that deletes the product and removes it 
+    from the list when it is clicked.
+
+📝
+Remember that changes in products that come from the Fake Store API are not physically persisted.
+If you delete a product and refresh the browser, the product will appear again on the list.
+
+- According to the documentation of the Fake Store API, shopping carts are only available to
+    authenticated users, so we must ensure that the Add to cart button will only be available
+    to them in our application.
+
+💡
+In an Angular enterprise application, the product management feature must also be protected from
+unauthorized users. In this case, we would implement a more granular authorization scheme with
+user roles, allowing only administrators to change and add products. We will not implement this
+feature, but we encourage you to experiment.

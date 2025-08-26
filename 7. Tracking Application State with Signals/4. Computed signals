@@ -37,7 +37,7 @@ Computed signals:
 5) Run the application using ng serve and verify that the title is updated correctly.
 
 ---------------------------------------------------------------------------------
-NOTE) this is not working out, getting the error:
+NOTE📝 this is not working out, getting the error:
 
     X [ERROR] TS2554: Expected 1 arguments, but got 0. [plugin angular-compiler]
 
