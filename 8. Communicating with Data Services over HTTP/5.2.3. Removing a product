@@ -124,3 +124,5 @@ In an Angular enterprise application, the product management feature must also b
 unauthorized users. In this case, we would implement a more granular authorization scheme with
 user roles, allowing only administrators to change and add products. We will not implement this
 feature, but we encourage you to experiment.
+
+- In the following section, we will learn about authentication and authorization in Angular.
