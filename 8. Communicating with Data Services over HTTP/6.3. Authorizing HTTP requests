@@ -1,0 +1,26 @@
+Authorizing HTTP requests:
+
+- The Fake Store API does not require authorization while communicating with its endpoints.
+    However, suppose we are working with a backend API that expects all HTTP requests to contain
+    an authentication token using HTTP headers. A common pattern in web applications is to
+    include the token in an Authorization header.
+
+- We can use HTTP headers in an Angular application by importing the HttpHeaders class from the
+    @angular/common/http namespace and modifying our methods accordingly.
+    Here is an example of how the getProducts method should look:
+
+        getProducts(): Observable<Product[]> {
+            const options = {
+                params: new HttpParams().set('limit', 10),
+                headers: new HttpHeaders({ Authorization: 'myToken' })
+            };
+            return this.http.get<Product[]>(this.productsUrl, options).
+                pipe(map(products => {
+                    this.products = products;
+                    return products;
+                }));
+        }
+
+📝
+For simplicity, we are using a hardcoded value for the authentication token. In a real-world
+scenario, we may get it from the local storage of the browser or some other means.

@@ -3,6 +3,7 @@ import { Component, input, output, OnChanges } from '@angular/core';
 import { Product } from '../product'; // importing interface
 import { Observable } from 'rxjs';
 import { ProductsService } from '../products.service';
+import { AuthService } from '../auth.service';
 
 @Component({
   selector: 'app-product-detail',
@@ -21,13 +22,16 @@ export class ProductDetailComponent implements OnChanges{
 
   product$: Observable<Product> | undefined;
 
-  added = output<Product>(); // output binding (added is an output property)
+  added = output(); // output binding (added is an output property)
 
   // addToCart() {
   //   this.added.emit(this.product()!); // emit the product when the button is clicked
   // }
+  addToCart() {
+    this.added.emit();
+  }
 
-  constructor(private productService: ProductsService) { }
+  constructor( private productService: ProductsService, public authService: AuthService ) { }
 
   ngOnChanges(): void {
     this.product$ = this.productService.getProduct(this.id()!);

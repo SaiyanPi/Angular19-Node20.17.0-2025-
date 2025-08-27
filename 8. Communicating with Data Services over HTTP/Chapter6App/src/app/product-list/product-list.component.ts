@@ -27,8 +27,8 @@ export class ProductListComponent implements OnInit {
   // Injecting services in the constructor:
   constructor(private productService: ProductsService) {}
 
-  onAdded(stuff: Product) {
-    alert(`Added ${stuff.title} to cart`);
+  onAdded() {
+    alert(`${this.selectedProduct?.title} added to the cart!`);
   }
 
   ngOnInit(): void {

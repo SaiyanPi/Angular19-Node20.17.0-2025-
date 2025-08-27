@@ -1,0 +1,16 @@
+Authentication and authorization with HTTP:
+
+- The Fake Store API provides an endpoint for authenticating users. It contains a login method
+    that accepts a username and a password as parameters and returns an authentication token.
+    We will use the authentication token in our application to differentiate between a logged-in
+    user and a guest.
+
+📝
+A predefined pool from the users endpoint at https://fakestoreapi.com/users provides the username
+and password.
+
+- We will explore the following authentication and authorization topics in this section:
+    • Authenticating with a backend API
+    • Authorizing users for certain features
+    • Authorizing HTTP requests using interceptors
+    Let’s get started with the topic of authenticating with the Fake Store API

@@ -1,0 +1,60 @@
+Authenticating with a backend API:
+
+- In Angular real-world applications, we usually create an Angular component, allowing users to 
+    log in and out of the application. An Angular service will communicate with the API and
+    handle all authentication tasks.
+    Let’s get started by creating the authentication service:
+
+1) Run the following command to create a new Angular service:
+
+        cmd: ng generate service auth
+
+2) Open the auth.service.ts file and modify the import statements as follows:
+
+        import { Injectable,👉 computed,👉 inject,👉 signal } from '@angular/core';
+    👉  import { HttpClient } from '@angular/common/http';
+    👉  import { Observable, tap } from 'rxjs';
+    👉  import { APP_SETTINGS } from './app.settings';
+
+3) Create the following properties in the AuthService class:
+
+        private accessToken = signal('');
+        private authUrl = inject(APP_SETTINGS).apiUrl + '/auth';
+        isLoggedIn = computed(() => this.accessToken() !== '');
+    
+    -> In the preceding snippet, the accessToken signal will store the authentication token from 
+        the API.
+    -> isLoggedIn signal indicates whether the user is logged in.
+    -> The logged-in status of the user depends on whether the accessToken property has a value.
+
+📝
+Signals can be used not only in Angular components but also inside services.
+
+    -> The authUrl property points to the authentication endpoint URL of the Fake Store API.
+
+4) Inject the HttpClient class in the constructor:
+
+        constructor(private http: HttpClient) { }
+
+5) Create a login method to allow users to log in to the Fake Store API:
+
+        login(username: string, password: string): Observable<string> {
+            return this.http.post<string>(this.authUrl + '/login', {
+                username, password
+            }).pipe(tap(token => this.accessToken.set(token)));
+        }
+    
+    -> The preceding method initiates a POST request to the API, using the login endpoint and 
+        passing username and password in the request body.
+    -> The observable returned from the POST request is passed to the tap operator, which updates
+        the accessToken signal.
+
+6) Create a logout method that resets the accessToken signal:
+
+        logout() {
+            this.accessToken.set('');
+        }
+    
+- We have already set up the business logic for authenticating users in our Angular application. 
+    In the following section, we will learn how to use it to control authorization in the
+    application.

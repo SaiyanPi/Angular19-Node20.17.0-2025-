@@ -44,7 +44,9 @@
   </div>
 
   <div class="button-group">
-    <!-- <button (click)="addToCart()">Add to cart</button> -->
+    @if (authService.isLoggedIn()) {
+      <button (click)="addToCart()">Add to cart</button>
+    }
     <button class="delete" (click)="remove(product)">Delete</button>
   </div>
 }

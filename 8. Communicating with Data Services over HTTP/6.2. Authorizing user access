@@ -1,0 +1,98 @@
+Authorizing user access:
+
+- First, we will create an authentication component that will allow our users to log in and out
+    of the application:
+
+1) Run the following command to create a new Angular component:
+
+        cmd: ng generate component auth
+
+2) Open the auth.component.ts file and add the following import statement:
+
+        import { AuthService } from '../auth.service';
+
+3) Inject AuthService in the component’s constructor:
+
+        constructor(public authService: AuthService) {}
+    
+    -> In the preceding snippet, we use the public access modifier to inject AuthService because 
+        we want it to be accessible from the component’s template.
+
+4) Create the following methods in the AuthComponent class:
+
+        login() {
+            this.authService.login('saiyan_pi', '3478*#54').subscribe();
+        }
+
+        logout() {
+            this.authService.logout();
+        }
+    
+    -> In the preceding snippet, the login method uses predefined credentials from the users 
+        endpoint.
+
+5) Open the auth.component.html file and replace its content with the following HTML template:
+
+        @if (!authService.isLoggedIn()) {
+            <button (click)="login()">Login</button>
+        } @else {
+            <button (click)="logout()">Logout</button>
+        }
+
+    ->  The preceding template contains two <button> HTML elements for login/logout purposes. 
+        Each button is displayed conditionally according to the value of the isLoggedIn signal 
+        of the AuthService class.
+
+- We can now leverage the isLoggedIn signal in the product detail component and toggle the 
+    visibility of the Add to cart button:
+
+a) Open the product-detail.component.ts file and add the following import statement:
+
+        import { AuthService } from '../auth.service';
+
+2) Inject AuthService in the constructor of the ProductDetailComponent class:
+
+        constructor( private productService: ProductsService,
+        👉 public authService: AuthService ) { }
+
+3) Open the product-detail.component.html file and use an @if block to display the Add to cart
+    button conditionally:
+
+    👉  @if (authService.isLoggedIn()) {
+            <button (click)="addToCart()">Add to cart</button>
+        }
+
+4) Open the app.component.ts file and import the AuthComponent class:
+
+        import { Component, inject } from '@angular/core';
+        import { RouterOutlet } from '@angular/router';
+        import { ProductListComponent } from './product-list/product-list.component';
+        import { CopyrightDirective } from './copyright.directive';
+        import { APP_SETTINGS } from './app.settings';
+    👉 import { AuthComponent } from './auth/auth.component';
+
+        @Component({
+            selector: 'app-root',
+            imports: [RouterOutlet, ProductListComponent, CopyrightDirective,👉 AuthComponent],
+            templateUrl: './app.component.html',
+            styleUrl: './app.component.css'
+        })
+
+5) Open the app.component.html file and add the <app-auth> tag inside the <header> HTML element:
+
+        <header>
+            {{ settings.title }}
+        👉   <app-auth></app-auth>
+        </header>
+
+-  To try the authentication feature in the application, follow these steps:
+    1. Run the ng serve command to start the application and navigate to http://localhost:4200.
+    2. Select a product from the list and verify that the Add to cart button is not visible.
+    3. Click the Login button in the top-left corner of the page. The text should change to
+        Logout after you have logged in successfully to the Fake Store API, and the Add to cart
+        button should appear.
+
+- It is common in enterprise applications to perform authorization in the business logic layer
+    while communicating with the backend API. The backend API often requires certain method calls
+    to pass the authentication token in each request through headers. We will learn how to work
+    with HTTP headers in the following section.

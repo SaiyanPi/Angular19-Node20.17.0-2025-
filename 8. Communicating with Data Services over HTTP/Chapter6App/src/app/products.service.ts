@@ -9,6 +9,8 @@ import { APP_SETTINGS } from './app.settings';
 )
 export class ProductsService {
 
+  private products: Product[] = [];
+
   private productsUrl = inject(APP_SETTINGS).apiUrl + '/products';
 
   constructor( private http: HttpClient) { }
@@ -22,8 +24,6 @@ export class ProductsService {
       return products;
     }));
   }
-
-  private products: Product[] = [];
 
   getProduct(id: number): Observable<Product> {
     // return this.http.get<Product>(`${this.productsUrl}/${id}`);
