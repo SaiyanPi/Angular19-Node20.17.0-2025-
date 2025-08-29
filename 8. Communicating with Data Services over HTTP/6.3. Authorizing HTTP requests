@@ -24,3 +24,117 @@ Authorizing HTTP requests:
 📝
 For simplicity, we are using a hardcoded value for the authentication token. In a real-world
 scenario, we may get it from the local storage of the browser or some other means.
+
+- All HttpClient methods accept an optional object as a parameter for passing additional options 
+    to an HTTP request, including HTTP headers. To set headers, we use the headers property of the 
+    options object and create a new instance of the HttpHeaders class as a value. The HttpHeaders 
+    object is a key-value pair that defines custom HTTP headers.
+
+- Now, imagine what will happen if we need to pass the authentication token in all methods of the 
+    ProductsService class. We should go to each of them and write the same code repeatedly. Our 
+    code could quickly become cluttered and difficult to test. Luckily, the Angular HTTP client has 
+    another feature we can use to help us in such a situation called INTERCEPTORS.
+
+- An HTTP interceptor is an Angular service that intercepts HTTP requests and responses that pass 
+    through the Angular HTTP client. It can be used in the following scenarios:
+    • When we want to pass custom HTTP headers in every request, such as an authentication token
+    • When we want to display a loading indicator while we wait for a response from the server
+    • When we want to provide a logging mechanism for every HTTP communication
+
+- In our case, we can create an interceptor for passing the authentication token to each HTTP
+    request:
+
+1) Run the following command to create a new interceptor:
+
+        cmd: ng generate interceptor auth
+
+2) Open the app.config.ts file and import the withInterceptors function from the @angular/common/http
+    namespace:
+
+        import { provideHttpClient,👉 withInterceptors } from '@angular/common/http';
+    
+    -> The withInterceptors function is used to register an interceptor with the HTTP client.
+
+3) In app.config.ts, Import the interceptor we created in the previous step using the following
+    statement:
+
+        import { authInterceptor } from './auth.interceptor';
+
+4) Modify the provideHttpClient method to register the authInterceptor:
+
+        export const appConfig: ApplicationConfig = {
+            providers: [
+                provideZoneChangeDetection({ eventCoalescing: true }),
+                provideRouter(routes),
+                provideClientHydration(withEventReplay()),
+                provideHttpClient(👉 withInterceptors([authInterceptor])),
+                { provide: APP_SETTINGS, useValue: appSettings },
+            ]
+        };
+    
+    -> The withInterceptors function accepts a list of registered interceptors, and their order 
+        matters.
+    -> In the following diagram, you can see how interceptors process HTTP requests and responses
+        according to their order:
+
+                        |    Authentication ⬆️                                          |
+                        |                    |
+          Request flow  |    Loading         | Response flow
+                        |                    |
+                       ⬇️    Logger          |
+
+    💡
+    By default, the last interceptor before sending the request to the server is a built-in Angular
+    service named HttpBackend.
+
+5) Open the auth.interceptor.ts file and modify the arrow function of the authInterceptor function
+    as follows:
+
+        export const authInterceptor: HttpInterceptorFn = (req, next) => {
+            const authReq = req.clone({
+                setHeaders: { Authorization: 'myToken' }
+            });
+            return next(authReq);
+        };
+    
+    -> The arrow function accepts the following parameters: req, which indicates the current 
+        request, and next, which is the next interceptor in the chain.
+    -> we use the clone method to modify the existing request because HTTP requests are immutable
+        by default. Similarly, due to the immutable nature of HTTP headers, we use the setHeaders
+        method to update them.
+    -> Finally, we delegate the request to the next interceptor using the handle method.
+
+- Interceptors can use the inject method to get dependencies that they may need from the Angular 
+    DI mechanism. For example, if we wanted to use the AuthService class inside the interceptor, 
+    we could modify it as follows:
+
+      👉  import { inject } from '@angular/core';
+      👉  import { HttpInterceptorFn } from '@angular/common/http';
+        import { AuthService } from './auth.service';
+
+        export const authInterceptor: HttpInterceptorFn = (req, next) => {
+        👉 const authService = inject(AuthService);
+            const authReq = req.clone({
+                setHeaders: { Authorization: 'myToken' }
+            });
+
+            return next(authReq);
+
+        };
+
+📝
+In applications built with older versions of the Angular framework, you may notice 
+that interceptors are TypeScript classes instead of pure functions. To register an in
+terceptor with the HTTP client, we need to add the following provide object literal 
+in the providers array of the module, which also provides the HttpClientModule:
+
+        {
+            provide: HTTP_INTERCEPTORS,
+            useClass: AuthInterceptor,
+            multi: true
+        }
+In the preceding snippet, HTTP_INTERCEPTORS is an injection token that can be 
+provided multiple times as indicated by the multi property.
+
+- Angular interceptors have many uses, and authorization is one of the most basic. Passing
+    authentication tokens during HTTP requests is a common scenario in enterprise web applications.
