@@ -1,0 +1,35 @@
+Specifying a base path:
+
+- As we have already seen, modern and traditional web applications react differently when a URL 
+    changes inside the application. The architecture of each browser plays an essential part in this 
+    behavior.
+- Older browsers initiate a new request to the server when the URL changes. Modern browsers, also
+    known as evergreen browsers, can change the URL and the browser history when navigating in
+    different views without sending a request to the server, using a technique called pushState.
+
+📝
+HTML5 pushState allows in-app navigation without causing a full reload of a page and is supported
+by all modern browsers.
+
+- An Angular application must set the <base> HTML tag in the index.html file to enable pushState 
+    routing:
+
+        <!doctype html>
+        <html lang="en">
+            <head>
+                <meta charset="utf-8">
+                    <title>MyApp</title>
+                👉  <base href="/">
+                <meta name="viewport" content="width=device-width, initial-scale=1">
+                <link rel="icon" type="image/x-icon" href="favicon.ico">
+            </head>
+            <body>
+                <app-root></app-root>
+            </body>
+        </html>
+    
+    -> The href attribute informs the browser of the path it should follow when loading application 
+        resources. 
+    -> The Angular CLI automatically adds the tag when creating a new application and sets the href
+        value to the application root, /. If your application resides in a different folder from the 
+        root, you should name it after that folder.

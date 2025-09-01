@@ -1,0 +1,34 @@
+Configuring the router:
+
+- The app.routes.ts file contains a list of Routes objects that specify which routes exist in the 
+    application and which components should respond to a specific route. It looks like the following:
+
+        const routes: Routes = [ 
+            { path: 'products', component: ProductListComponent }, 
+            { path: '**', component: PageNotFoundComponent } 
+        ];
+
+📝
+In applications built with older versions of the Angular framework, you may notice that the route
+configuration is defined in a dedicated app-routing.module.ts file.
+
+    -> Each route definition object contains a path property, which is the URL path of the route,
+        and a component property that defines which component will be loaded when the application
+        navigates to that path.
+
+📝
+The value of a path property should not contain a leading /.
+
+- Navigation in an Angular application can occur manually by changing the browser URL or navigating
+    using in-app links. The browser will cause the application to reload in the first scenario, 
+    while the second will instruct the router to navigate at runtime. 
+
+- In our case, when the browser URL contains the products path, the router renders the product list
+    component on the page. On the contrary, when the application navigates to products by code, the
+    router follows the same procedure and updates the browser URL.
+
+- If the user tries to navigate to a URL that does not match any route, Angular activates a custom 
+    type of route called wildcard or fallback.
+    The wildcard route has a path property with two asterisks and matches any URL. The component
+    property for this is usually an application-specific PageNotFoundComponent or the main component
+    of the application.

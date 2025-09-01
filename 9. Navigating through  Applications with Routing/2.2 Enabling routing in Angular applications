@@ -1,0 +1,26 @@
+Enabling routing in Angular applications:
+
+- The Angular router is enabled by default in new Angular applications, as indicated by the 
+    provideRouter method in the app.config.ts file:
+
+        import { ApplicationConfig, provideZoneChangeDetection } from '@angular/core';
+    👉   import { provideRouter } from '@angular/router';
+    👉  import { routes } from './app.routes';
+        export const appConfig: ApplicationConfig = {
+            providers: [
+                provideZoneChangeDetection({ eventCoalescing: true }),
+            👉  provideRouter(routes)
+            ]
+        };
+
+📝
+In applications built with older versions of the Angular framework, the router is enabled by
+importing the RouterModule class in the main application module and using its forRoot method to
+define the routing configuration.
+
+    -> The provideRouter method enables us to use a set of Angular artifacts related to routing:
+        • Services to perform common routing tasks such as navigation
+        • Directives that we can use in our components to enrich them with navigation logic
+    
+    -> It accepts a single parameter, which is the routing configuration of the application, and is
+        defined by default in the app.routes.ts file.

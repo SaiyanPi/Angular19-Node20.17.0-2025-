@@ -1,0 +1,18 @@
+Navigating through Applications with Routing:
+
+- In previous chapters, we did a great job of separating concerns and adding different layers of 
+    abstraction to increase the maintainability of an Angular application. However, we have barely 
+    focused on the application’s UX.
+
+- Our user interface is bloated, with components scattered across a single screen. We must provide 
+    a better navigational experience for users and a logical way to change the application’s view 
+    intuitively.
+    Now is the right time to incorporate routing and split the different areas of interest into
+    pages, connected by a grid of links and URLs.
+
+- This chapter contains the following sections:
+    • Introducing the Angular router
+    • Configuring the main routes
+    • Organizing application routes
+    • Passing parameters to routes
+    • Enhancing navigation with advanced features

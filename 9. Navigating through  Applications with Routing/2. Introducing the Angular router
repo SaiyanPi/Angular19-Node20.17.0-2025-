@@ -1,0 +1,71 @@
+Introducing the Angular router:
+
+- In traditional web applications, when we wanted to change from one view to another, we needed 
+    to request a new page from the server. The browser would create a URL for the view and send it
+    to the server. The browser would then reload the page as soon as the client received a response.
+    It was a process that resulted in round trip time delays and a bad user experience for our
+    applications:
+
+             Browser                                                  Server
+                |                                                       |
+                |                                                       |
+                |                                                       |
+                |------------------- /products ------------------------>|
+                |                                                       |
+                |                                                       |
+                |<----------------- products.html ----------------------|
+                |                                                       |
+                |                                                       |
+                |                                                       |
+                |                                                       |
+                |                                                       |
+                |                                                       |
+                |                                                       |
+                |------------------ /product -------------------------->|
+                |                                                       |
+                |                                                       |
+                |<----------------- product.html -----------------------|
+                |                                                       |
+                |                                                       |
+
+- Modern web applications using JavaScript frameworks such as Angular follow a different approach. 
+    They handle changes between views or components on the client side without bothering the server.
+    They contact the server once during bootstrapping to get the main HTML file. The router on the
+    client intercepts and handles any subsequent URL changes. These applications are called
+    Single-Page Applications (SPAs) because they do not cause a full reload of a page:
+
+    Browser                              router                     Server
+        |                                   |                            |
+        |                                   |                            |
+        |                                   |                            |
+        |---------------- / --------------->|------------ / ------------>|
+        |                                   |                            |
+        |                                   |                            |
+        |<----------- index.html -----------|<-------index.html ---------|
+        |                                   |                            |
+        |                                   |                            |
+        |                                   |                            |
+        |                                   |                            |
+        |                                   |                            |
+        |                                   |                            |
+        |                                   |                            |
+        |------------ /products ----------->|                            |
+        |                                   |                            |
+        |<--------- products.html ----------|                            |
+        |                                   |                            |
+        |---------- /product -------------->|                            |
+        |                                   |
+        |<-------- product.html ------------|
+        |                                   |
+
+- The Angular framework provides the @angular/router npm package, which we can use to navigate
+    between different components in an Angular application. 
+
+- Adding routing in an Angular application involves the following steps:
+    1. Specifying the base path for the Angular application
+    2. Using an appropriate directive or service from the @angular/router npm package
+    3. Configuring different routes for the Angular application
+    4. Deciding where to render components upon navigation
+
+- In the following sections, we will learn the basics of Angular routing before diving deeper into 
+    hands-on examples.

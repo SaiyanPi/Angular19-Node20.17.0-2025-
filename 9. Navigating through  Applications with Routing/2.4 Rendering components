@@ -1,0 +1,11 @@
+Rendering components:
+
+- The template of the main application component contains the <router-outlet> element, which 
+    is one of the main directives of the Angular router.
+
+-  It resides inside the app.component.html file and is used as a placeholder for components
+    activated with routing. These components are rendered as a sibling element of the
+    <router-outlet> element.
+
+- We have covered the basics and provided a minimal router setup. In the next section, we will
+    look at a more realistic example and expand our knowledge of routing.
