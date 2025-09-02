@@ -1,0 +1,136 @@
+Configuring the main routes:
+
+- When we start designing the architecture of an Angular application with routing, it is easiest 
+    to think about its main features, such as menu links that users can click to access.
+    Products and shopping carts are basic features of the e-shop application we are currently
+    building. Adding links and configuring them to activate certain features of an Angular
+    application is part of the route configuration of the application.
+
+📝
+You will need the source code of the Angular application we created in Chapter 8, Communicating with
+Data Services over HTTP, to follow along with the rest of the chapter. After you get the code, we
+suggest you take the following actions for simplicity:
+    • Remove the auth.interceptor.ts and its unit test file. Actual calls in the Fake Store API do
+        not need authentication.
+    • Modify the app.config.ts file so that the provideHttpClient method does not use the interceptor.
+
+- To set up the route configuration of our application, we need to follow the steps below:
+
+1) Run the following command to create a new Angular component for the shopping cart:
+
+        cmd: ng generate component cart
+
+2) Open the app.routes.ts file and add the following import statements:
+
+        import { Routes } from '@angular/router';
+    👉  import { CartComponent } from './cart/cart.component';
+    👉  import { ProductListComponent } from './product-list/product-list.component';
+
+3) Add two route definition objects in the routes variable:
+
+        export const routes: Routes = [
+        👉    { path: 'cart', component: CartComponent },
+        👉    { path: 'products', component: ProductListComponent }
+        ];
+    
+    -> In the preceding snippet, the products route will activate the ProductListComponent, 
+        and the cart route will activate the CartComponent.
+
+4) Open the app.component.html file and modify the <header> HTML element as follows:
+
+        <header>
+            <h2>{{ settings.title }}</h2>
+            <span class="spacer"></span>
+            <div class="menu-links">
+                <a routerLink="/products">Products</a>
+                <a routerLink="/cart">My Cart</a>
+            </div>
+            <app-auth></app-auth>
+        </header>
+    
+    -> In the preceding template, we apply the routerLink directive to anchor HTML elements 
+        and assign the route path we want to navigate.
+    -> Notice that the path should start with / as opposed to the path property in the route
+        definition object. 
+    -> How the path starts depends on whether we want to use absolute or relative routing in 
+        our application, as we will learn later in the chapter.
+
+5) Move the <router-outlet> HTML element inside the <div> element with the content class selector
+    and remove the <app-product-list> component:
+
+        <main class = "main">
+            <div class="content">
+                👉  <router-outlet/>
+                <!-- <app-product-list></app-product-list> -->
+            </div>
+        </main>
+
+6) Open the app.component.ts file, remove any references to the ProductListComponent class, and
+    import the RouterLink class:
+
+        import { Component, inject } from '@angular/core';
+        import {👉 RouterLink, RouterOutlet } from '@angular/router';
+        import { CopyrightDirective } from './copyright.directive';
+        import { APP_SETTINGS } from './app.settings';
+        import { AuthComponent } from './auth/auth.component';
+
+        @Component({
+            selector: 'app-root',
+            imports: [RouterOutlet,👉 RouterLink, CopyrightDirective, AuthComponent],
+            templateUrl: './app.component.html',
+            styleUrl: './app.component.css'
+        })
+
+7) Open the app.component.css file and replace every CSS style related to the .social-links selector
+    with the following styles:
+
+        header {
+            display: flex;
+            flex-direction: row;
+            gap: 0.73rem;
+            justify-content: end;
+            margin-top: 1.5rem;
+        }
+        .menu-links {
+            display: flex;
+            align-items: center;
+            gap: 0.73rem;
+        }
+        .menu-links a {
+            transition: fill 0.3s ease;
+            color: var(--gray-400);
+        }
+        .menu-links a:hover {
+            color: var(--gray-900);
+        }
+
+8) Finally, open the global styles.css file and add the following CSS styles:
+
+        a {
+            text-decoration: none;
+        }
+        .spacer {
+            flex: 1 1 auto;
+        }
+
+- We are now ready to preview our Angular application:
+
+    a) Run the ng serve command and navigate to http://localhost:4200. Initially, the application
+        page displays 'Cannot GET /' only.
+    b) Navigate to the root path at http://localhost:4200 and append the /cart path at the end of
+        the browser URL. The application should replace the product list view with the cart
+        component:
+
+        cart works!
+    c) Click on the Products link. The application should display the product list and update 
+        the browser URL to match the /products path.
+
+📝
+Routing in Angular works bi-directionally. It enables us to navigate to an Angular component using
+the in-app links or the browser address bar.
+
+- Congratulations! Your Angular application now supports in-app navigation.
+
+- We have barely scratched the surface of Angular routing. There are many features for us to
+    investigate in the following sections. For now, let’s try to break our components into more
+    routes so that we can manage them easily.

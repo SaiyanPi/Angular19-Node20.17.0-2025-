@@ -1,0 +1,53 @@
+<!-- @let selectedProduct = this.product()!;
+
+@if(selectedProduct){
+  <div>
+    <p>You selected:
+      <strong>{{selectedProduct.title}}</strong>
+    </p>
+    <p>{{selectedProduct.price | currency:'NPR'}}</p>
+     <div class="pill-group">
+        <p class="pill">{{ selectedProduct.category }}</p>
+      </div>
+    <button (click)="addToCart()">Add to cart</button>
+  </div>
+} -->
+
+<!-- @if (product()) {
+  <p>You selected:
+    <strong>{{product()!.title}}</strong>
+  </p>
+  <p>{{product()!.price | currency:'NPR'}}</p>
+  <div class="pill-group">
+    <p class="pill">{{ product()!.category }}</p>
+  </div>
+  <button (click)="addToCart()">Add to cart</button>
+} -->
+
+@let product = (product$ | async);
+
+@if (product) {
+  <p>You selected:
+    <strong>{{product.title}}</strong>
+  </p>
+  <p>{{product.price | currency:'NPR'}}</p>
+
+  <input placeholder="New price" #price type="number" />
+  <button
+    class="secondary"
+    (click)="changePrice(product, price.value)">
+      Change
+  </button>
+
+  <div class="pill-group">
+    <p class="pill">{{ product.category }}</p>
+  </div>
+
+  <div class="button-group">
+    @if (authService.isLoggedIn()) {
+      <button (click)="addToCart()">Add to cart</button>
+    }
+    <button class="delete" (click)="remove(product)">Delete</button>
+  </div>
+}
+
