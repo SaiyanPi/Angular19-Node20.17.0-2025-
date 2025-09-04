@@ -1,0 +1,45 @@
+Using built-in route paths:
+
+- When we want to define a component that will be loaded when we navigate to the root path, 
+    we create a route definition object and set the path property to an empty string. A route with
+    an empty string path is called the default route of the Angular application.
+
+- In our case, we want the default route to display the product list component. Open the
+    app.routes.ts file and add the following route at the end of the routes variable:
+
+        { path: '', redirectTo: 'products', pathMatch: 'full' }
+
+    -> In the preceding snippet, we tell the router to redirect to the products path when the
+        application navigates to the default route. The pathMatch property tells the router how
+        to match the URL to the root path property. In this case, the router redirects to the
+        products path only when the URL matches the root path, which is the empty string.
+
+- If we run the application, we will notice that when the browser URL points to the root path of
+    our application, we are redirected to the products path, and the product list is displayed on
+    the screen.
+
+📝💡
+We added the default route after all other routes because the order of the routes is important.
+The router selects routes with a first-match-wins strategy. More specific routes should be defined
+before less specific ones.
+
+
+- We have encountered the concept of unknown routes in the Introducing the Angular router section.
+    We saw briefly how to set up a wildcard route to display a PageNotFoundComponent when our
+    application tries to navigate to a route that does not exist. 
+
+- In real-world applications, it is common to create such a component, especially if you want to
+    display additional information to the user, such as what next steps they can follow. In our
+    case, which is simpler, we will redirect to the products route.
+
+📝💡
+The wildcard route must be the last entry in the route list because the application should only
+reach it if there are no matching routes.
+
+- If we run our application using the ng serve command and navigate to an unknown path,
+    like: http://localhost:4200/whatever/wrong our application will display the product list.
+
+- Until now, we have relied on the address bar of the browser to indicate which route is active at 
+    any given time. As we will learn in the following section, we could improve the user experience 
+    using CSS styling.
+    

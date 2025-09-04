@@ -1,0 +1,30 @@
+Organizing application routes:
+
+- Our application displays the product list along with the product details and the product create 
+    components. We need to organize the routing configuration so that different routes activate 
+    each component.
+
+- In this section, we will add a new route for the product create component. Later, in the Passing 
+    parameters to routes section, we will add a separate route for the product details component.
+
+- Let’s get started with the product create component:
+
+1) Open the app.routes.ts file and add the following import statement:
+
+        import { ProductCreateComponent } from './product-create/product-create.component';
+
+2) Add the following route definition object in the routes variable:
+
+        { path: 'products/new', component: ProductCreateComponent }
+
+3) Open the product-list.component.ts file and remove any references to the ProductCreateComponent
+    class.
+
+4) Open the product-list.component.html file and remove the <app-product-create> element.
+
+5) Run the ng serve command to start the application and append the /cart or /products path,
+    click on the Products link, and verify that the product create form is not displayed.
+
+- Currently, the product create component is only accessible using the browser URL, and we cannot 
+    reach it using the application UI. In the following section, we will learn how to accomplish
+    that task and imperatively navigate to a route.

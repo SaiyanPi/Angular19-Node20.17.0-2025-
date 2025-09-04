@@ -1,0 +1,53 @@
+Styling router links:
+
+- The application header contains the Products and the My Cart links. When we navigate to each one, 
+    it is not clear which route has been activated.
+
+- The Angular router exports the routerLinkActive directive, which we can use to change the style of
+    a link when the corresponding route is active. It works similarly to the class binding we
+    learned about in Chapter 3, Structuring User Interfaces with Components. It accepts a list of
+    class names or a class that is added when the link is active and removed when it becomes
+    inactive.
+
+- Let’s see how to use it in our application:
+
+1) Open the app.component.css file and add the following CSS style:
+
+        .menu-links a.active {
+            color: var(--electric-violet);
+        }
+
+2) Open the app.component.ts file and import the RouterLinkActive class from the  @angular/router
+    npm package:
+
+        import { RouterLink,👉 RouterLinkActive, RouterOutlet } from '@angular/router';
+
+3) Add the RouterLinkActive class in the imports array of the @Component decorator:
+
+        @Component({
+            selector: 'app-root',
+            imports: [
+                RouterOutlet,
+                RouterLink,
+                RouterLinkActive,
+                CopyrightDirective,
+                AuthComponent
+            ],
+            templateUrl: './app.component.html',
+            styleUrl: './app.component.css'
+        })  
+
+4) Open the app.component.html file and add the routerLinkActive directive to both links:
+
+        <div class="menu-links">
+            <a routerLink="/products" 👉 routerLinkActive="active">Products</a>
+            <a routerLink="/cart" 👉 routerLinkActive="active">My Cart</a>
+        </div>
+    
+
+- Now, when we click on an application link in the header, its color changes to denote the link is 
+    active.
+
+- We have learned how to use routing and activate components that do not need any parameters. 
+    However, the product details component accepts the product ID as a parameter. In the next
+    section, we will learn how to activate the component using dynamic route parameters.

@@ -180,3 +180,6 @@ main {
   }
 }
 
+.menu-links a.active {
+ color: var(--electric-violet);
+}

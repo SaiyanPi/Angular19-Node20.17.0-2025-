@@ -34,7 +34,7 @@ Introducing the Angular router:
     client intercepts and handles any subsequent URL changes. These applications are called
     Single-Page Applications (SPAs) because they do not cause a full reload of a page:
 
-    Browser                              router                     Server
+     Browser                              router                       Server
         |                                   |                            |
         |                                   |                            |
         |                                   |                            |

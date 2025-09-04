@@ -45,3 +45,16 @@ p {
 .pill:hover {
   background: color-mix(in srgb, var(--pill-accent) 15%, transparent);
 }
+
+.caption {
+  display: flex;
+  align-items: center;
+  gap: 1.25rem;
+}
+path {
+  transition: fill 0.3s ease;
+  fill: var(--gray-400);
+}
+a:hover svg path {
+  fill: var(--gray-900);
+}

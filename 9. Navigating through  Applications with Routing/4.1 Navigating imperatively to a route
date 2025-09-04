@@ -1,0 +1,138 @@
+Navigating imperatively to a route:
+
+- The product create component can only be activated by entering the address
+    http://localhost:4200/products/new in the browser address bar.
+    Let’s add a button in the product list that will navigate us from the UI also:
+
+1) Open the product-list.component.html file and modify the second @if block as follows:
+
+        <div class="caption">
+            <h1>Products ({{products.length}})</h1>
+            <a routerLink="new">
+                <svg
+                    width="24"
+                    height="24"
+                    xmlns="http://www.w3.org/2000/svg"
+                    fill-rule="evenodd"
+                    clip-rule="evenodd">
+                    <path d="M11.5 0c6.347 0 11.5 5.153 11.5 11.5s-5.153 11.5
+            11.5 11.5-11.5-5.153-11.5-11.5 5.153-11.5 11.5-11.5zm0 1c5.795 0 
+            10.5 4.705 10.5 10.5s-4.705 10.5-10.5 10.5-10.5-4.705-10.5-10.5 
+            4.705-10.5 10.5-10.5zm.5 10h6v1h-6v6h-1v-6h-6v-1h6v-6h1v6z"/>
+                </svg>
+            </a>
+        </div>
+    
+    -> In the preceding snippet, we added an anchor element that will navigate us to the product 
+        create component, as indicated by the value of the routerLink directive.
+    -> The value of the routerLink directive is new and not /products/new as someone would expect.
+        The preceding behavior is because the button resides in the product list component, which
+        is already activated by the products part of the route. 
+
+
+📝
+The Angular router can synthesize the destination route by all activated routes, but if you don’t
+want to start from the root, you can add a / before the route. 
+
+2) Open the product-list.component.css file and add the following CSS styles:
+
+        .caption {
+            display: flex;
+            align-items: center;
+            gap: 1.25rem;
+        }
+        path {
+            transition: fill 0.3s ease;
+            fill: var(--gray-400);
+        }
+        a:hover svg path {
+            fill: var(--gray-900);
+        }
+
+3) Open the product-list.component.ts file and add the following import statement:
+
+        import { RouterLink } from '@angular/router';
+
+4) Add the RouterLink class in the imports array of the @Component decorator:
+
+        @Component({
+            selector: 'app-product-list',
+            imports: [ProductDetailComponent, SortPipe, AsyncPipe,👉 RouterLink],
+            templateUrl: './product-list.component.html',
+            styleUrl: './product-list.component.css',
+            providers: [ProductsService]
+        })
+
+5) Open the product-create.component.css file and add the following CSS style:
+
+        :host {
+            width: 400px;
+        }
+
+    -> In the preceding style, the :host selector targets the host element of the product create 
+        component.
+
+6) Run the ng serve command to start the application and navigate to http://localhost:4200/products:
+    (ProductsList.png)
+
+7) Click the button with the plus sign. The application redirects you to the /products/new route
+    and activates the product create component:
+
+    -> Although the product create component remains functional, our change introduced a flaw in the 
+        application’s UX. The user does not have a visual indication when a new product is created
+        because the product list belongs to a different route.
+    -> We must modify the logic of the Create button so that it redirects the user to the product
+        list upon successful creation of a product.
+
+    a) Open the product-create.component.ts file and add the following import statement:
+
+        import { Router } from '@angular/router';
+    
+    b) Inject the Router service in the constructor of the ProductCreateComponent class:
+
+        constructor(private productsService: ProductsService,👉 private router: Router) {}
+    
+    c) Modify the createProduct method as follows:
+
+        createProduct(title: string, price: string, category: string) {
+            this.productsService.addProduct({
+                title,
+                price: Number(price),
+                category
+            }).subscribe(👉() => this.router.navigate(['/products']));
+        }
+
+        -> In the preceding method, we call the navigate method of the Router service to navigate 
+            into the /products route of the application.
+        -> It accepts a link parameters array containing the destination route path we want to 
+            navigate.
+
+📝
+We use the / character because we are using absolute routing by default.
+
+    d) Open the products.service.ts file and modify the getProducts method so that it uses the Fake
+        Store API when there is no local product data:
+
+        getProducts() : Observable<Product[]> {
+        👉 if (this.products.length === 0) {
+                const options = new HttpParams().set('limit', 10);
+                return this.http.get<Product[]>(this.productsUrl, {
+                    params: options
+                }).pipe(map(products => {
+                    this.products = products;
+                    return products;
+                }));
+            }
+        👉  return of(this.products);
+        }
+
+        -> If we do not make the preceding change, the product list component will always return 
+            data from the Fake Store API.
+
+- So far, we have configured the application routing to activate components according to a given 
+    path. However, our application does not show any components in the following situations:
+    • When we navigate to the root path of the application
+    • When we try to navigate to a non-existing route
+
+- In the following section, we will learn how to use the built-in route paths that Angular router 
+    provides and improve the application UX.
