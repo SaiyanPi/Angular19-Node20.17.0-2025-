@@ -1,0 +1,14 @@
+Passing parameters to routes:
+
+- A common scenario in enterprise web applications is to have a list of items, and when you click 
+    on one of them, the page changes the current view and displays details of the selected item.
+    The previous approach resembles a master-detail browsing functionality, where each generated
+    URL on the master page contains the identifiers required to load each item on the detail page.
+
+- We can represent the previous scenario with two routes navigating to different components. One 
+    component is the list of items, and the other is the item details. So, we need to find a way to
+    create and pass dynamic item-specific data from one route to the other.
+
+- We are tackling double trouble here: creating URLs with dynamic parameters at runtime and 
+    parsing the value of these parameters. No problem: the Angular router has our back, and we
+    will see how with a real example.

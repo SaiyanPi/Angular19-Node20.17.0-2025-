@@ -26,7 +26,8 @@
         @case ('men\'s clothing') {👖}
         @default {🏷️}
       }
-      {{product.title}}
+      <!-- {{product.title}} -->
+      <a [routerLink]="[product.id]">{{product.title}}</a>
     </li>
   }
   @empty {

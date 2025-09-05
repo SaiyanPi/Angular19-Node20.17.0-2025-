@@ -1,0 +1,166 @@
+Building a detail page using route parameters:
+
+- The product list in our application currently displays a list of products. When we click on a
+    product, the product details appear below the list. We need to refactor the previous workflow
+    so that the component responsible for displaying product details is rendered on a different
+    page from the list.
+    We will use the Angular router to redirect the user to the new page upon clicking on a product
+    from the list.
+
+- The product list component currently passes the selected product ID via input binding. We will 
+    use the Angular router to pass the product ID as a route parameter instead:
+
+1) Open the app.routes.ts file and add the following import statement:
+
+        import { ProductDetailComponent } from './product-detail/product-detail.component';
+
+2) Add the following route definition in the routes variable after the products/new route:
+
+        { path: 'products/:id', component: ProductDetailComponent },
+
+    -> The colon character denotes id as a route parameter in the new route definition object. 
+    -> If a route has multiple parameters, we separate them with /. As we will learn later, the 
+        parameter name is important when we want to consume its value in our components.
+
+3) Open the product-list.component.html file and add an anchor element for the product title so that
+    it uses the new route definition:
+
+        <ul class = "pill-group">
+            @for (product of products | sort; track product.id) {
+                <li class="pill" >
+                    @switch (product.category) {
+                        @case ('electronics') {⌨️}
+                        @case ('jewelery') {💎}
+                        @case ('men\'s clothing') {👖}
+                        @default {🏷️}
+                    }
+                  👉  <a [routerLink]="[product.id]">{{product.title}}</a>
+                </li>
+            }
+            @empty {
+                <li class = "pill">No products available</li>
+            }
+        </ul>
+    
+    -> In the preceding snippet, the routerLink directive uses property binding to set its value 
+        in a link parameters array.
+    -> We pass the id of the product template reference variable as a parameter in the array.
+
+📝💡
+We do not need to prefix the value of the link parameters array with /products because that route
+already activates the product list.
+
+4) Remove the <app-product-detail> component and the click event binding from the <li> tag.
+
+    -> We can refactor the product-list.component.ts file and remove any code that uses the
+        selectedProduct property and the ProductDetailComponent class.
+    -> The product list does not need to keep the selected product in its local state because we
+        are navigating away from the list upon choosing a product.
+
+
+- We can now proceed by modifying the product detail component so that it works with routing:
+
+    a) Open the product-detail.component.css file and add a CSS style to set the width of 
+        the host element:
+
+        :host {
+            width: 450px;
+        }
+    
+    b) Open the product-detail.component.ts file and modify the import statements as follows:
+
+        import { CommonModule } from '@angular/common';
+        import { Component, input, output } from '@angular/core';
+    👉  import { ActivatedRoute, Router } from '@angular/router'
+        import { Product } from '../product'; // importing interface
+        import { Observable,👉 switchMap } from 'rxjs';
+        import { ProductsService } from '../products.service';
+        import { AuthService } from '../auth.service';
+
+        -> The Angular router exports the ActivatedRoute service, which we can use to retrieve 
+            information about the currently activated route, including any parameters.
+    
+    c) Modify the component constructor to inject the ActivatedRoute and Router services:
+
+        constructor(
+            private productService: ProductsService,
+            public authService: AuthService,
+        👉 private route: ActivatedRoute,
+        👉 private router: Router
+        ) { }
+    
+    d) Modify the list of implemented interfaces of the ProductDetailComponent class:
+
+        export class ProductDetailComponent implements OnInit {
+            // OMITTED
+        }
+    
+    e) Create the following ngOnInit method:
+
+        ngOnInit(): void {
+            this.product$ = this.route.paramMap.pipe(
+                switchMap(params => {
+                    return this.productService.getProduct(Number(params.get('id')));
+                })
+            );
+        }
+
+        -> The ActivatedRoute service contains the paramMap observable, which we can use to
+            subscribe and get route parameter values.
+        -> The switchMap RxJS operator is used when we want to get a value from an observable,
+            complete it, and pass the value down to another observable. We use it, in this case,
+            to pipe the id parameter from the paramMap observable to the getProduct method of the
+            ProductsService class.
+    
+    f) Modify the changePrice and remove methods so that the application will redirect to the 
+        product list upon completion of each action:
+
+        changePrice(product: Product, price: string) {
+          this.productService.updateProduct(product.id, Number(price)).subscribe( 👉 () => {
+            this.router.navigate(['/products']);
+          });
+        }
+
+        remove(product: Product) {
+          this.productService.deleteProduct(product.id).subscribe( 👉 () => {
+            this.router.navigate(['/products']);
+          });
+        }
+    
+    g) Remove the ngOnChanges method because the component and its bindings are initialized 
+        every time the route is activated.
+
+    h) Remove the output event emitters because the product list component is not a parent component
+        anymore. Leave the id input property as is because we will use it later in the chapter.
+    
+    i) Leave the addToCart method empty for now. We will use it later in Chapter 10, Collecting 
+        User Data with Forms. 
+
+- It is also worth noting the following:
+  1. The paramMap observable returns an object of the ParamMap type. We can use the get method of
+    the ParamMap object to pass the parameter name we defined in the route configuration and access
+    its value.
+  2. We convert the value of the id parameter to a number because route parameter values are always
+    strings.
+
+- If we run the application using the ng serve command and click on a product from the list, the 
+  application navigates us to the product details component: (ProductDetailComponent.png)
+
+📝⚠️
+If you refresh the browser, the application will not display the product because the getProduct
+method of the ProductsService class works only with the cached version of product data. You must
+go to the product list again and select a product because the local cache has been reset.
+Note that this behavior is based on the current implementation of the e-shop application and is not
+tied to the Angular router architecture.
+
+
+---------------------------------------------------------------------------------------------------------
+
+- In the previous example, we used the paramMap property to get route parameters as an observable. 
+  So, ideally, our component could be notified of new values during its lifetime. But the component 
+  is destroyed each time we want to select a different product from the list, and so is the
+  subscription to the paramMap observable.
+
+- Alternatively, we can avoid using observables by reusing the instance of a component as soon as 
+  it remains rendered on the screen during consecutive navigations. We can achieve this behavior 
+  using child routes, as we will learn in the following section.
