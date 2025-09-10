@@ -1,0 +1,30 @@
+Taking a snapshot of route parameters:
+
+-  When we select a product from the list, the product list component is removed from the DOM tree,
+    and the product details component is added. To choose a different product, we need to click on
+    either the Products link or the back button of our browser. Consequently, the product details
+    component is replaced by the product list component in the DOM. So, we are in a situation where
+    only one component is displayed on the screen at any time.
+
+- When the product details component is destroyed, so is its ngOnInit method and the subscription 
+    to the paramMap observable. So, we do not benefit from using observables at this point.
+
+- Alternatively, we could use the snapshot property of the ActivatedRoute service to get values for
+    route parameters, as follows:
+
+        ngOnInit(): void {
+            const id = this.route.snapshot.params['id'];
+            this.product$ = this.productService.getProduct(id);
+        }
+
+- The snapshot property represents the current value of a route parameter, which also happens to be the
+    initial value. It contains the params property, an object of route parameter key-value pairs we can
+    access.
+
+📝💡
+If you are sure your component will not be reused, use the snapshot approach.
+
+- So far, we have dealt with routing parameters in the form of products/:id. We use these parameters
+    to navigate to a component that requires the parameter. In our case, the product details component
+    requires the id parameter to get specific product details. However, there is another type of route
+    parameter when we need it to be optional, as we will learn in the following section.

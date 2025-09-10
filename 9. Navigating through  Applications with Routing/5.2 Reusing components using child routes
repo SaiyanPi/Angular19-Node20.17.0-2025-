@@ -1,0 +1,62 @@
+Reusing components using child routes:
+
+- Child routes are a perfect solution when we want a landing page component that will provide routing
+    to other components. The component should contain a <router-outlet> element in which child routes
+    will be loaded. 
+- Suppose that we want to define the layout of our Angular application like Master-detail-layout.png
+    The scenario in the image requires the product list component to contain a <router-outlet> element
+    to render the product details component when the related route is activated.
+
+- The product details component will be rendered in the <router-outlet> of the product list component
+    and not in the <router-outlet> of the main application component.
+
+- The product details component is not destroyed when we navigate from one product to another. Instead,
+    it remains in the DOM tree, and its ngOnInit method is called once, the first time we select a
+    product. When we choose a new product from the list, the paramMap observable emits the id of the
+    new product. The new product is fetched using the ProductsService class, and the component template
+    is refreshed to reflect the new changes.
+
+- The route configuration of the application, in this case, would be as follows:
+
+        export const routes: Routes = [
+            {
+                path: 'products',
+                component: ProductListComponent,
+                children: [
+                    { path: 'new', component: ProductCreateComponent },
+                    { path: ':id', component: ProductDetailComponent },
+                ]
+            },
+            { path: 'cart', component: CartComponent },
+            { path: '', redirectTo: 'products', pathMatch: 'full' },
+            { path: '**', redirectTo: 'products' }
+
+        ];
+    
+    -> In the preceding snippet, we use the children property of the route definition object to define 
+        child routes containing a list of route definition objects.
+
+- A parent route can also provide services to its children by using the providers property of the route
+    definition object. Providing services in a route is very helpful when we want to limit access to a
+    subset of the routing configuration.
+    If we wanted to restrict the ProductsService class only to the product-related components, we should
+    do the following:
+
+        {
+            path: 'products',
+            component: ProductListComponent,
+            children: [
+                { path: 'new', component: ProductCreateComponent },
+                { path: ':id', component: ProductDetailComponent },
+            ],
+            providers: [ProductsService] 👈
+        }
+
+- Angular creates a separate injector when providing services in route definition objects, which is 
+    an immediate child of the root injector. Suppose the service is also provided in the root injector, 
+    and suppose the cart component uses that.
+    In that case, the instance created by one of the product-related components will differ from that of
+    the cart component.
+
+- We have learned how to use the paramMap observable in Angular routing. In the following section, 
+    we will discuss an alternative approach using snapshots.
