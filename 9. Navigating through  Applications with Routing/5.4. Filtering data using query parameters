@@ -1,0 +1,81 @@
+Filtering data using query parameters:
+
+- In Chapter 8, Communicating with Data Services over HTTP/SECTION 5.1, we learned how to pass query
+    parameters to a request using the HttpParams class. The Angular router also supports passing query 
+    parameters through the application’s URL.
+
+- The getProducts method in the products.service.ts file uses HTTP query parameters to limit product
+    results returned from the Fake Store API:
+
+        getProducts() : Observable<Product[]> {
+            if (this.products.length === 0) {
+            const options = new HttpParams().set('limit', 10);
+            return this.http.get<Product[]>(this.productsUrl, {
+                params: options
+            }).pipe(map(products => {
+                this.products = products;
+                return products;
+            }));
+            }
+            return of(this.products);
+        }
+
+- It uses a hardcoded value for setting the limit query parameter. We will modify the application 
+    so that the product list component passes the limit value dynamically:
+
+1) Open the products.service.ts file and modify the getProducts method so that the limit is passed as
+    a parameter:
+
+        getProducts(👉 limit?: number) : Observable<Product[]> {
+            if (this.products.length === 0) {
+            const options = new HttpParams().set('limit',👉 limit || 👈 10);
+            return this.http.get<Product[]>(this.productsUrl, {
+                params: options
+            }).pipe(map(products => {
+                this.products = products;
+                return products;
+            }));
+            }
+            return of(this.products);
+        }
+    
+    -> In the preceding method, if the limit value is falsy, we pass a default value of 10 to the 
+        query parameter.
+
+2) Open the product-list.component.ts file and import the ActivatedRoute service and the switchMap
+    RxJS operator:
+
+        import { Observable,👉 switchMap } from 'rxjs';
+        import { RouterLink,👉 ActivatedRoute } from '@angular/router';
+
+3) Inject the ActivatedRoute service in the constructor of the ProductListComponent class:
+
+        constructor(private productsService: ProductsService, private router: Router) {}
+    
+    -> The ActivatedRoute service contains a queryParamMap observable that we can subscribe to get
+        query parameter values.
+    -> It returns a ParamMap object, similar to the paramMap observable we saw earlier, which we can
+        query to get parameter values.
+
+4) Modify the getProducts method to use the queryParamMap observable:
+
+        private getProducts() {
+            this.products$ = this.route.queryParamMap.pipe(
+                switchMap(params => {
+                    return this.productService.getProducts(Number(params.get('limit')));
+                })
+            );
+        }
+    
+    -> In the preceding snippet, we use the switchMap RxJS operator to pipe the limit parameter 
+        from the queryParamMap observable to the getProducts method of the ProductsService class as a
+        number.
+
+5) Run the ng serve command to start the application and navigate to
+    http://localhost:4200/products?limit=5. You should see a list of 5 products:
+
+- Query parameters in routing are powerful and can be used for various use cases, such as filtering 
+    and sorting data. They can also be used when working with snapshot-based routing. 
+
+- In the following section, we will explore a new innovative way to pass route parameters using 
+    component input properties.

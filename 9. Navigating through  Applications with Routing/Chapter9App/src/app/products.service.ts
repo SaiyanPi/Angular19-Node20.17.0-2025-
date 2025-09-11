@@ -17,7 +17,7 @@ export class ProductsService {
 
   getProducts(limit?: number) : Observable<Product[]> {
     if (this.products.length === 0) {
-      const options = new HttpParams().set('limit', limit || 50);
+      const options = new HttpParams().set('limit', limit || 10);
       return this.http.get<Product[]>(this.productsUrl, {
         params: options
       }).pipe(map(products => {
