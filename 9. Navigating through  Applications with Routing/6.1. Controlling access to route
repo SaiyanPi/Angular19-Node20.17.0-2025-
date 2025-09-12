@@ -1,0 +1,88 @@
+Controlling access to route:
+
+- When we want to control access to a particular route, we use a guard. To create a guard, we use the 
+    ng generate command of the Angular CLI, passing the word guard and its name as parameters:
+
+        cmd: ng generate guard auth
+    
+    -> When we execute the previous command, the Angular CLI asks what type of guard we would like 
+        to create. There are multiple types of guards that we can create according to the functionality 
+        that they provide:
+        • CanActivate: Controls whether a route can be activated
+        • CanActivateChild: Controls whether children routes can be activated
+        • CanDeactivate: Controls whether a route can be deactivated
+        • CanMatch: Controls whether a route can be accessed at all
+
+- Select CanActivate and press Enter. The Angular CLI creates the following auth.guard.ts file:
+
+        import { CanActivateFn } from '@angular/router';
+
+        export const authGuard: CanActivateFn = (route, state) => {
+            return true;
+        };
+
+    -> The guard that we created is a function of type CanActivateFn, which accepts two parameters:
+        • route: Indicates the route that will be activated
+        • state: Contains the state of the router upon successful navigation
+
+📝
+The CanActivateFn function can return a boolean value, either synchronously or asynchronously.
+In the latter case, the router will wait for the observable or the promise to resolve before
+continuing. If the asynchronous event does not complete, the navigation will not continue.
+It can also return a UrlTree object, which will cause new navigation to a defined route.
+
+- Our guard returns true immediately, allowing free access to the route. Let’s add custom logic to 
+    control access based on whether the user is logged in:
+
+    1) Modify the import statements as follows:
+
+        👉 import { inject } from '@angular/core';
+            import { CanActivateFn,👉 Router } from '@angular/router';
+        👉 import { AuthService } from './auth.service';
+    
+    2) Replace the body of the arrow function with the following snippet:
+            const authService = inject(AuthService);
+            const router = inject(Router);
+            if (authService.isLoggedIn()) {
+                return true;
+            }
+            return router.parseUrl('/');
+        
+        -> In the preceding snippet, we use the inject method to inject the AuthService and Router 
+            services into the function. 
+        -> We then check the value of the isLoggedIn signal. If it is true, we allow the application
+            to navigate to the requested route. Otherwise, we use the parseUrl method of the Router
+            service to navigate to the root path of the Angular application.
+
+    📝
+    The parseUrl method returns a UrlTree object, which effectively cancels the previous navigation and
+    redirects the user to the URL passed in the parameter. It is advised to use it over the navigate
+    method, which may introduce unexpected behavior and can lead to complex navigation issues.
+
+    3) Open the app.routes.ts file and add the following import statement:
+
+        import { authGuard } from './auth.guard';
+    
+    4) Add the authGuard function in the canActivate array of the cart route:
+
+        { 
+            path: 'cart', 
+            component: CartComponent, 
+        👉 canActivate: [authGuard] 
+        }
+
+    📝
+    The canActivate property is an array because multiple guards can control route activation.
+    The order of guards in the array is important. If one of the guards fails to pass, Angular
+    will prevent access to the route. 
+
+- Only authenticated users can now access the shopping cart. If you run the application using the 
+    ng serve command and click the My Cart link, you will notice that nothing happens.
+
+    📝💡
+    When you try to access the shopping cart from the product list, you always remain on the same page.
+    This is because the redirection that happens due to the authentication guard does not have any
+    effect when you are already in the redirected route.
+
+- Another guard type related to the activation of a route is the CanDeactivate guard. In the following 
+    section, we will learn how to use it to prevent a user leaving a route.

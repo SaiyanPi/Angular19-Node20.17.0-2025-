@@ -15,7 +15,7 @@ import { AuthService } from '../auth.service';
 })
 export class ProductDetailComponent implements OnInit {
 
-  id = input<number>();
+  id = input<string>();
 
   product$: Observable<Product> | undefined;
 
@@ -39,8 +39,10 @@ export class ProductDetailComponent implements OnInit {
     // );
 
     // using snapshot property instead of observables
-    const id = this.route.snapshot.params['id'];
-    this.product$ = this.productService.getProduct(id);
+    // const id = this.route.snapshot.params['id'];
+    // this.product$ = this.productService.getProduct(id);
+
+    this.product$ = this.productService.getProduct(Number(this.id()!));
 
   }
 

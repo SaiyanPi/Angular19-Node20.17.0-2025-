@@ -1,0 +1,52 @@
+Binding input properties to routes:
+
+- We have already learned, in Chapter 3, Structuring User Interfaces with Components, that we use 
+    input and output bindings to inter-communicate between components. 
+
+- An input binding can also pass route parameters while navigating to a component. We will see an
+    example using the product detail component:
+
+1) The input binding with route parameters is not enabled by default in the Angular router. We must
+    activate it from the application configuration file. Open the app.config.ts file and import the
+    withComponentInputBinding function from the @angular/router npm package:
+
+        import { provideRouter,👉 withComponentInputBinding } from '@angular/router';
+
+2) Pass the preceding function as the second parameter in the provideRouter method:
+
+        providers: [
+            provideZoneChangeDetection({ eventCoalescing: true }),
+            provideRouter(routes,👉 withComponentInputBinding()),
+            provideHttpClient(),
+            { provide: APP_SETTINGS, useValue: appSettings }
+        ]
+
+3) Now, open the product-detail.component.ts file and change the type of the id component property to
+    a string:
+
+        id = input<👉 string>();
+    
+    -> We must change the property type because routing parameters are passed as strings.
+
+4) Modify the ngOnInit method to use the id parameter to fetch a product:
+
+        ngOnInit(): void {
+            this.product$ = this.productService.getProduct(Number(this.id()!));
+        }
+
+5) Run the ng serve command and verify that the product details are displayed upon selecting a product
+    from the list.
+
+-  Binding route parameters to component input properties has the following advantages:
+    • The TypeScript component class is simpler because we do not have asynchronous calls with
+        observables
+    • We can access existing components that work with input and output bindings using a route
+
+📝
+Input binding works with components that are activated via routing. If we want to access any route
+parameter from another component, we must use the ActivatedRoute service.
+
+- Now that we have learned all the different ways to pass parameters during navigation, we have 
+    covered all the essential information we need to start building Angular applications with routing. 
+    In the following sections, we will focus on advanced practices that enhance the user experience 
+    when using in-app navigation in Angular applications.

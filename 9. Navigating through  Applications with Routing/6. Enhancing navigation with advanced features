@@ -1,0 +1,10 @@
+Enhancing navigation with advanced features:
+
+- So far, we have covered basic routing with route and query parameters. The Angular router is quite
+    capable, though, and able to do much more, such as the following:
+    • Controlling access to a route
+    • Preventing navigation away from a route
+    • Prefetching data to improve application UX
+    • Lazy-loading routes to speed up response time
+
+-  In the following sections, we will learn about all these techniques in more detail.
