@@ -1,0 +1,122 @@
+Prefetching route data:
+
+- You may have noticed that when you navigate to the root path of the application for the first
+    time, there is a delay in displaying the product list. It is reasonable since we are making
+    an HTTP request to the backend API. However, the product list component was already
+    initialized at that time.
+
+- The preceding behavior may lead to unwanted effects if the component contains logic that
+    interacts with data during initialization. To solve this problem, we can use a resolver to
+    prefetch the product list and load the component when data are available.
+
+💡
+A resolver can be handy when handling possible errors before activating a route. It would be more
+appropriate to navigate to an error page if the request to the API does not succeed instead of
+displaying a blank page.
+
+- To create a resolver, we use the ng generate command of the Angular CLI, passing the word 
+    resolver and its name as parameters:
+
+        cmd: ng generate resolver products
+
+- The preceding command creates the following products.resolver.ts file:
+
+        import { ResolveFn } from '@angular/router';
+
+        export const productsResolver: ResolveFn<boolean> = (route, state) => {
+            return true;
+        };
+
+    -> The resolver that we created is a function of type ResolveFn, which accepts two parameters:
+        • route: Indicates the route that will be activated
+        • state: Contains the state of the activated route
+
+📝
+A ResolveFn function can return an observable or promise. The router will wait for the observable
+or the promise to resolve before continuing. If the asynchronous event does not complete, the
+navigation will not continue.
+
+    -> Currently, our resolver returns a boolean value. Let’s add custom logic so that it returns
+        an array of products:
+
+1) Add the following import statements:
+
+     👉   import { inject } from '@angular/core';
+        import { ResolveFn } from '@angular/router';
+     👉   import { Product } from './product';
+     👉   import { ProductsService } from './products.service';
+
+2) Modify the productsResolver function so that it returns a product array:
+
+        export const productsResolver: ResolveFn<Product[]> = (route, state) => {
+            return [];
+        };
+
+3) Use the inject method to inject ProductsService in the function body:
+
+        const productService = inject(ProductsService);
+
+4) Use the queryParamMap property to get the limit parameter value from the current route:
+
+        const limit = Number(route.queryParamMap.get('limit'));
+
+5) Replace the return statement with the following:
+        
+        return productService.getProducts(limit);
+
+6) The resulting function should look like the following:
+
+        export const productsResolver: ResolveFn<Product[]> = (route, state) => {
+            const productService = inject(ProductsService);
+            const limit = Number(route.queryParamMap.get('limit'));
+            return productService.getProducts(limit);
+        };
+
+------------------------------------------------------------------------------------------------------
+
+- Now that we've created resolver, we can connect it with the product list component:
+
+a) Open the app.routes.ts file and add the following import statement:
+
+        import { productsResolver } from './products.resolver';
+
+b) Add the following resolve property to the products route:
+
+        {
+            path: 'products',
+            component: ProductListComponent,
+        👉 resolve: {
+                products: productsResolver
+            }
+        },
+    
+    -> The resolve property is an object that contains a unique name as a key and the resolver 
+        function as a value. The key name is important because we will use it in our components 
+        to access the resolved data.
+
+c) Open the product-list.component.ts file and import the of operator from the rxjs npm package:
+
+        import { Observable, switchMap, 👉 of } from 'rxjs';
+
+d) Modify the getProducts method so that it subscribes to the data property of the ActivatedRoute
+    service:
+
+        private getProducts() {
+            this.products$ = 👉 this.route.data.pipe(
+                switchMap(data => of(data['products']))
+            );
+        }
+    
+    -> In the preceding snippet, the data observable emits an object whose value exists in the 
+        products key.
+    -> Notice that we use the switchMap operator to return products in a new observable.
+
+- At this point, we can also remove any references to the ProductsService class because it is not
+    needed anymore.
+
+e) Run the ng serve command to start the application and verify that the product list is displayed
+    when navigating to http://localhost:4200.
+
+- Angular resolvers improve application performance when complex initialization logic exists in 
+    routed components. Another way to improve the application performance is to load components 
+    or child routes on demand, as we will learn in the following section.

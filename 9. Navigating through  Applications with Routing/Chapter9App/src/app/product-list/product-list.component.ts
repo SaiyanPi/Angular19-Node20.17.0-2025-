@@ -3,7 +3,7 @@ import { Product } from '../product'; // importing interface
 import { SortPipe } from '../sort.pipe';
 import { ProductsService } from '../products.service';
 import { AsyncPipe } from '@angular/common';
-import { Observable, switchMap } from 'rxjs';
+import { Observable, switchMap, of } from 'rxjs';
 import { RouterLink, ActivatedRoute } from '@angular/router';
 
 @Component({
@@ -28,10 +28,14 @@ export class ProductListComponent implements OnInit {
   // }
 
   private getProducts() {
-    this.products$ = this.route.queryParamMap.pipe(
-      switchMap(params => {
-        return this.productService.getProducts(Number(params.get('limit')));
-      })
+    // this.products$ = this.route.queryParamMap.pipe(
+    //   switchMap(params => {
+    //     return this.productService.getProducts(Number(params.get('limit')));
+    //   })
+    // );
+
+    this.products$ = this.route.data.pipe(
+      switchMap(data => of(data['products']))
     );
   }
 
