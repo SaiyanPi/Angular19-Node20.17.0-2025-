@@ -1,0 +1,73 @@
+Lazy-loading parts of the application:
+
+- Our application may grow at some point, and the amount of data we put into it may also increase. 
+    The application may take a long time to start initially, or certain parts can take a long time
+    to load. To overcome these problems, we can use a technique called lazy loading.
+
+- Lazy loading means we don’t initially load certain application parts, such as Angular components 
+    or routes. There are many advantages of lazy loading in an Angular application:
+    • Components and routes can be loaded upon request from the user
+    • Users who visit certain areas of your application can significantly benefit from this
+        technique
+    • We can add more features in a lazy-loaded area without affecting the overall application 
+        bundle size
+
+- To understand how lazy loading in Angular works, we will create a new component that displays 
+    the current user profile.
+
+📝
+A good practice is to lazy-load parts of the application that are not used frequently, such as
+the profile of the currently logged-in user.
+
+1) Run the following command to create an Angular component:
+
+        cmd: ng generate component user
+
+2) Create a file named user.routes.ts in the src\app folder and add the following content:
+
+        import { UserComponent } from './user/user.component';
+        export default [
+            { path: '', component: UserComponent }
+        ];
+    
+    -> In the preceding snippet, we set the path property to an empty string to activate the route 
+        by default.
+    -> We also use the default keyword to benefit from the default export feature in lazy loading.
+
+3) Open the app.routes.ts file and add the following route definition in the routes variable:
+
+        { path: 'user', loadChildren: () => import('./user.routes') }
+    
+    -> The loadChildren property of a route definition object is used to lazy-load Angular routes. 
+    -> It returns an arrow function that uses a dynamic import statement to lazy-load the routes 
+        file. The import function accepts the relative path of the routes file we want to import.
+
+4) Add a new anchor element to the <header> element of the app.component.html file that links to
+    the newly created route:
+
+        <div class="menu-links">
+            <a routerLink="/products" routerLinkActive="active">Products</a>
+            <a routerLink="/cart" routerLinkActive="active">My Cart</a>
+           👉 <a routerLink="/user" routerLinkActive="active">My Profile</a>
+        </div>
+
+5) Run the command ng serve and observe the output in the console window. It should look similar
+    to the Lazy-loading.png
+    -> In the image, we can see that the Angular CLI has created a lazy chunk file named
+        user-routes in addition to the initial chunk files of the application.
+
+- Lazy loading works not only with routes but also with components. We could have lazy-loaded 
+    the user component instead of the whole route by modifying the user route as follows:
+
+        {
+            path: 'user',
+            loadComponent: () => import('./user/user.component').then(c => c.UserComponent),
+        }
+    
+    -> In the preceding snippet, we use the loadComponent property to import the user.component.ts 
+        file dynamically.
+    -> The import function returns a promise that we chain with the then method to load the
+        UserComponent class.
+
+- The user route is currently accessible for all users, even if not authenticated. In the following 
+    section, we will learn how to protect them using guards.

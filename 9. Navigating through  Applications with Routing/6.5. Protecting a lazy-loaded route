@@ -1,0 +1,45 @@
+Protecting a lazy-loaded route:
+
+- We can control unauthorized access to a lazy-loaded route similarly to how we can on normal 
+    routes. However, our guards need to support a function type named CanMatchFn.
+
+- We will extend our authentication guard for use with lazy-loaded routes:
+
+1) Open the auth.guard.ts file and import the CanMatchFn type from the @angular/router npm
+    package:
+
+        import { CanActivateFn,👉 CanMatchFn, Router } from '@angular/router';
+
+2) Modify the signature of the authGuard function as follows:
+
+        export const authGuard: CanActivateFn 👉 | CanMatchFn = () => {
+            const authService = inject(AuthService);
+            const router = inject(Router);
+            if (authService.isLoggedIn()) {
+                return true;
+            }
+            return router.parseUrl('/');
+        };
+
+3) Open the app.routes.ts file and add the authGuard function in the canMatch array of the user
+    route:
+
+        {
+            path: 'user',
+            loadChildren: () => import('./user.routes'),
+        👉 canMatch: [authGuard]
+        }
+
+    📝
+    The canMatch property is an array because multiple guards can control route matching.
+    The order of guards in the array is important. If one of the guards fails to match with a
+    route, Angular will prevent access to the route.
+
+-> If we now run the application and click the My Profile link, we will notice that we cannot
+    navigate to the respective component unless we are authenticated.
+
+-> Lazy loading is a technique preferred when the application performance is critical. Angular has 
+    also introduced a more performant feature to delay loading parts of an Angular application
+    called deferrable views. Deferrable views give developers more fine-grained control over the
+    conditions under which a part of the application will be loaded. We will explore deferrable
+    views in Chapter 15, Optimizing Application Performance.
