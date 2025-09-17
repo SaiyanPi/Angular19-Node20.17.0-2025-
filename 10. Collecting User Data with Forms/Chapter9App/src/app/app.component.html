@@ -1,0 +1,21 @@
+<header>
+  <h2>{{ settings.title }}</h2>
+  <span class="spacer"></span>
+  <!-- <div class="menu-links">
+    <a routerLink="/products">Products</a>
+    <a routerLink="/cart">My Cart</a>
+  </div> -->
+  <div class="menu-links">
+    <a routerLink="/products" routerLinkActive="active">Products</a>
+    <a routerLink="/cart" routerLinkActive="active">My Cart</a>
+    <a routerLink="/user" routerLinkActive="active">My Profile</a>
+  </div>
+  <app-auth></app-auth>
+</header>
+<main class="main">
+  <div class="content">
+    <router-outlet />
+  </div>
+</main>
+<footer appCopyright> - v{{ settings.version }}</footer>
+

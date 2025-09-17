@@ -1,0 +1,13 @@
+Collecting User Data with Forms:
+
+- Web applications use forms to collect input data from users. Use cases vary, from allowing users 
+    to log in, fill in payment information, book a flight, or even perform a search.
+- Form data can later be persisted on local storage or be sent to a server using a backend API.
+
+- In this chapter, we will cover the following topics about forms:
+    • Introducing web forms
+    • Building template-driven forms
+    • Building reactive forms
+    • Using a form builder
+    • Validating input in forms
+    • Manipulating form state

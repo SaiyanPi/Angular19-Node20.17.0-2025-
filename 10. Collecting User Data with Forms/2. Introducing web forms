@@ -1,0 +1,55 @@
+Introducing web forms:
+
+- A form usually has the following characteristics that enhance the user experience of a web
+    application:
+    • Defines different kinds of input fields
+    • Sets up different kinds of validations and displays validation errors to the user
+    • Supports different strategies for handling data if the form is in an error state
+
+- The Angular framework provides two approaches to handling forms: template-driven and reactive.
+    Neither approach is considered better; you must choose the one that best suits your scenario. 
+    The main difference between the two approaches is how they manage data:
+
+    1) Template-driven forms:
+    These are easy to set up and add to an Angular application. They operate solely on the
+    component template to create elements and configure validation rules; thus, they are not
+    easy to test. They also depend on the change detection mechanism of the framework.
+
+    2) Reactive forms:
+    These are more robust when scaling and testing. They operate in the component class to manage
+    input controls and set validation rules. They also manipulate data using an intermediate form
+    model, maintaining their immutable nature. This technique is for you if you use reactive
+    programming techniques extensively or if your Angular application comprises many forms.
+
+- A form in a web application consists of a <form> HTML element that contains HTML elements 
+    for entering data, such as <input> and <select> elements, and <button> elements for
+    interacting with the data. The form can retrieve and save data locally or send it to a
+    server for further manipulation.
+    The following is an example of a simple form that is used for logging a user into a web
+    application:
+
+        <form> 
+            <div>
+                <input type="text" name="username" placeholder="Username" /> 
+            </div> 
+            <div>
+                <input type="password" name="password" placeholder="Password" /> 
+            </div> 
+            <button type="submit">Login</button> 
+        </form> 
+    
+    -> The preceding form has two <input> elements: one for entering the username and another for 
+        entering the password.
+    -> The type of the password field is set to password so that the content of the input control
+        is not visible while typing.
+    -> The type of the <button> element is set to submit so that the form can collect data by a
+        user clicking on the button or pressing Enter on any input control.
+    -> Notice that an HTML element must reside inside the <form> element to be part of it.
+
+    📝💡
+    We could add another button with the reset type if we wanted to reset form data.
+
+- Web applications can significantly enhance the user experience by using forms that provide 
+    features such as autocomplete in input controls or prompting the user to save sensitive data. 
+    Now that we have understood what a web form looks like, let’s learn how all that fits into the 
+    Angular framework.

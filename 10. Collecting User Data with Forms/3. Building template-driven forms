@@ -1,0 +1,133 @@
+Building template-driven forms:
+
+- Template-driven forms are one of two different ways of integrating forms with Angular. These can 
+    be powerful in cases where we want to create small and simple forms for our Angular application.
+
+- We learned about data binding in Chapter 3, Structuring User Interfaces with Components, and how 
+    we can use different types to read data from an Angular component and write data to it.
+    In that case, binding is either one way or another, called one-way binding. In template-driven
+    forms, we can combine both ways and create a two-way binding that can read and write data
+    simultaneously. 
+
+- Template-driven forms provide the ngModel directive, which we can use in our components to 
+    get this behavior. To learn more about template-driven forms, we will convert the change price 
+    functionality of our product detail component to work with Angular forms.
+
+📝💡
+You will need the source code of the Angular application we created in Chapter 9, Navigating
+through Applications with Routing, to follow along with the rest of the chapter. 
+
+1) Open the product-detail.component.ts file and add the following import statement:
+
+        import { FormsModule } from '@angular/forms';
+
+    -> We add template-driven forms to an Angular application using the FormsModule class 
+        from the @angular/forms npm package.
+
+2) Add FormsModule in the imports array of the @Component decorator:
+
+        @Component({
+            selector: 'app-product-detail',
+            imports: [CommonModule,👉 FormsModule],
+            templateUrl: './product-detail.component.html',
+            styleUrl: './product-detail.component.css',
+        })
+
+3) Open the product-detail.component.html file and modify the <input> element as follows:
+
+        <input placeholder="New price" type="number" name="price" [(ngModel)]="product.price" />
+    
+    -> In the preceding snippet, we bind the price property of the product template variable 
+        to the ngModel directive of the <input> element.
+    -> The name attribute is required so that Angular can internally create a unique form control
+        to distinguish it.
+    
+💡
+The syntax of the ngModel directive is known as a banana in a box, and we create it in two steps.
+First, we make the banana by surrounding ngModel in parentheses (). Then, we put it in a box by
+surrounding it with square brackets [()].
+
+4) Modify the <button> element as follows:
+
+        <button class="secondary" type="submit">Change</button>
+    
+    -> In the preceding snippet, we remove the click event from the <button> element because 
+        submitting the form will update the price.
+    -> We also add the submit type to indicate that the form submission can happen by a user
+        clicking the button.
+
+5) Surround the <input> and <button> elements with the following <form> element.
+
+        <form (ngSubmit)="changePrice(product)">
+            <input
+                placeholder="New price"
+                type="number"
+                name="price"
+                [(ngModel)]="product.price" />
+            <button class="secondary" type="submit">Change</button>
+        </form>
+    
+    -> In the preceding snippet, we bind the changePrice method to the ngSubmit event of the 
+        form. The binding will trigger the method execution if we press Enter inside the input box 
+        or click the button.
+    -> The ngSubmit event is part of the Angular FormsModule and hooks on the native submit event
+        of an HTML form.
+
+6) Open the product-detail.component.ts file and modify the changePrice method as follows:
+
+        changePrice(product: Product) {
+            this.productService.updateProduct(
+                product.id,
+                product.price
+            ).subscribe(() => this.router.navigate(['/products']));
+        }
+
+7) Run the application using the ng serve command and select a product from the list.
+
+8) You will notice that the current product price is already displayed inside the input box. 
+    Try to change the price, and you will notice that the current price of the product is also 
+    changing while you type (change-price.png)
+
+    -> The behavior of our application depicted in the preceding image is the magic behind two-way 
+        binding and ngModel. 
+
+💡
+Two-way binding was the biggest selling point when AngularJS came out in 2010. It was complex to
+achieve that behavior in those days with vanilla JavaScript and jQuery.
+
+- While we type inside the input box, the ngModel directive updates the value of the product price. 
+    The new price is directly reflected in the template because we use Angular interpolation syntax 
+    to display its value.
+
+----------------------------------------------------------------------------------------------------
+
+- In our case, updating the current product price while entering a new one is a bad user experience. 
+    The user should be able to view the current price of the product at all times.
+    We will modify the product detail component so that the price is displayed correctly:
+
+a) Open the product-detail.component.ts file and create a price property inside the
+    ProductDetailComponent class:
+
+        price: number | undefined;
+
+b) Modify the changePrice method to use the price component property:
+
+        changePrice(product: Product) {
+            this.productService.updateProduct(
+                product.id,
+                this.price!
+            ).subscribe(() => this.router.navigate(['/products']));
+        }
+
+c) Open the product-detail.component.html file and replace the binding in the <input> element to
+    use the new component property:
+
+        <input placeholder="New price" type="number" name="price" [(ngModel)]="👉 price" />
+
+- If we run the application and try to enter a new price inside the New price input box, we will 
+    notice that the current price displayed does not change.
+    The functionality of changing the price also works correctly as before.
+
+- We have seen how template-driven forms can be useful when creating small and simple forms. 
+    In the next section, we dive deeper into the alternative approach offered by the Angular
+    framework: reactive forms.
