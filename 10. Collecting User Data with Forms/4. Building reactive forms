@@ -1,0 +1,19 @@
+Building reactive forms:
+
+- Reactive forms, as the name implies, reactively provide access to web forms. They are built with 
+    reactivity in mind, where input controls and their values can be manipulated using observable 
+    streams.
+- They also maintain an immutable state of form data, making them easier to test because we can be
+    sure that the form state can be modified explicitly and consistently.
+
+- Reactive forms have a programmatic approach to creating form elements and setting up validation
+    rules by setting everything up in the component class. 
+    The Angular key classes involved in this approach are the following:
+    • FormControl: 
+        Represents an individual form control, such as an <input> element.
+    • FormGroup: 
+        Represents a collection of form controls. The <form> element is the topmostFormGroup in the
+        hierarchy of a reactive form.
+    • FormArray:
+        Represents a collection of form controls, just like FormGroup, but can be modified at
+        runtime. For example, we can add or remove FormControl objects dynamically as needed.
