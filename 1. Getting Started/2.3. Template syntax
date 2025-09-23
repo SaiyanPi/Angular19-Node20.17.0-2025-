@@ -30,7 +30,8 @@ Template syntax:
         of the Angular template syntax. In a nutshell, interpolation converts the value of the title
         property to text and prints it on the page.
     -> Angular uses specific template syntax to extend and enrich the standard HTML syntax in the
-        application template. We will learn more about the Angular template syntax in future chapter.
+        application template. We will learn more about the Angular template syntax in Chapter 3,
+        Structuring User Interfaces with Components.
 
 4) Change the value of the title property in the AppComponent class to World, save the changes, wait for
     the application to reload, and examine the output in the browser:

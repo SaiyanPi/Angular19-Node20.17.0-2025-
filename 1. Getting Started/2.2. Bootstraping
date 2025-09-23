@@ -33,7 +33,8 @@ Bootstraping:
         };
 
     -> The appConfig object contains a providers property to define services provided throughout the 
-        Angular application. We will learn more about services in future chapter.
+        Angular application. We will learn more about services in Chapter 5, Managing Complex Tasks 
+        with Services.
 
 - A new Angular CLI application provides routing services by default. Routing is related to in
     app navigation between different components using the browser URL. It is activated using the 
@@ -47,4 +48,5 @@ Bootstraping:
         export const routes: Routes = [];
 
     -> Our application does not have a route configuration yet, as indicated by the empty routes array. 
-        We will learn how to set up routing and configure it in future chapter.
+        We will learn how to set up routing and configure it in Chapter 9, Navigating through Applications 
+        with Routing..

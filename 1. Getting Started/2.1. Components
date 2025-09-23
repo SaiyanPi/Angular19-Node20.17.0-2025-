@@ -12,7 +12,7 @@ Components:
 
     -> The <app-root> tag is used to identify the main component of the application and acts as a 
         container to display its HTML content.
-    ->  It instructs Angular to render the template of the main component inside that tag.
+    -> It instructs Angular to render the template of the main component inside that tag.
     -> When the Angular CLI builds an Angular application, it parses the index.html file and identifies 
         HTML tags inside the <body> element. An Angular application is always rendered inside the 
         <body> element and comprises a tree of components. When the Angular CLI finds a tag that is 

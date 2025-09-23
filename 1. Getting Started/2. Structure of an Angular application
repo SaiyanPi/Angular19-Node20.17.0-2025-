@@ -5,7 +5,7 @@ Structure of an Angular application:
     write the code and tests of our application. It contains the following:
  
     1. app folder
-        All the Angular-related files of the application. You interact with this folder mostof the time
+        All the Angular-related files of the application. You interact with this folder most of the time
         during development.
     2. index.html
         The main HTML page of the Angular application.
