@@ -27,6 +27,8 @@ Variable declaration:
         }
 
         -> The let keyword allows us to change the reference of a variable multiple times in the code.
+    
+    see var_vs_let.png for more.
 
 - Another way to define variables in JavaScript is the const keyword, which indicates that a variable 
     should never change. As a code base grows, changes may happen by mistake, which can be costly. 
