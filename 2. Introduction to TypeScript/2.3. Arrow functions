@@ -1,3 +1,4 @@
+
 Arrow functions:
 
 - In JavaScript, we can create functions in an alternate way called arrow functions. 
@@ -53,3 +54,5 @@ Arrow functions:
         });
 
         Console output: Product name is: Monitor
+
+- see this.png images to know more about this in java script.

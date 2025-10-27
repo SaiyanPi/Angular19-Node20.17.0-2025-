@@ -13,7 +13,7 @@ Variable declaration:
     However, there are cases in which scoping is not applied, such as in loops:
 
         var x =20;
-        for (var x = 0; x <10; x++){
+        for (var x = 0; x < 10; x++){
 
         }
     
@@ -57,7 +57,7 @@ Variable declaration:
 - It is preferable to use the const keyword when we are sure that the properties of an object will 
     not change during its lifetime because it prevents the object from accidentally changing.
 
-- When we want to combine variables, we can use the spread parameter syntax. A spread parameter 
+- When we want to combine variables, we can use the spread operator/parameter syntax. A spread operator 
     uses the ellipsis (…) to expand the values of a variable:
 
         const category = 'Computing';
@@ -69,7 +69,7 @@ Variable declaration:
     The current behavior is called immutability, which means not changing a variable but creating 
     a new one that comes from the original.
 
-- We can also use a spread parameter on objects:
+- We can also use a spread operator on objects:
 
         const product = {
             name: 'Keyboard',
@@ -91,7 +91,7 @@ Variable declaration:
         }
 
     The newProduct object takes the properties from the product object, adds new values on top of 
-    it, and replaces the existing ones. Thta's why 'price: 100'.
+    it, and replaces the existing ones. That's why 'price: 100'.
 
 NOTE
     An object is not immutable if its properties can be changed or its properties are an 
